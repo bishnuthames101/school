@@ -81,7 +81,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email Addresses',
-      details: ['info@excellenceacademy.edu', 'admissions@excellenceacademy.edu', 'principal@excellenceacademy.edu'],
+      details: ['info@kopess.edu', 'admissions@kopess.edu', 'principal@kopess.edu'],
       color: 'text-purple-600',
     },
     {
@@ -93,12 +93,12 @@ const Contact = () => {
   ];
 
   const departments = [
-    { name: 'Principal\'s Office', phone: '+1 (555) 123-4567', email: 'principal@excellenceacademy.edu' },
-    { name: 'Admissions Office', phone: '+1 (555) 123-4568', email: 'admissions@excellenceacademy.edu' },
-    { name: 'Academic Office', phone: '+1 (555) 123-4570', email: 'academics@excellenceacademy.edu' },
-    { name: 'Student Affairs', phone: '+1 (555) 123-4571', email: 'students@excellenceacademy.edu' },
-    { name: 'Finance Department', phone: '+1 (555) 123-4572', email: 'finance@excellenceacademy.edu' },
-    { name: 'IT Support', phone: '+1 (555) 123-4573', email: 'support@excellenceacademy.edu' },
+    { name: 'Principal\'s Office', phone: '+1 (555) 123-4567', email: 'principal@kopess.edu' },
+    { name: 'Admissions Office', phone: '+1 (555) 123-4568', email: 'admissions@kopess.edu' },
+    { name: 'Academic Office', phone: '+1 (555) 123-4570', email: 'academics@kopess.edu' },
+    { name: 'Student Affairs', phone: '+1 (555) 123-4571', email: 'students@kopess.edu' },
+    { name: 'Finance Department', phone: '+1 (555) 123-4572', email: 'finance@kopess.edu' },
+    { name: 'IT Support', phone: '+1 (555) 123-4573', email: 'support@kopess.edu' },
   ];
 
   return (
@@ -109,7 +109,7 @@ const Contact = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
           <p className="text-xl text-cyan-100 max-w-3xl mx-auto">
             We're here to help! Get in touch with us for any questions, concerns, or information
-            about Excellence Academy. We look forward to hearing from you.
+            about KOPESS. We look forward to hearing from you.
           </p>
         </div>
       </section>

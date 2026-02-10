@@ -51,7 +51,7 @@ const HeroSection = () => {
         <div className="absolute inset-0">
           <Image
             src="/juniors1.jpg"
-            alt="Excellence Academy Students"
+            alt="KOPESS Students"
             fill
             className="object-cover -z-10"
             priority
@@ -65,7 +65,7 @@ const HeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">
-            Welcome to <span className="text-yellow-400">Excellence Academy</span>
+            Welcome to <span className="text-yellow-400">KOPESS</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto drop-shadow-md">
             Nurturing young minds, building bright futures, and creating tomorrow's leaders

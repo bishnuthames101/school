@@ -177,7 +177,7 @@ const Others = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Beyond Academics</h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
-            Discover the vibrant community life at Excellence Academy through our house system,
+            Discover the vibrant community life at KOPESS through our house system,
             clubs, extracurricular activities, and the inspiring achievements of our alumni.
           </p>
         </div>

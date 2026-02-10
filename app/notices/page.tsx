@@ -84,7 +84,7 @@ const Notices = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-6">School Notices</h1>
           <p className="text-xl text-teal-100 max-w-3xl mx-auto">
             Stay informed with the latest announcements, updates, and important information
-            from Excellence Academy administration.
+            from KOPESS administration.
           </p>
         </div>
       </section>

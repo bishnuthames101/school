@@ -21,7 +21,7 @@ const About = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Excellence Academy</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">About KOPESS</h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
             Discover our rich history, unwavering mission, and commitment to educational excellence
             that has shaped generations of successful leaders.
@@ -37,7 +37,7 @@ const About = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  Founded in 1999, Excellence Academy began as a small institution with a big dream –
+                  Founded in 1999, KOPESS began as a small institution with a big dream –
                   to provide world-class education that nurtures both academic excellence and character development.
                 </p>
                 <p>
@@ -167,7 +167,7 @@ const About = () => {
                 <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex-shrink-0"></div>
                 <div className="flex-1">
                   <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                    "At Excellence Academy, we believe that every child has the potential to achieve greatness.
+                    "At KOPESS, we believe that every child has the potential to achieve greatness.
                     Our role is to provide the nurturing environment, exceptional resources, and inspiring guidance
                     that allows each student to discover and develop their unique talents."
                   </blockquote>
@@ -178,7 +178,7 @@ const About = () => {
                   </blockquote>
                   <div className="mt-6">
                     <p className="font-bold text-gray-900">Dr. Sarah Johnson</p>
-                    <p className="text-blue-600">Principal, Excellence Academy</p>
+                    <p className="text-blue-600">Principal, KOPESS</p>
                     <p className="text-sm text-gray-600">Ph.D. in Education, 20+ years of experience</p>
                   </div>
                 </div>

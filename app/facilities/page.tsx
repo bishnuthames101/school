@@ -129,7 +129,7 @@ const Facilities = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">World-Class Facilities</h1>
           <p className="text-xl text-violet-100 max-w-3xl mx-auto">
-            Excellence Academy provides state-of-the-art facilities designed to enhance learning,
+            KOPESS provides state-of-the-art facilities designed to enhance learning,
             promote creativity, and ensure the safety and well-being of our students.
           </p>
         </div>
@@ -269,7 +269,7 @@ const Facilities = () => {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Experience Our Campus</h2>
           <p className="text-xl text-gray-600 mb-8">
             See our world-class facilities in person. Schedule a campus tour or take our virtual tour
-            to explore everything Excellence Academy has to offer.
+            to explore everything KOPESS has to offer.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">

@@ -64,7 +64,7 @@ function AdminLoginForm() {
               <Lock className="h-8 w-8 text-blue-600" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600">Excellence Academy Management Portal</p>
+            <p className="text-gray-600">KOPESS Management Portal</p>
           </div>
 
           {/* Login Form */}

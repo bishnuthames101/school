@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
             <div className="flex items-center space-x-2 mb-4">
               <GraduationCap className="h-8 w-8 text-blue-400" />
               <div>
-                <h3 className="text-xl font-bold">Excellence Academy</h3>
+                <h3 className="text-xl font-bold">KOPESS</h3>
                 <p className="text-sm text-gray-400">Nurturing Future Leaders</p>
               </div>
             </div>
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <p className="text-gray-300 text-sm">info@excellenceacademy.edu</p>
+                <p className="text-gray-300 text-sm">info@kopess.edu</p>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Excellence Academy. All rights reserved. | Privacy Policy | Terms of Service
+            © 2024 KOPESS. All rights reserved. | Privacy Policy | Terms of Service
           </p>
         </div>
       </div>

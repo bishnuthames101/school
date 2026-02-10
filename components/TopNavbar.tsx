@@ -41,7 +41,7 @@ const TopNavbar: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="h-4 w-4" />
-              <span>info@excellenceacademy.edu  </span>
+              <span>info@kopess.edu  </span>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-4 w-4" />
@@ -55,7 +55,7 @@ const TopNavbar: React.FC = () => {
               Call Now
             </a>
 
-          <a href="mailto:info@excellenceacademy.edu" className="hover:text-blue-200 transition-colors duration-200">
+          <a href="mailto:info@kopess.edu" className="hover:text-blue-200 transition-colors duration-200">
               Email Us
             </a>
           </div>
