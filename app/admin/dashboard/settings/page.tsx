@@ -18,7 +18,6 @@ export default function SettingsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Client-side validation
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -91,22 +90,25 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Breadcrumb + Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600 mt-1">Manage your admin account settings</p>
+        <p className="text-sm text-gray-500 mb-1">
+          Dashboard &gt; <span className="text-gray-700">Settings</span>
+        </p>
+        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <p className="text-gray-500 mt-1 text-sm">Manage your admin account settings</p>
       </div>
 
       {/* Password Change Card */}
-      <div className="bg-white rounded-lg shadow-md max-w-2xl">
+      <div className="bg-white rounded-xl border border-gray-200 max-w-2xl">
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
+            <div className="p-2 bg-blue-50 rounded-lg">
               <Lock className="h-6 w-6 text-blue-600" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Change Password</h2>
-              <p className="text-sm text-gray-600">Update your admin password</p>
+              <p className="text-sm text-gray-500">Update your admin password</p>
             </div>
           </div>
         </div>
@@ -243,13 +245,13 @@ export default function SettingsPage() {
       </div>
 
       {/* Security Information */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-2xl">
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 max-w-2xl">
         <h3 className="text-sm font-semibold text-blue-900 mb-3">Password Security Tips</h3>
         <ul className="text-sm text-blue-800 space-y-2">
-          <li>• Use a strong, unique password that you don&apos;t use elsewhere</li>
-          <li>• Include a mix of uppercase, lowercase, numbers, and symbols</li>
-          <li>• Avoid using personal information or common words</li>
-          <li>• Change your password regularly for better security</li>
+          <li>Use a strong, unique password that you don&apos;t use elsewhere</li>
+          <li>Include a mix of uppercase, lowercase, numbers, and symbols</li>
+          <li>Avoid using personal information or common words</li>
+          <li>Change your password regularly for better security</li>
         </ul>
       </div>
     </div>

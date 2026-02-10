@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, X, Image as ImageIcon, Tag, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Plus, Trash2, X, Image as ImageIcon } from 'lucide-react';
 
 interface GalleryImage {
   id: string;
@@ -75,8 +74,6 @@ export default function GalleryManagement() {
     const file = e.target.files?.[0];
     if (file) {
       setFormData({ ...formData, image: file });
-
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -160,8 +157,8 @@ export default function GalleryManagement() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading gallery...</p>
+          <div className="h-10 w-10 border-[3px] border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-500">Loading gallery...</p>
         </div>
       </div>
     );
@@ -169,17 +166,19 @@ export default function GalleryManagement() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="relative z-[70]">
-        {/* Title and Add Button */}
-        <div className="flex justify-between items-center">
+      {/* Breadcrumb + Header */}
+      <div>
+        <p className="text-sm text-gray-500 mb-1">
+          Dashboard &gt; <span className="text-gray-700">Gallery</span>
+        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Gallery Management</h1>
-            <p className="text-gray-600 mt-1">Manage school photo gallery</p>
+            <h1 className="text-2xl font-bold text-gray-900">Gallery Management</h1>
+            <p className="text-gray-500 mt-1 text-sm">Manage school photo gallery</p>
           </div>
           <button
             onClick={handleOpenModal}
-            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors self-start"
           >
             <Plus className="h-5 w-5" />
             <span>Add Image</span>
@@ -189,78 +188,79 @@ export default function GalleryManagement() {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
           {error}
         </div>
       )}
 
       {/* Category Filter */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex items-center space-x-2 overflow-x-auto">
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by:</span>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                selectedCategory === category
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Images Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredImages.map((image) => (
-          <div key={image.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-            <div className="relative aspect-square bg-gray-200 overflow-hidden">
-              <img
-                src={image.imageUrl}
-                alt={image.caption}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400?text=No+Image';
-                }}
-              />
-              <button
-                onClick={() => handleDelete(image.id)}
-                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="p-4">
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <p className="text-sm text-gray-900 font-medium line-clamp-2 flex-1">{image.caption}</p>
-              </div>
-              <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(image.category)}`}>
-                {image.category}
-              </span>
-            </div>
-          </div>
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+              selectedCategory === category
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            {category}
+          </button>
         ))}
       </div>
 
+      {/* Images Grid */}
+      {filteredImages.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredImages.map((image) => (
+            <div key={image.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all group">
+              <div className="relative aspect-square bg-gray-200 overflow-hidden">
+                <img
+                  src={image.imageUrl}
+                  alt={image.caption}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400?text=No+Image';
+                  }}
+                />
+                <button
+                  onClick={() => handleDelete(image.id)}
+                  className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <p className="text-sm text-gray-900 font-medium line-clamp-2 flex-1">{image.caption}</p>
+                </div>
+                <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(image.category)}`}>
+                  {image.category}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Empty State */}
       {filteredImages.length === 0 && !error && (
-        <div className="text-center py-12 bg-white rounded-lg">
-          <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+            <ImageIcon className="h-8 w-8 text-gray-400" />
+          </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             {selectedCategory === 'All' ? 'No images found' : `No ${selectedCategory} images found`}
           </h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-500 mb-6 max-w-sm mx-auto">
             {selectedCategory === 'All'
               ? 'Get started by adding your first image.'
               : 'Try selecting a different category or add a new image.'}
           </p>
           <button
             onClick={handleOpenModal}
-            className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="h-5 w-5" />
             <span>Add Image</span>
@@ -270,18 +270,18 @@ export default function GalleryManagement() {
 
       {/* Stats */}
       {images.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{images.length}</div>
-              <div className="text-sm text-gray-600">Total Images</div>
+              <div className="text-xs text-gray-500">Total</div>
             </div>
             {['Campus', 'Events', 'Sports', 'Cultural', 'Academic', 'Other'].map((cat) => (
               <div key={cat} className="text-center">
                 <div className="text-2xl font-bold text-gray-900">
                   {images.filter((img) => img.category === cat).length}
                 </div>
-                <div className="text-sm text-gray-600">{cat}</div>
+                <div className="text-xs text-gray-500">{cat}</div>
               </div>
             ))}
           </div>
@@ -290,9 +290,9 @@ export default function GalleryManagement() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-2 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-lg max-w-2xl w-full my-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b px-4 py-3 sm:px-6 sm:py-4 flex justify-between items-center z-10">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-2 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full my-4 max-h-[calc(100vh-2rem)] flex flex-col">
+            <div className="sticky top-0 bg-white border-b px-4 py-3 sm:px-6 sm:py-4 flex justify-between items-center rounded-t-xl">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Add New Image</h2>
               <button
                 onClick={handleCloseModal}
@@ -302,7 +302,7 @@ export default function GalleryManagement() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               {/* Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -367,7 +367,7 @@ export default function GalleryManagement() {
               </div>
 
               {/* Form Actions */}
-              <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">
+              <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
                 <button
                   type="button"
                   onClick={handleCloseModal}
