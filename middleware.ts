@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyTokenEdge } from '@/lib/auth';
+import { verifyTokenEdge } from '@/lib/auth-edge';
 
 // Define paths that require authentication
 const protectedPaths = [
