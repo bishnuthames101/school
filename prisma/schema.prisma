@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ApplicationForm {
+  id             String            @id @default(cuid())
+  studentName    String
+  parentName     String
+  email          String
+  phone          String
+  grade          String
+  dob            String
+  address        String            @db.Text
+  previousSchool String?
+  message        String?           @db.Text
+  status         ApplicationStatus @default(pending)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("application_forms")
+}
+
+model ContactForm {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  subject   String
+  message   String        @db.Text
+  status    ContactStatus @default(unread)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("contact_forms")
+}
+
+model Event {
+  id          String        @id @default(cuid())
+  title       String
+  date        String
+  category    EventCategory
+  image       String
+  description String        @db.Text
+  highlights  String[]
+  photos      String[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("events")
+}
+
+model GalleryImage {
+  id        String          @id @default(cuid())
+  imageUrl  String
+  caption   String
+  category  GalleryCategory
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("gallery_images")
+}
+
+model Notice {
+  id          String         @id @default(cuid())
+  title       String
+  date        String
+  category    NoticeCategory
+  description String         @db.Text
+  priority    NoticePriority @default(normal)
+  attachment  String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("notices")
+}
+
+model Popup {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  linkUrl   String?
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("popups")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
+enum ApplicationStatus {
+  pending
+  reviewed
+  accepted
+  rejected
+}
+
+enum ContactStatus {
+  unread
+  read
+  replied
+}
+
+enum EventCategory {
+  Academic
+  Sports
+  Cultural
+  Social
+  Other
+}
+
+enum GalleryCategory {
+  Campus
+  Events
+  Sports
+  Cultural
+  Academic
+  Other
+}
+
+enum NoticeCategory {
+  General
+  Academic
+  Exam
+  Event
+  Holiday
+  Fee
+  Important
+}
+
+enum NoticePriority {
+  normal
+  important
+  urgent
+}

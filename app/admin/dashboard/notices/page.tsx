@@ -1,0 +1,473 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Plus, Edit2, Trash2, X, Bell, Calendar, Tag, AlertCircle, Paperclip, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+
+interface Notice {
+  id: string;
+  title: string;
+  date: string;
+  category: 'General' | 'Academic' | 'Exam' | 'Event' | 'Holiday' | 'Fee' | 'Important';
+  description: string;
+  priority: 'normal' | 'important' | 'urgent';
+  attachment?: string;
+}
+
+interface NoticeFormData {
+  title: string;
+  date: string;
+  category: 'General' | 'Academic' | 'Exam' | 'Event' | 'Holiday' | 'Fee' | 'Important';
+  description: string;
+  priority: 'normal' | 'important' | 'urgent';
+  attachment: string;
+  attachmentFile?: File | null;
+}
+
+export default function NoticesManagement() {
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState<NoticeFormData>({
+    title: '',
+    date: '',
+    category: 'General',
+    description: '',
+    priority: 'normal',
+    attachment: '',
+    attachmentFile: null,
+  });
+
+  useEffect(() => {
+    fetchNotices();
+  }, []);
+
+  const fetchNotices = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/notices?limit=1000');
+      if (!response.ok) throw new Error('Failed to fetch notices');
+      const result = await response.json();
+      const data = result.data || [];
+      setNotices(data);
+      setError('');
+    } catch (err) {
+      setError('Failed to load notices');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenModal = (notice?: Notice) => {
+    if (notice) {
+      setEditingNotice(notice);
+      setFormData({
+        title: notice.title,
+        date: notice.date.split('T')[0],
+        category: notice.category,
+        description: notice.description,
+        priority: notice.priority,
+        attachment: notice.attachment || '',
+        attachmentFile: null,
+      });
+    } else {
+      setEditingNotice(null);
+      setFormData({
+        title: '',
+        date: '',
+        category: 'General',
+        description: '',
+        priority: 'normal',
+        attachment: '',
+        attachmentFile: null,
+      });
+    }
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingNotice(null);
+    setFormData({
+      title: '',
+      date: '',
+      category: 'General',
+      description: '',
+      priority: 'normal',
+      attachment: '',
+      attachmentFile: null,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const url = editingNotice ? `/api/notices?id=${editingNotice.id}` : '/api/notices';
+      const method = editingNotice ? 'PUT' : 'POST';
+
+      // Create FormData to handle file upload
+      const submitData = new FormData();
+      submitData.append('title', formData.title);
+      submitData.append('date', formData.date);
+      submitData.append('category', formData.category);
+      submitData.append('description', formData.description);
+      submitData.append('priority', formData.priority);
+
+      // Add file if present
+      if (formData.attachmentFile) {
+        submitData.append('attachment', formData.attachmentFile);
+      } else if (editingNotice && formData.attachment) {
+        // Keep existing attachment if editing and no new file
+        submitData.append('existingAttachment', formData.attachment);
+      }
+
+      const response = await fetch(url, {
+        method,
+        body: submitData,
+      });
+
+      if (!response.ok) throw new Error('Failed to save notice');
+
+      await fetchNotices();
+      handleCloseModal();
+    } catch (err) {
+      alert('Failed to save notice. Please try again.');
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this notice?')) return;
+
+    try {
+      const response = await fetch(`/api/notices?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete notice');
+
+      await fetchNotices();
+    } catch (err) {
+      alert('Failed to delete notice. Please try again.');
+      console.error(err);
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      General: 'bg-gray-100 text-gray-800',
+      Academic: 'bg-blue-100 text-blue-800',
+      Exam: 'bg-purple-100 text-purple-800',
+      Event: 'bg-green-100 text-green-800',
+      Holiday: 'bg-yellow-100 text-yellow-800',
+      Fee: 'bg-orange-100 text-orange-800',
+      Important: 'bg-red-100 text-red-800',
+    };
+    return colors[category] || colors.General;
+  };
+
+  const getPriorityColor = (priority: string) => {
+    const colors: Record<string, string> = {
+      normal: 'bg-green-100 text-green-800',
+      important: 'bg-yellow-100 text-yellow-800',
+      urgent: 'bg-red-100 text-red-800',
+    };
+    return colors[priority] || colors.normal;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading notices...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="relative z-[70]">
+        {/* Back Button */}
+        {/* Title and Add Button */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Notices Management</h1>
+            <p className="text-gray-600 mt-1">Manage school notices and announcements</p>
+          </div>
+          <button
+            onClick={() => handleOpenModal()}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Notice</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Notices Table */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Title
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Priority
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {notices.map((notice) => (
+                <tr key={notice.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="flex items-start">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{notice.title}</div>
+                        <div className="text-sm text-gray-500 line-clamp-2 mt-1">{notice.description}</div>
+                        {notice.attachment && (
+                          <a
+                            href={notice.attachment}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 mt-1"
+                          >
+                            <Paperclip className="h-3 w-3 mr-1" />
+                            Attachment
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center text-sm text-gray-900">
+                      <Calendar className="h-4 w-4 mr-1 text-gray-400" />
+                      {new Date(notice.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getCategoryColor(notice.category)}`}>
+                      {notice.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPriorityColor(notice.priority)}`}>
+                      {notice.priority.charAt(0).toUpperCase() + notice.priority.slice(1)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleOpenModal(notice)}
+                        className="text-blue-600 hover:text-blue-900"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(notice.id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Empty State */}
+      {notices.length === 0 && !error && (
+        <div className="text-center py-12 bg-white rounded-lg">
+          <Bell className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No notices found</h3>
+          <p className="text-gray-600 mb-4">Get started by creating your first notice.</p>
+          <button
+            onClick={() => handleOpenModal()}
+            className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Notice</span>
+          </button>
+        </div>
+      )}
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-2 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-2xl w-full my-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b px-4 py-3 sm:px-6 sm:py-4 flex justify-between items-center z-10">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                {editingNotice ? 'Edit Notice' : 'Add New Notice'}
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Notice Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter notice title"
+                />
+              </div>
+
+              {/* Date, Category, Priority */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Notice Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category *
+                  </label>
+                  <select
+                    required
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="General">General</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Exam">Exam</option>
+                    <option value="Event">Event</option>
+                    <option value="Holiday">Holiday</option>
+                    <option value="Fee">Fee</option>
+                    <option value="Important">Important</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Priority *
+                  </label>
+                  <select
+                    required
+                    value={formData.priority}
+                    onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="normal">Normal</option>
+                    <option value="important">Important</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Attachment File Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Attachment (Optional)
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    setFormData({ ...formData, attachmentFile: file });
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Supported: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, JPG, PNG (Max 10MB)
+                </p>
+                {editingNotice && formData.attachment && !formData.attachmentFile && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Current attachment: <a href={formData.attachment} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">View file</a>
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description *
+                </label>
+                <textarea
+                  required
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter notice description"
+                />
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? 'Saving...' : editingNotice ? 'Update Notice' : 'Create Notice'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
