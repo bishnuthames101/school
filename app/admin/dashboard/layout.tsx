@@ -188,55 +188,54 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {renderNavSection('Main', mainNav)}
             {renderNavSection('Content', contentNav)}
             {renderNavSection('Inbox', inboxNav)}
+
+            {/* Settings, Logout, Back to Website — inside scroll area so mobile browser bars don't hide them */}
+            <div className="border-t border-gray-800 mx-2 mt-4 pt-3 space-y-1 pb-4">
+              <Link
+                href="/admin/dashboard/settings"
+                onClick={() => setSidebarOpen(false)}
+                title={sidebarCollapsed ? 'Settings' : undefined}
+                className={`flex items-center transition-colors duration-200 rounded-lg ${
+                  sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'space-x-3 px-3 py-2.5'
+                } ${
+                  pathname === '/admin/dashboard/settings'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                <Settings className="h-5 w-5 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Settings</span>}
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                title={sidebarCollapsed ? 'Logout' : undefined}
+                className={`w-full flex items-center transition-colors duration-200 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white ${
+                  sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'space-x-3 px-3 py-2.5'
+                }`}
+              >
+                <LogOut className="h-5 w-5 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Logout</span>}
+              </button>
+
+              <Link
+                href="/"
+                title={sidebarCollapsed ? 'Back to Website' : undefined}
+                className={`flex items-center transition-colors duration-200 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 hover:text-white ${
+                  sidebarCollapsed ? 'justify-center px-2 py-2' : 'space-x-3 px-3 py-2'
+                }`}
+              >
+                <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Back to Website</span>}
+              </Link>
+            </div>
           </nav>
 
-          {/* Bottom Area */}
-          <div className="border-t border-gray-800 p-3 space-y-2">
-            {/* Settings */}
-            <Link
-              href="/admin/dashboard/settings"
-              onClick={() => setSidebarOpen(false)}
-              title={sidebarCollapsed ? 'Settings' : undefined}
-              className={`flex items-center transition-colors duration-200 rounded-lg ${
-                sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'space-x-3 px-3 py-2.5'
-              } ${
-                pathname === '/admin/dashboard/settings'
-                  ? 'bg-gray-800 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-              }`}
-            >
-              <Settings className="h-5 w-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm">Settings</span>}
-            </Link>
-
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              title={sidebarCollapsed ? 'Logout' : undefined}
-              className={`w-full flex items-center transition-colors duration-200 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white ${
-                sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'space-x-3 px-3 py-2.5'
-              }`}
-            >
-              <LogOut className="h-5 w-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm">Logout</span>}
-            </button>
-
-            {/* Back to Website */}
-            <Link
-              href="/"
-              title={sidebarCollapsed ? 'Back to Website' : undefined}
-              className={`flex items-center transition-colors duration-200 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 hover:text-white ${
-                sidebarCollapsed ? 'justify-center px-2 py-2' : 'space-x-3 px-3 py-2'
-              }`}
-            >
-              <ExternalLink className="h-4 w-4 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm">Back to Website</span>}
-            </Link>
-
-            {/* Desktop collapse toggle */}
+          {/* Desktop-only collapse toggle */}
+          <div className="hidden lg:block border-t border-gray-800 p-3">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex w-full items-center justify-center py-2 text-gray-500 hover:text-gray-300 transition-colors"
+              className="w-full flex items-center justify-center py-2 text-gray-500 hover:text-gray-300 transition-colors"
             >
               {sidebarCollapsed ? (
                 <ChevronRight className="h-5 w-5" />
