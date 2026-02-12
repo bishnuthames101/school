@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import prisma from '@/lib/db';
 
 export async function POST(request: Request) {
   try {
@@ -12,27 +10,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create popups directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'popups');
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
+    const uploaded = await prisma.uploadedFile.create({
+      data: {
+        data: buffer,
+        mimeType: file.type,
+        fileName: file.name,
+        size: file.size,
+      },
+    });
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const originalName = file.name.replace(/\s+/g, '-');
-    const filename = `${timestamp}-${originalName}`;
-    const filepath = path.join(uploadsDir, filename);
-
-    // Save file
-    await writeFile(filepath, buffer);
-
-    // Return the public URL
-    const publicUrl = `/popups/${filename}`;
+    const publicUrl = `/api/files/${uploaded.id}`;
 
     return NextResponse.json({ url: publicUrl }, { status: 200 });
   } catch (error) {

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/db';
+import { deleteUploadedFile } from '@/lib/fileUpload';
 
 // PUT - Update popup
 export async function PUT(
@@ -11,6 +10,12 @@ export async function PUT(
   try {
     const body = await request.json();
     const { title, imageUrl, linkUrl, startDate, endDate, isActive } = body;
+
+    // If imageUrl is changing, clean up the old file
+    const existing = await prisma.popup.findUnique({ where: { id: params.id } });
+    if (existing && existing.imageUrl !== imageUrl && existing.imageUrl.startsWith('/api/files/')) {
+      await deleteUploadedFile(existing.imageUrl);
+    }
 
     const popup = await prisma.popup.update({
       where: { id: params.id },
@@ -37,6 +42,13 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Fetch popup first to get imageUrl for cleanup
+    const popup = await prisma.popup.findUnique({ where: { id: params.id } });
+
+    if (popup && popup.imageUrl.startsWith('/api/files/')) {
+      await deleteUploadedFile(popup.imageUrl);
+    }
+
     await prisma.popup.delete({
       where: { id: params.id },
     });

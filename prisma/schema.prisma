@@ -104,6 +104,17 @@ model Admin {
   @@map("admins")
 }
 
+model UploadedFile {
+  id        String   @id @default(cuid())
+  data      Bytes
+  mimeType  String
+  fileName  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  @@map("uploaded_files")
+}
+
 enum ApplicationStatus {
   pending
   reviewed

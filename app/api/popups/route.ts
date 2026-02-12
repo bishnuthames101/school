@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/db';
 
 // GET - Fetch popups (use ?all=true for admin to get all popups)
 export async function GET(request: Request) {
