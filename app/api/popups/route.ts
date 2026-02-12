@@ -3,9 +3,23 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// GET - Fetch active popups
-export async function GET() {
+// GET - Fetch popups (use ?all=true for admin to get all popups)
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all');
+
+    if (all === 'true') {
+      // Admin: return all popups
+      const popups = await prisma.popup.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return NextResponse.json(popups);
+    }
+
+    // Public: return only active popups within date range
     const now = new Date();
 
     const popups = await prisma.popup.findMany({

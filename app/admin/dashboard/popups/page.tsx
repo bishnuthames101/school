@@ -40,7 +40,7 @@ const PopupsPage = () => {
 
   const fetchPopups = async () => {
     try {
-      const response = await fetch('/api/popups');
+      const response = await fetch('/api/popups?all=true');
       const data = await response.json();
 
       if (Array.isArray(data)) {
