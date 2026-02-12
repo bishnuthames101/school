@@ -263,20 +263,17 @@ const Contact = () => {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Find Us Here</h2>
 
-              {/* Map Placeholder */}
               <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-                <div className="h-64 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500">Interactive Map</p>
-                    <p className="text-sm text-gray-400">123 Education Street, Knowledge City</p>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <button className="text-blue-600 hover:text-blue-800 font-medium">
-                    Get Directions →
-                  </button>
-                </div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.471852291576!2d85.34655857525254!3d27.671807676202977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19f0a50c9419%3A0xb91aba5ece08fc44!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1770864556743!5m2!1sen!2snp"
+                  width="100%"
+                  height="300"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-lg"
+                ></iframe>
               </div>
 
               {/* Transportation Info */}
