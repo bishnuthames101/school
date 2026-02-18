@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify current password
+    // Verify current password (scoped to this school)
     const isCurrentPasswordValid = await verifyAdminPassword(currentPassword);
     if (!isCurrentPasswordValid) {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update password in database
+    // Update password in database (scoped to this school)
     await updateAdminPassword(newPassword);
 
     return NextResponse.json({

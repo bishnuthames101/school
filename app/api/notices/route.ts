@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
-import { saveDocumentFile } from '@/lib/fileUpload';
+import { scopedPrisma } from '@/lib/db-scoped';
+import { getSchoolSlug } from '@/lib/school';
+import { uploadDocument, deleteFile } from '@/lib/storage';
 
 // GET all notices with pagination and filtering
 export async function GET(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
@@ -14,7 +16,6 @@ export async function GET(request: NextRequest) {
     const priority = searchParams.get('priority');
     const search = searchParams.get('search');
 
-    // Build filter conditions
     const where: any = {};
 
     if (category) {
@@ -32,14 +33,11 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get total count for pagination metadata with filters applied
-    const total = await prisma.notice.count({ where });
+    const total = await db.notice.count({ where });
 
-    const notices = await prisma.notice.findMany({
+    const notices = await db.notice.findMany({
       where,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     });
@@ -74,6 +72,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
+    const schoolSlug = getSchoolSlug();
     const formData = await request.formData();
     const title = formData.get('title') as string;
     const date = formData.get('date') as string;
@@ -86,23 +86,16 @@ export async function POST(request: NextRequest) {
 
     // Handle file upload if present
     if (attachmentFile && attachmentFile.size > 0) {
-      const uploadResult = await saveDocumentFile(attachmentFile);
-      if (!uploadResult.success) {
-        return NextResponse.json(
-          { success: false, error: uploadResult.error || 'Failed to upload file' },
-          { status: 400 }
-        );
-      }
-      attachmentUrl = uploadResult.filePath;
+      attachmentUrl = await uploadDocument(schoolSlug, 'notices', attachmentFile, attachmentFile.name);
     }
 
-    const notice = await prisma.notice.create({
+    const notice = await db.notice.create({
       data: {
         title,
         date,
-        category: category as any,
+        category,
         description,
-        priority: priority as any,
+        priority,
         attachment: attachmentUrl,
       },
     });
@@ -127,6 +120,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
+    const schoolSlug = getSchoolSlug();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -150,24 +145,22 @@ export async function PUT(request: NextRequest) {
 
     // Handle file upload if present
     if (attachmentFile && attachmentFile.size > 0) {
-      const uploadResult = await saveDocumentFile(attachmentFile);
-      if (!uploadResult.success) {
-        return NextResponse.json(
-          { success: false, error: uploadResult.error || 'Failed to upload file' },
-          { status: 400 }
-        );
+      attachmentUrl = await uploadDocument(schoolSlug, 'notices', attachmentFile, attachmentFile.name);
+
+      // Delete old attachment from storage
+      if (existingAttachment) {
+        await deleteFile(existingAttachment);
       }
-      attachmentUrl = uploadResult.filePath;
     }
 
-    const notice = await prisma.notice.update({
+    const notice = await db.notice.update({
       where: { id },
       data: {
         title,
         date,
-        category: category as any,
+        category,
         description,
-        priority: priority as any,
+        priority,
         attachment: attachmentUrl,
       },
     });
@@ -193,6 +186,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -203,9 +197,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    await prisma.notice.delete({
-      where: { id },
-    });
+    // Get notice to clean up attachment
+    const notice = await db.notice.findUnique({ where: { id } });
+    if (notice?.attachment) {
+      await deleteFile(notice.attachment);
+    }
+
+    await db.notice.delete({ where: { id } });
 
     return NextResponse.json({ success: true, message: 'Notice deleted successfully' });
   } catch (error: any) {

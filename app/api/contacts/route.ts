@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { scopedPrisma } from '@/lib/db-scoped';
 
 // GET all contacts with pagination (requires auth)
 export async function GET(request: NextRequest) {
@@ -13,18 +13,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    // Get total count for pagination metadata
-    const total = await prisma.contactForm.count();
+    const total = await db.contactForm.count();
 
-    const contacts = await prisma.contactForm.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const contacts = await db.contactForm.findMany({
+      orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     });
@@ -51,10 +49,13 @@ export async function GET(request: NextRequest) {
 // POST new contact (public - from contact form)
 export async function POST(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const body = await request.json();
-    const contact = await prisma.contactForm.create({
+
+    const contact = await db.contactForm.create({
       data: body,
     });
+
     return NextResponse.json({ success: true, data: contact }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating contact:', error);
@@ -76,6 +77,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -96,7 +98,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const contact = await prisma.contactForm.update({
+    const contact = await db.contactForm.update({
       where: { id },
       data: { status },
     });

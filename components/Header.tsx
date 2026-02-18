@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, GraduationCap } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,10 +37,8 @@ const Header: React.FC = () => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down and past 100px
         setIsVisible(false);
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up
         setIsVisible(true);
       }
 
@@ -59,10 +60,10 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center py-3 sm:py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" onClick={handleLinkClick}>
-            <GraduationCap className="h-7 w-7 sm:h-8 sm:w-8 text-blue-600" />
+            <GraduationCap className="h-7 w-7 sm:h-8 sm:w-8 text-school-primary" />
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900">KOPESS</h1>
-              <p className="text-xs text-gray-600 hidden sm:block">Nurturing Future Leaders</p>
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900">{config.name}</h1>
+              <p className="text-xs text-gray-600 hidden sm:block">{config.tagline}</p>
             </div>
           </Link>
 
@@ -74,8 +75,8 @@ const Header: React.FC = () => {
                 href={item.href}
                 className={`text-sm font-medium transition-colors duration-200 px-2 py-1 ${
                   isActive(item.href)
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-gray-700 hover:text-blue-600'
+                    ? 'text-school-primary border-b-2 border-school-primary'
+                    : 'text-gray-700 hover:text-school-primary'
                 }`}
               >
                 {item.name}
@@ -86,7 +87,7 @@ const Header: React.FC = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 z-50 relative"
+            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-school-primary hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-school-primary transition-colors duration-200 z-50 relative"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -105,8 +106,8 @@ const Header: React.FC = () => {
                     onClick={handleLinkClick}
                     className={`text-base font-medium transition-colors duration-200 px-3 py-2 rounded-md ${
                       isActive(item.href)
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-school-primary bg-school-primary-50'
+                        : 'text-gray-700 hover:text-school-primary hover:bg-gray-50'
                     }`}
                   >
                     {item.name}

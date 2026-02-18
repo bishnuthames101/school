@@ -73,7 +73,7 @@ const PopupsPage = () => {
       const formDataUpload = new FormData();
       formDataUpload.append('file', selectedFile);
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/upload-image', {
         method: 'POST',
         body: formDataUpload,
       });

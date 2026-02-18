@@ -1,23 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
-import { saveUploadedFile, deleteUploadedFile } from '@/lib/fileUpload';
+import { scopedPrisma } from '@/lib/db-scoped';
+import { getSchoolSlug } from '@/lib/school';
+import { uploadImage, deleteFile } from '@/lib/storage';
 
 // GET all gallery images with pagination
 export async function GET(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    // Get total count for pagination metadata
-    const total = await prisma.galleryImage.count();
+    const total = await db.galleryImage.count();
 
-    const images = await prisma.galleryImage.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const images = await db.galleryImage.findMany({
+      orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     });
@@ -52,6 +51,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
+    const schoolSlug = getSchoolSlug();
     const formData = await request.formData();
     const file = formData.get('image') as File;
     const caption = formData.get('caption') as string;
@@ -71,22 +72,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the uploaded file
-    const uploadResult = await saveUploadedFile(file);
+    // Upload to Supabase Storage
+    const imageUrl = await uploadImage(schoolSlug, 'gallery', file, file.name);
 
-    if (!uploadResult.success) {
-      return NextResponse.json(
-        { success: false, error: uploadResult.error || 'Failed to upload file' },
-        { status: 400 }
-      );
-    }
-
-    // Create database record
-    const image = await prisma.galleryImage.create({
+    const image = await db.galleryImage.create({
       data: {
-        imageUrl: uploadResult.filePath!,
+        imageUrl,
         caption,
-        category: category as any,
+        category,
       },
     });
 
@@ -111,6 +104,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -121,20 +115,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get the image to delete the file
-    const image = await prisma.galleryImage.findUnique({
-      where: { id },
-    });
+    // Get image to delete the file from storage
+    const image = await db.galleryImage.findUnique({ where: { id } });
 
-    if (image) {
-      // Delete the physical file
-      await deleteUploadedFile(image.imageUrl);
+    if (image?.imageUrl) {
+      await deleteFile(image.imageUrl);
     }
 
-    // Delete from database
-    await prisma.galleryImage.delete({
-      where: { id },
-    });
+    await db.galleryImage.delete({ where: { id } });
 
     return NextResponse.json({ success: true, message: 'Image deleted successfully' });
   } catch (error: any) {

@@ -3,10 +3,13 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const CalendarCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 6;
+  const totalSlides = config.academics.calendarSlides;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % totalSlides);
@@ -64,8 +67,8 @@ const CalendarCarousel = () => {
               onClick={() => goToSlide(index)}
               className={`relative w-20 h-20 rounded-lg overflow-hidden transition-all ${
                 currentSlide === index
-                  ? 'ring-4 ring-blue-600 scale-110'
-                  : 'ring-2 ring-gray-300 hover:ring-blue-400 opacity-70 hover:opacity-100'
+                  ? 'ring-4 ring-school-primary scale-110'
+                  : 'ring-2 ring-gray-300 hover:ring-school-primary-light opacity-70 hover:opacity-100'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             >
@@ -87,7 +90,7 @@ const CalendarCarousel = () => {
               onClick={() => goToSlide(index)}
               className={`w-3 h-3 rounded-full transition-all ${
                 currentSlide === index
-                  ? 'bg-blue-600 w-8'
+                  ? 'bg-school-primary w-8'
                   : 'bg-gray-300 hover:bg-gray-400'
               }`}
               aria-label={`Go to slide ${index + 1}`}

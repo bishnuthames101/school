@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { scopedPrisma } from '@/lib/db-scoped';
 
 // GET all applications with pagination (requires auth)
 export async function GET(request: NextRequest) {
@@ -13,18 +13,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    // Get total count for pagination metadata
-    const total = await prisma.applicationForm.count();
+    const total = await db.applicationForm.count();
 
-    const applications = await prisma.applicationForm.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const applications = await db.applicationForm.findMany({
+      orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     });
@@ -51,10 +49,13 @@ export async function GET(request: NextRequest) {
 // POST new application (public - from admission form)
 export async function POST(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const body = await request.json();
-    const application = await prisma.applicationForm.create({
+
+    const application = await db.applicationForm.create({
       data: body,
     });
+
     return NextResponse.json({ success: true, data: application }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating application:', error);

@@ -11,6 +11,9 @@ import {
   GraduationCap,
   Lock
 } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Footer: React.FC = () => {
   return (
@@ -20,15 +23,14 @@ const Footer: React.FC = () => {
           {/* School Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <GraduationCap className="h-8 w-8 text-blue-400" />
+              <GraduationCap className="h-8 w-8 text-school-primary-light" />
               <div>
-                <h3 className="text-xl font-bold">KOPESS</h3>
-                <p className="text-sm text-gray-400">Nurturing Future Leaders</p>
+                <h3 className="text-xl font-bold">{config.name}</h3>
+                <p className="text-sm text-gray-400">{config.tagline}</p>
               </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Committed to providing quality education and fostering holistic development
-              of students through innovative teaching methods and comprehensive learning experiences.
+              {config.description}
             </p>
           </div>
 
@@ -36,11 +38,11 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><Link href="/about" className="text-gray-300 hover:text-blue-400 transition-colors">About Us</Link></li>
-              <li><Link href="/academics" className="text-gray-300 hover:text-blue-400 transition-colors">Academics</Link></li>
-              <li><Link href="/admission" className="text-gray-300 hover:text-blue-400 transition-colors">Admission</Link></li>
-              <li><Link href="/facilities" className="text-gray-300 hover:text-blue-400 transition-colors">Facilities</Link></li>
-              <li><Link href="/events" className="text-gray-300 hover:text-blue-400 transition-colors">Events</Link></li>
+              <li><Link href="/about" className="text-gray-300 hover:text-school-primary-light transition-colors">About Us</Link></li>
+              <li><Link href="/academics" className="text-gray-300 hover:text-school-primary-light transition-colors">Academics</Link></li>
+              <li><Link href="/admission" className="text-gray-300 hover:text-school-primary-light transition-colors">Admission</Link></li>
+              <li><Link href="/facilities" className="text-gray-300 hover:text-school-primary-light transition-colors">Facilities</Link></li>
+              <li><Link href="/events" className="text-gray-300 hover:text-school-primary-light transition-colors">Events</Link></li>
             </ul>
           </div>
 
@@ -49,19 +51,18 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="h-5 w-5 text-school-primary-light mt-0.5 flex-shrink-0" />
                 <p className="text-gray-300 text-sm">
-                  123 Education Street<br />
-                  Knowledge City, KC 12345
+                  {config.contact.address}
                 </p>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <p className="text-gray-300 text-sm">+1 (555) 123-4567</p>
+                <Phone className="h-5 w-5 text-school-primary-light flex-shrink-0" />
+                <p className="text-gray-300 text-sm">{config.contact.phones.main}</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <p className="text-gray-300 text-sm">info@kopess.edu</p>
+                <Mail className="h-5 w-5 text-school-primary-light flex-shrink-0" />
+                <p className="text-gray-300 text-sm">{config.contact.emails.info}</p>
               </div>
             </div>
           </div>
@@ -70,31 +71,39 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
             <div className="flex space-x-4 mb-6">
-              <a href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
-                <Facebook className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
-                <Twitter className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
-                <Instagram className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-blue-400 transition-colors">
-                <Youtube className="h-6 w-6" />
-              </a>
+              {config.social.facebook && (
+                <a href={config.social.facebook} className="text-gray-300 hover:text-school-primary-light transition-colors">
+                  <Facebook className="h-6 w-6" />
+                </a>
+              )}
+              {config.social.twitter && (
+                <a href={config.social.twitter} className="text-gray-300 hover:text-school-primary-light transition-colors">
+                  <Twitter className="h-6 w-6" />
+                </a>
+              )}
+              {config.social.instagram && (
+                <a href={config.social.instagram} className="text-gray-300 hover:text-school-primary-light transition-colors">
+                  <Instagram className="h-6 w-6" />
+                </a>
+              )}
+              {config.social.youtube && (
+                <a href={config.social.youtube} className="text-gray-300 hover:text-school-primary-light transition-colors">
+                  <Youtube className="h-6 w-6" />
+                </a>
+              )}
             </div>
             <div className="mb-6">
               <h5 className="text-sm font-semibold mb-2">School Hours</h5>
               <p className="text-gray-300 text-sm">
-                Monday - Friday: 8:00 AM - 3:30 PM<br />
-                Office Hours: 8:00 AM - 5:00 PM
+                {config.contact.officeHours.weekdays}
+                {config.contact.officeHours.saturday && <><br />{config.contact.officeHours.saturday}</>}
               </p>
             </div>
             {/* Admin Login Button */}
             <div>
               <Link
                 href="/admin/login"
-                className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors duration-200"
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-school-primary hover:bg-school-primary-dark text-white text-sm font-medium rounded-md transition-colors duration-200"
               >
                 <Lock className="h-4 w-4" />
                 <span>Admin Login</span>
@@ -105,7 +114,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 KOPESS. All rights reserved. | Privacy Policy | Terms of Service
+            &copy; {new Date().getFullYear()} {config.name}. All rights reserved. | Privacy Policy | Terms of Service
           </p>
         </div>
       </div>

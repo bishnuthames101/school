@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Bell, Calendar, FileText, AlertCircle, Info, CheckCircle } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Notices = () => {
   const [notices, setNotices] = useState<any[]>([]);
@@ -35,7 +38,7 @@ const Notices = () => {
       case 'low':
         return <CheckCircle className="h-5 w-5 text-green-600" />;
       default:
-        return <Info className="h-5 w-5 text-blue-600" />;
+        return <Info className="h-5 w-5 text-school-primary" />;
     }
   };
 
@@ -48,14 +51,14 @@ const Notices = () => {
       case 'low':
         return 'border-green-500 bg-green-50';
       default:
-        return 'border-blue-500 bg-blue-50';
+        return 'border-school-primary bg-school-primary-50';
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'Academic':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-school-primary-100 text-school-primary-dark';
       case 'Sports':
         return 'bg-green-100 text-green-800';
       case 'Health':
@@ -79,12 +82,12 @@ const Notices = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-teal-600 to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-teal-600 to-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">School Notices</h1>
           <p className="text-xl text-teal-100 max-w-3xl mx-auto">
             Stay informed with the latest announcements, updates, and important information
-            from KOPESS administration.
+            from {config.name} administration.
           </p>
         </div>
       </section>
@@ -106,7 +109,7 @@ const Notices = () => {
               <div className="text-gray-600 text-sm">Low Priority</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{notices.length}</div>
+              <div className="text-2xl font-bold text-school-primary">{notices.length}</div>
               <div className="text-gray-600 text-sm">Total Notices</div>
             </div>
           </div>
@@ -123,7 +126,7 @@ const Notices = () => {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
                   selectedCategory === category
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-school-primary text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -181,7 +184,7 @@ const Notices = () => {
                             <a
                               key={index}
                               href="#"
-                              className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full hover:bg-blue-200 transition-colors duration-200"
+                              className="inline-flex items-center px-3 py-1 bg-school-primary-100 text-school-primary-dark text-sm rounded-full hover:bg-blue-200 transition-colors duration-200"
                             >
                               <FileText className="h-3 w-3 mr-1" />
                               {attachment}
@@ -199,10 +202,10 @@ const Notices = () => {
       </section>
 
       {/* Notice Subscription */}
-      <section className="py-16 bg-blue-600">
+      <section className="py-16 bg-school-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-school-primary-100 mb-8 max-w-2xl mx-auto">
             Subscribe to our notice notifications to receive important updates directly to your email.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
@@ -211,7 +214,7 @@ const Notices = () => {
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 rounded-md border-0 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
             />
-            <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-gray-50 transition-colors duration-200">
+            <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-school-primary bg-white hover:bg-gray-50 transition-colors duration-200">
               <Bell className="h-5 w-5 mr-2" />
               Subscribe
             </button>

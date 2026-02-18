@@ -130,7 +130,7 @@ const Events = () => {
                       </div>
                     </div>
 
-                    <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                    <button className="mt-4 w-full bg-school-primary text-white py-2 px-4 rounded-md hover:bg-school-primary-dark transition-colors duration-200">
                       Learn More
                     </button>
                   </div>
@@ -169,7 +169,7 @@ const Events = () => {
                       <ul className="space-y-2">
                         {event.highlights.map((highlight, hIndex) => (
                           <li key={hIndex} className="flex items-center">
-                            <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                            <div className="w-2 h-2 bg-school-primary rounded-full mr-3"></div>
                             <span className="text-gray-700">{highlight}</span>
                           </li>
                         ))}
@@ -179,7 +179,7 @@ const Events = () => {
 
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                      <Camera className="h-5 w-5 mr-2 text-blue-600" />
+                      <Camera className="h-5 w-5 mr-2 text-school-primary-light" />
                       Event Gallery
                     </h4>
                     <div className="grid grid-cols-2 gap-3">
@@ -198,19 +198,19 @@ const Events = () => {
       </section>
 
       {/* Event Registration CTA */}
-      <section className="py-16 bg-blue-600">
+      <section className="py-16 bg-school-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Want to Participate?</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-school-primary-100 mb-8 max-w-2xl mx-auto">
             Join us in our upcoming events and be part of our vibrant school community.
             Registration is open for students and parents.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-gray-50 transition-colors duration-200">
+            <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-school-primary bg-white hover:bg-gray-50 transition-colors duration-200">
               <Users className="h-5 w-5 mr-2" />
               Register for Events
             </button>
-            <button className="inline-flex items-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-blue-600 transition-colors duration-200">
+            <button className="inline-flex items-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-school-primary transition-colors duration-200">
               View Event Calendar
             </button>
           </div>

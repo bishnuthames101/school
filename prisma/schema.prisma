@@ -8,155 +8,177 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// === Multi-Tenant: School (tenant root) ===
+
+model School {
+  id        String   @id @default(cuid())
+  slug      String   @unique // matches SCHOOL_ID env var: "kopess", "schoolb"
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admins        Admin[]
+  events        Event[]
+  notices       Notice[]
+  galleryImages GalleryImage[]
+  popups        Popup[]
+  applications  ApplicationForm[]
+  contacts      ContactForm[]
+
+  @@map("schools")
+}
+
+// === Admin ===
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String
+  password  String
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([username, schoolId])
+  @@map("admins")
+}
+
+// === Application Form (Nepal-standard) ===
+
 model ApplicationForm {
-  id             String            @id @default(cuid())
-  studentName    String
-  parentName     String
-  email          String
-  phone          String
-  grade          String
-  dob            String
-  address        String            @db.Text
+  id       String @id @default(cuid())
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  // --- Student Info ---
+  studentNameEn String
+  studentNameNp String?
+  dobAD         DateTime
+  dobBS         String?
+  gender        String
+  nationality   String  @default("Nepali")
+  gradeApplying String
+  photo         String?
+
+  // --- Father Info ---
+  fatherName       String
+  fatherPhone      String
+  fatherOccupation String?
+
+  // --- Mother Info ---
+  motherName       String
+  motherPhone      String?
+  motherOccupation String?
+
+  // --- Address (Nepal structure) ---
+  province     String
+  district     String
+  municipality String
+  wardNo       String
+  tole         String?
+
+  // --- Previous School ---
   previousSchool String?
-  message        String?           @db.Text
-  status         ApplicationStatus @default(pending)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  previousClass  String?
+
+  // --- Contact ---
+  email String
+  phone String
+
+  // --- Meta ---
+  message   String?  @db.Text
+  status    String   @default("pending") // pending | reviewed | accepted | rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("application_forms")
 }
 
+// === Contact Form ===
+
 model ContactForm {
-  id        String        @id @default(cuid())
+  id        String   @id @default(cuid())
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
   name      String
   email     String
   phone     String
   subject   String
-  message   String        @db.Text
-  status    ContactStatus @default(unread)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  message   String   @db.Text
+  status    String   @default("unread") // unread | read | replied
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("contact_forms")
 }
 
+// === Event ===
+
 model Event {
-  id          String        @id @default(cuid())
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
   title       String
   date        String
-  category    EventCategory
-  image       String
-  description String        @db.Text
-  highlights  String[]
-  photos      String[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  category    String   @default("Other")
+  image       String?
+  description String?  @db.Text
+  highlights  String[] @default([])
+  photos      String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("events")
 }
 
+// === Gallery Image ===
+
 model GalleryImage {
-  id        String          @id @default(cuid())
+  id        String   @id @default(cuid())
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
   imageUrl  String
-  caption   String
-  category  GalleryCategory
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  caption   String?
+  category  String   @default("Other")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("gallery_images")
 }
 
+// === Notice ===
+
 model Notice {
-  id          String         @id @default(cuid())
+  id          String   @id @default(cuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
   title       String
   date        String
-  category    NoticeCategory
-  description String         @db.Text
-  priority    NoticePriority @default(normal)
+  category    String   @default("General")
+  description String?  @db.Text
+  priority    String   @default("normal")
   attachment  String?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("notices")
 }
 
+// === Popup ===
+
 model Popup {
   id        String   @id @default(cuid())
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
   title     String
-  imageUrl  String
+  imageUrl  String?
   linkUrl   String?
-  startDate DateTime
-  endDate   DateTime
+  startDate DateTime?
+  endDate   DateTime?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("popups")
-}
-
-model Admin {
-  id        String   @id @default(cuid())
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("admins")
-}
-
-model UploadedFile {
-  id        String   @id @default(cuid())
-  data      Bytes
-  mimeType  String
-  fileName  String
-  size      Int
-  createdAt DateTime @default(now())
-
-  @@map("uploaded_files")
-}
-
-enum ApplicationStatus {
-  pending
-  reviewed
-  accepted
-  rejected
-}
-
-enum ContactStatus {
-  unread
-  read
-  replied
-}
-
-enum EventCategory {
-  Academic
-  Sports
-  Cultural
-  Social
-  Other
-}
-
-enum GalleryCategory {
-  Campus
-  Events
-  Sports
-  Cultural
-  Academic
-  Other
-}
-
-enum NoticeCategory {
-  General
-  Academic
-  Exam
-  Event
-  Holiday
-  Fee
-  Important
-}
-
-enum NoticePriority {
-  normal
-  important
-  urgent
 }

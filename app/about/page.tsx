@@ -1,28 +1,17 @@
 import React from 'react';
 import { Target, Eye, Heart, Award, Users, BookOpen } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const About = () => {
-  const managementTeam = [
-    { name: 'Dr. Sarah Johnson', position: 'Principal', qualification: 'Ph.D. in Education' },
-    { name: 'Mr. Robert Davis', position: 'Vice Principal', qualification: 'M.Ed. Mathematics' },
-    { name: 'Ms. Emily Chen', position: 'Academic Director', qualification: 'M.A. Curriculum Design' },
-    { name: 'Dr. Michael Brown', position: 'Dean of Students', qualification: 'Ph.D. Psychology' },
-  ];
-
-  const achievements = [
-    { year: '2023', achievement: 'Best School in Academic Excellence Award' },
-    { year: '2022', achievement: 'National Recognition for Innovation in Teaching' },
-    { year: '2021', achievement: 'Excellence in Extracurricular Activities' },
-    { year: '2020', achievement: 'Outstanding Community Service Award' },
-  ];
-
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <section className="bg-gradient-to-r from-school-primary to-school-primary-dark text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About KOPESS</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">About {config.name}</h1>
+          <p className="text-xl text-school-primary-100 max-w-3xl mx-auto">
             Discover our rich history, unwavering mission, and commitment to educational excellence
             that has shaped generations of successful leaders.
           </p>
@@ -37,45 +26,31 @@ const About = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  Founded in 1999, KOPESS began as a small institution with a big dream –
+                  Founded in {config.foundedYear}, {config.name} began as a small institution with a big dream &ndash;
                   to provide world-class education that nurtures both academic excellence and character development.
                 </p>
                 <p>
-                  Over the past 25 years, we have grown from a humble beginning of 50 students to a
-                  thriving educational community of over 1,200 students. Our journey has been marked by
+                  Over the past {new Date().getFullYear() - config.foundedYear} years, we have grown from a humble beginning to a
+                  thriving educational community of over {config.stats.students} students. Our journey has been marked by
                   continuous innovation, unwavering commitment to quality, and a deep understanding of
-                  each student's unique potential.
+                  each student&apos;s unique potential.
                 </p>
                 <p>
-                  Today, we stand proud as one of the region's leading educational institutions,
+                  Today, we stand proud as one of the region&apos;s leading educational institutions,
                   known for our holistic approach to education that balances rigorous academics with
                   comprehensive personal development programs.
                 </p>
               </div>
             </div>
-            <div className="bg-blue-50 p-8 rounded-lg">
+            <div className="bg-school-primary-50 p-8 rounded-lg">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Key Milestones</h3>
               <div className="space-y-3">
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full mr-3"></div>
-                  <span className="text-gray-700"><strong>1999:</strong> School established with 50 students</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full mr-3"></div>
-                  <span className="text-gray-700"><strong>2005:</strong> First graduation ceremony</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full mr-3"></div>
-                  <span className="text-gray-700"><strong>2010:</strong> New campus expansion</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full mr-3"></div>
-                  <span className="text-gray-700"><strong>2015:</strong> Technology integration program</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full mr-3"></div>
-                  <span className="text-gray-700"><strong>2020:</strong> Digital learning platform launch</span>
-                </div>
+                {config.milestones.map((milestone, index) => (
+                  <div key={index} className="flex items-center">
+                    <div className="w-4 h-4 bg-school-primary rounded-full mr-3"></div>
+                    <span className="text-gray-700"><strong>{milestone.year}:</strong> {milestone.title}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -92,14 +67,11 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 bg-school-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Target className="h-8 w-8 text-school-primary" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
-              <p className="text-gray-600">
-                To provide exceptional education that empowers students to achieve academic excellence,
-                develop strong character, and become responsible global citizens who contribute positively to society.
-              </p>
+              <p className="text-gray-600">{config.mission}</p>
             </div>
 
             <div className="bg-white p-8 rounded-lg shadow-lg text-center">
@@ -107,10 +79,7 @@ const About = () => {
                 <Eye className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
-              <p className="text-gray-600">
-                To be the leading educational institution that inspires lifelong learning, fosters innovation,
-                and prepares students to thrive in an ever-changing world while maintaining strong moral values.
-              </p>
+              <p className="text-gray-600">{config.vision}</p>
             </div>
 
             <div className="bg-white p-8 rounded-lg shadow-lg text-center">
@@ -119,12 +88,9 @@ const About = () => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h3>
               <ul className="text-gray-600 text-left space-y-2">
-                <li>• Excellence in all endeavors</li>
-                <li>• Integrity and honesty</li>
-                <li>• Respect for diversity</li>
-                <li>• Innovation and creativity</li>
-                <li>• Community service</li>
-                <li>• Lifelong learning</li>
+                {config.coreValues.map((value, index) => (
+                  <li key={index}>&bull; {value}</li>
+                ))}
               </ul>
             </div>
           </div>
@@ -140,12 +106,12 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {managementTeam.map((member, index) => (
+            {config.leadership.map((member, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                <div className="h-48 bg-gradient-to-br from-school-primary-light to-school-primary"></div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-blue-600 font-semibold mb-2">{member.position}</p>
+                  <p className="text-school-primary font-semibold mb-2">{member.role}</p>
                   <p className="text-sm text-gray-600">{member.qualification}</p>
                 </div>
               </div>
@@ -159,27 +125,27 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Principal's Message</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Principal&apos;s Message</h2>
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex flex-col lg:flex-row items-start gap-8">
-                <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex-shrink-0"></div>
+                <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
                 <div className="flex-1">
                   <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                    "At KOPESS, we believe that every child has the potential to achieve greatness.
+                    &ldquo;At {config.name}, we believe that every child has the potential to achieve greatness.
                     Our role is to provide the nurturing environment, exceptional resources, and inspiring guidance
-                    that allows each student to discover and develop their unique talents."
+                    that allows each student to discover and develop their unique talents.&rdquo;
                   </blockquote>
                   <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                    "We are committed to fostering not just academic excellence, but also the development of
+                    &ldquo;We are committed to fostering not just academic excellence, but also the development of
                     character, creativity, and critical thinking skills that will serve our students throughout
-                    their lives. Together, we are building tomorrow's leaders today."
+                    their lives. Together, we are building tomorrow&apos;s leaders today.&rdquo;
                   </blockquote>
                   <div className="mt-6">
-                    <p className="font-bold text-gray-900">Dr. Sarah Johnson</p>
-                    <p className="text-blue-600">Principal, KOPESS</p>
-                    <p className="text-sm text-gray-600">Ph.D. in Education, 20+ years of experience</p>
+                    <p className="font-bold text-gray-900">{config.leadership[0]?.name}</p>
+                    <p className="text-school-primary">{config.leadership[0]?.role}, {config.name}</p>
+                    <p className="text-sm text-gray-600">{config.leadership[0]?.qualification}</p>
                   </div>
                 </div>
               </div>
@@ -197,15 +163,15 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {achievements.map((achievement, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-blue-600">
+            {config.achievements.map((achievement, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-school-primary">
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <Award className="h-6 w-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-school-primary-100 rounded-lg flex items-center justify-center mr-4">
+                    <Award className="h-6 w-6 text-school-primary" />
                   </div>
                   <div>
-                    <div className="text-blue-600 font-bold text-lg">{achievement.year}</div>
-                    <div className="text-gray-900 font-semibold">{achievement.achievement}</div>
+                    <div className="text-school-primary font-bold text-lg">{achievement.year}</div>
+                    <div className="text-gray-900 font-semibold">{achievement.title}</div>
                   </div>
                 </div>
               </div>

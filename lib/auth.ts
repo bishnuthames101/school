@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/db';
+import { getSchoolId } from '@/lib/school';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '$2b$10$DMLsg9lWdSG93f2sZUvO4O0Fh80pznQjmkGdFCYsiTJPvSCNQwQnS';
 
 // Convert string secret to Uint8Array for jose
 const getSecretKey = () => new TextEncoder().encode(JWT_SECRET);
@@ -19,18 +19,18 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 }
 
 export async function verifyAdminPassword(password: string): Promise<boolean> {
-  // Fetch admin user from database
-  const admin = await prisma.admin.findUnique({
-    where: { username: 'admin' }
+  const schoolId = await getSchoolId();
+
+  // Find admin for this school
+  const admin = await prisma.admin.findFirst({
+    where: { schoolId },
   });
 
   if (!admin) {
-    // Fallback to env variable for backward compatibility during migration
-    console.warn('[Auth] No admin user in database, falling back to env variable');
-    return bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+    console.warn('[Auth] No admin user found for school');
+    return false;
   }
 
-  // Compare password with database hash
   return bcrypt.compare(password, admin.password);
 }
 
@@ -79,7 +79,15 @@ export async function isAuthenticated(): Promise<boolean> {
   if (!token) return false;
 
   const payload = verifyToken(token);
-  return !!payload;
+  if (!payload) return false;
+
+  // Verify the token's schoolId matches this deployment
+  if (payload.schoolId) {
+    const schoolId = await getSchoolId();
+    if (payload.schoolId !== schoolId) return false;
+  }
+
+  return true;
 }
 
 export async function requireAuth(): Promise<void> {
@@ -90,16 +98,24 @@ export async function requireAuth(): Promise<void> {
 }
 
 export async function getAdminUser() {
-  return prisma.admin.findUnique({
-    where: { username: 'admin' }
+  const schoolId = await getSchoolId();
+  return prisma.admin.findFirst({
+    where: { schoolId },
   });
 }
 
 export async function updateAdminPassword(newPassword: string): Promise<void> {
+  const schoolId = await getSchoolId();
   const hashedPassword = await hashPassword(newPassword);
 
+  const admin = await prisma.admin.findFirst({
+    where: { schoolId },
+  });
+
+  if (!admin) throw new Error('Admin user not found');
+
   await prisma.admin.update({
-    where: { username: 'admin' },
-    data: { password: hashedPassword }
+    where: { id: admin.id },
+    data: { password: hashedPassword },
   });
 }

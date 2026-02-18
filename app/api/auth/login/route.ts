@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminPassword, generateToken } from '@/lib/auth';
+import { getSchoolId } from '@/lib/school';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify admin password
+    // Verify admin password (scoped to this school)
     const isValid = await verifyAdminPassword(password);
 
     if (!isValid) {
@@ -22,8 +23,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate JWT token
-    const token = generateToken({ role: 'admin', loginTime: new Date().toISOString() });
+    // Include schoolId in the JWT payload
+    const schoolId = await getSchoolId();
+    const token = generateToken({
+      role: 'admin',
+      schoolId,
+      loginTime: new Date().toISOString(),
+    });
 
     // Create response with cookie
     const response = NextResponse.json(

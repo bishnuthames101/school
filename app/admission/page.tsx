@@ -2,26 +2,49 @@
 
 import React, { useState } from 'react';
 import { FileText, DollarSign, Calendar, CheckCircle, Send } from 'lucide-react';
+import { grades, provinces, districtsByProvince } from '@/lib/nepal-data';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
+
+const initialFormData = {
+  studentNameEn: '',
+  studentNameNp: '',
+  dobAD: '',
+  dobBS: '',
+  gender: '',
+  nationality: 'Nepali',
+  gradeApplying: '',
+  fatherName: '',
+  fatherPhone: '',
+  fatherOccupation: '',
+  motherName: '',
+  motherPhone: '',
+  motherOccupation: '',
+  province: '',
+  district: '',
+  municipality: '',
+  wardNo: '',
+  tole: '',
+  previousSchool: '',
+  previousClass: '',
+  email: '',
+  phone: '',
+  message: '',
+};
 
 const Admission = () => {
-  const [formData, setFormData] = useState({
-    studentName: '',
-    grade: '',
-    dob: '',
-    parentName: '',
-    email: '',
-    phone: '',
-    address: '',
-    previousSchool: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
   const [submitting, setSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      if (name === 'province') {
+        return { ...prev, province: value, district: '' };
+      }
+      return { ...prev, [name]: value };
     });
   };
 
@@ -33,40 +56,30 @@ const Admission = () => {
     try {
       const response = await fetch('/api/applications', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          dobAD: formData.dobAD ? new Date(formData.dobAD).toISOString() : undefined,
+        }),
       });
 
       if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          message: 'Application submitted successfully! We will contact you soon.'
+          message: 'Application submitted successfully! We will contact you soon.',
         });
-        // Clear form
-        setFormData({
-          studentName: '',
-          grade: '',
-          dob: '',
-          parentName: '',
-          email: '',
-          phone: '',
-          address: '',
-          previousSchool: '',
-          message: ''
-        });
+        setFormData(initialFormData);
       } else {
         const error = await response.json();
         setSubmitStatus({
           type: 'error',
-          message: error.error || 'Failed to submit application. Please try again.'
+          message: error.error || 'Failed to submit application. Please try again.',
         });
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus({
         type: 'error',
-        message: 'An error occurred. Please try again later.'
+        message: 'An error occurred. Please try again later.',
       });
     } finally {
       setSubmitting(false);
@@ -81,48 +94,27 @@ const Admission = () => {
     { step: 5, title: 'Enrollment', description: 'Complete enrollment process and pay fees' },
   ];
 
-  const scholarships = [
-    {
-      name: 'Academic Excellence Scholarship',
-      amount: 'Up to 50% tuition',
-      criteria: 'Outstanding academic record and entrance test performance',
-    },
-    {
-      name: 'Need-Based Scholarship',
-      amount: 'Up to 30% tuition',
-      criteria: 'Demonstrated financial need and good academic standing',
-    },
-    {
-      name: 'Talent Scholarship',
-      amount: 'Up to 25% tuition',
-      criteria: 'Exceptional talent in arts, sports, or other special abilities',
-    },
-    {
-      name: 'Sibling Scholarship',
-      amount: '10% tuition',
-      criteria: 'Second child and subsequent children from the same family',
-    },
-  ];
-
   const requiredDocuments = [
     'Completed application form',
     'Previous school transcripts',
     'Birth certificate',
     'Immunization records',
     'Passport-size photographs (2)',
-    'Parent/Guardian ID proof',
+    'Parent/Guardian citizenship copy',
     'Previous school leaving certificate',
     'Medical examination report',
   ];
 
+  const availableDistricts = formData.province ? districtsByProvince[formData.province] || [] : [];
+
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-purple-600 to-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Join Our Community</h1>
           <p className="text-xl text-purple-100 max-w-3xl mx-auto">
-            Begin your child's journey of excellence with us. We're committed to nurturing
+            Begin your child&apos;s journey of excellence with us. We&apos;re committed to nurturing
             young minds and building bright futures through quality education.
           </p>
         </div>
@@ -133,7 +125,7 @@ const Admission = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Admission Process</h2>
-            <p className="text-xl text-gray-600">Simple steps to join KOPESS</p>
+            <p className="text-xl text-gray-600">Simple steps to join our school</p>
           </div>
 
           <div className="relative">
@@ -141,7 +133,7 @@ const Admission = () => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 relative z-10">
               {admissionSteps.map((step, index) => (
                 <div key={index} className="text-center">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
+                  <div className="w-12 h-12 bg-school-primary text-white rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
                     {step.step}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
@@ -159,7 +151,7 @@ const Admission = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <FileText className="h-6 w-6 mr-2 text-blue-600" />
+                <FileText className="h-6 w-6 mr-2 text-school-primary" />
                 Required Documents
               </h2>
               <div className="bg-white rounded-lg shadow p-6">
@@ -181,25 +173,21 @@ const Admission = () => {
               </h2>
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="space-y-4">
-                  <div className="border-l-4 border-blue-600 pl-4">
+                  <div className="border-l-4 border-school-primary pl-4">
                     <h3 className="font-semibold text-gray-900">Application Period</h3>
-                    <p className="text-blue-600">January 1 - March 31, 2024</p>
-                    <p className="text-gray-600 text-sm">For 2024-25 academic year</p>
+                    <p className="text-school-primary">{config.admissionDates.applicationPeriod}</p>
                   </div>
                   <div className="border-l-4 border-green-600 pl-4">
                     <h3 className="font-semibold text-gray-900">Assessment Dates</h3>
-                    <p className="text-green-600">April 5-15, 2024</p>
-                    <p className="text-gray-600 text-sm">Individual appointments scheduled</p>
+                    <p className="text-green-600">{config.admissionDates.assessmentDates}</p>
                   </div>
                   <div className="border-l-4 border-yellow-600 pl-4">
                     <h3 className="font-semibold text-gray-900">Admission Results</h3>
-                    <p className="text-yellow-600">April 25, 2024</p>
-                    <p className="text-gray-600 text-sm">Results announced via email</p>
+                    <p className="text-yellow-600">{config.admissionDates.results}</p>
                   </div>
                   <div className="border-l-4 border-purple-600 pl-4">
                     <h3 className="font-semibold text-gray-900">Enrollment Deadline</h3>
-                    <p className="text-purple-600">May 15, 2024</p>
-                    <p className="text-gray-600 text-sm">Final enrollment and fee payment</p>
+                    <p className="text-purple-600">{config.admissionDates.enrollmentDeadline}</p>
                   </div>
                 </div>
               </div>
@@ -220,14 +208,11 @@ const Admission = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {scholarships.map((scholarship, index) => (
+            {config.scholarships.map((scholarship, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6 border-t-4 border-green-600">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{scholarship.name}</h3>
-                <div className="text-2xl font-bold text-green-600 mb-4">{scholarship.amount}</div>
+                <div className="text-2xl font-bold text-green-600 mb-4">{scholarship.discount}</div>
                 <p className="text-gray-600">{scholarship.criteria}</p>
-                <button className="mt-4 text-blue-600 hover:text-blue-800 font-medium">
-                  Learn More →
-                </button>
               </div>
             ))}
           </div>
@@ -244,172 +229,403 @@ const Admission = () => {
 
           <div className="bg-white rounded-lg shadow-lg p-8">
             {submitStatus && (
-              <div className={`mb-6 p-4 rounded-md ${
-                submitStatus.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-              }`}>
+              <div
+                className={`mb-6 p-4 rounded-md ${
+                  submitStatus.type === 'success'
+                    ? 'bg-green-50 text-green-800 border border-green-200'
+                    : 'bg-red-50 text-red-800 border border-red-200'
+                }`}
+              >
                 {submitStatus.message}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="studentName" className="block text-sm font-medium text-gray-700 mb-2">
-                    Student Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="studentName"
-                    name="studentName"
-                    required
-                    value={formData.studentName}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Section 1: Student Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Student Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="studentNameEn" className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name (English) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="studentNameEn"
+                      name="studentNameEn"
+                      required
+                      value={formData.studentNameEn}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="studentNameNp" className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name (Nepali)
+                    </label>
+                    <input
+                      type="text"
+                      id="studentNameNp"
+                      name="studentNameNp"
+                      value={formData.studentNameNp}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                      placeholder="नाम लेख्नुहोस्"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="dobAD" className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Birth (AD) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="dobAD"
+                      name="dobAD"
+                      required
+                      value={formData.dobAD}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="dobBS" className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Birth (BS)
+                    </label>
+                    <input
+                      type="text"
+                      id="dobBS"
+                      name="dobBS"
+                      value={formData.dobBS}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                      placeholder="e.g. 2065-01-15"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
+                      Gender <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      required
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="gradeApplying" className="block text-sm font-medium text-gray-700 mb-1">
+                      Grade Applying For <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="gradeApplying"
+                      name="gradeApplying"
+                      required
+                      value={formData.gradeApplying}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    >
+                      <option value="">Select Grade</option>
+                      {grades.map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-1">
+                      Nationality <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="nationality"
+                      name="nationality"
+                      required
+                      value={formData.nationality}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="grade" className="block text-sm font-medium text-gray-700 mb-2">
-                    Grade Applying For *
-                  </label>
-                  <select
-                    id="grade"
-                    name="grade"
-                    required
-                    value={formData.grade}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Grade</option>
-                    <option value="kindergarten">Kindergarten</option>
-                    <option value="grade1">Grade 1</option>
-                    <option value="grade2">Grade 2</option>
-                    <option value="grade3">Grade 3</option>
-                    <option value="grade4">Grade 4</option>
-                    <option value="grade5">Grade 5</option>
-                    <option value="grade6">Grade 6</option>
-                    <option value="grade7">Grade 7</option>
-                    <option value="grade8">Grade 8</option>
-                    <option value="grade9">Grade 9</option>
-                    <option value="grade10">Grade 10</option>
-                    <option value="grade11">Grade 11</option>
-                    <option value="grade12">Grade 12</option>
-                  </select>
+              {/* Section 2: Parent/Guardian Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Parent / Guardian Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="fatherName" className="block text-sm font-medium text-gray-700 mb-1">
+                      Father&apos;s Full Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="fatherName"
+                      name="fatherName"
+                      required
+                      value={formData.fatherName}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="fatherPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                      Father&apos;s Phone <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="fatherPhone"
+                      name="fatherPhone"
+                      required
+                      value={formData.fatherPhone}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="fatherOccupation" className="block text-sm font-medium text-gray-700 mb-1">
+                      Father&apos;s Occupation
+                    </label>
+                    <input
+                      type="text"
+                      id="fatherOccupation"
+                      name="fatherOccupation"
+                      value={formData.fatherOccupation}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="motherName" className="block text-sm font-medium text-gray-700 mb-1">
+                      Mother&apos;s Full Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="motherName"
+                      name="motherName"
+                      required
+                      value={formData.motherName}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="motherPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                      Mother&apos;s Phone
+                    </label>
+                    <input
+                      type="tel"
+                      id="motherPhone"
+                      name="motherPhone"
+                      value={formData.motherPhone}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="motherOccupation" className="block text-sm font-medium text-gray-700 mb-1">
+                      Mother&apos;s Occupation
+                    </label>
+                    <input
+                      type="text"
+                      id="motherOccupation"
+                      name="motherOccupation"
+                      value={formData.motherOccupation}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
                 </div>
               </div>
 
+              {/* Section 3: Address */}
               <div>
-                <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-2">
-                  Date of Birth *
-                </label>
-                <input
-                  type="date"
-                  id="dob"
-                  name="dob"
-                  required
-                  value={formData.dob}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="parentName" className="block text-sm font-medium text-gray-700 mb-2">
-                    Parent/Guardian Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="parentName"
-                    name="parentName"
-                    required
-                    value={formData.parentName}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Address</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="province" className="block text-sm font-medium text-gray-700 mb-1">
+                      Province <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="province"
+                      name="province"
+                      required
+                      value={formData.province}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    >
+                      <option value="">Select Province</option>
+                      {provinces.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="district" className="block text-sm font-medium text-gray-700 mb-1">
+                      District <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="district"
+                      name="district"
+                      required
+                      value={formData.district}
+                      onChange={handleInputChange}
+                      disabled={!formData.province}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary disabled:bg-gray-100"
+                    >
+                      <option value="">Select District</option>
+                      {availableDistricts.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="municipality" className="block text-sm font-medium text-gray-700 mb-1">
+                      Municipality / Rural Municipality <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="municipality"
+                      name="municipality"
+                      required
+                      value={formData.municipality}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="wardNo" className="block text-sm font-medium text-gray-700 mb-1">
+                      Ward No. <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="wardNo"
+                      name="wardNo"
+                      required
+                      value={formData.wardNo}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                      placeholder="e.g. 5"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label htmlFor="tole" className="block text-sm font-medium text-gray-700 mb-1">
+                      Tole / Street
+                    </label>
+                    <input
+                      type="text"
+                      id="tole"
+                      name="tole"
+                      value={formData.tole}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+              {/* Section 4: Previous Education */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Previous Education</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="previousSchool" className="block text-sm font-medium text-gray-700 mb-1">
+                      Previous School Name
+                    </label>
+                    <input
+                      type="text"
+                      id="previousSchool"
+                      name="previousSchool"
+                      value={formData.previousSchool}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="previousClass" className="block text-sm font-medium text-gray-700 mb-1">
+                      Last Class Attended
+                    </label>
+                    <input
+                      type="text"
+                      id="previousClass"
+                      name="previousClass"
+                      value={formData.previousClass}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
                 </div>
               </div>
 
+              {/* Section 5: Contact */}
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number *
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Contact Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone (Primary) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    />
+                  </div>
+                </div>
               </div>
 
+              {/* Section 6: Additional */}
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                  Address *
-                </label>
-                <textarea
-                  id="address"
-                  name="address"
-                  required
-                  rows={3}
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter complete address..."
-                ></textarea>
-              </div>
-
-              <div>
-                <label htmlFor="previousSchool" className="block text-sm font-medium text-gray-700 mb-2">
-                  Previous School
-                </label>
-                <input
-                  type="text"
-                  id="previousSchool"
-                  name="previousSchool"
-                  value={formData.previousSchool}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Any additional information you'd like to share..."
-                ></textarea>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Additional Information</h3>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                    Message / Additional Info
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
+                    placeholder="Any additional information you'd like to share..."
+                  ></textarea>
+                </div>
               </div>
 
               <div className="text-center">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-school-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="h-5 w-5 mr-2" />
                   {submitting ? 'Submitting...' : 'Submit Application'}

@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Trophy, Users, Camera, GraduationCap, Music, Palette, BookOpen, Award } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Others = () => {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
@@ -177,7 +180,7 @@ const Others = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Beyond Academics</h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
-            Discover the vibrant community life at KOPESS through our house system,
+            Discover the vibrant community life at {config.name} through our house system,
             clubs, extracurricular activities, and the inspiring achievements of our alumni.
           </p>
         </div>
@@ -234,7 +237,7 @@ const Others = () => {
                 <p className="text-gray-600 mb-4">{club.description}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{club.members} members</span>
-                  <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                  <button className="text-school-primary hover:text-school-primary-dark font-medium text-sm">
                     Join Club →
                   </button>
                 </div>
@@ -277,7 +280,7 @@ const Others = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center justify-center">
-              <Camera className="h-8 w-8 mr-3 text-blue-600" />
+              <Camera className="h-8 w-8 mr-3 text-school-primary" />
               School Gallery
             </h2>
             <p className="text-xl text-gray-600">Capturing moments of learning, growth, and achievement</p>
@@ -307,7 +310,7 @@ const Others = () => {
               </div>
 
               <div className="text-center mt-8">
-                <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200">
                   <Camera className="h-5 w-5 mr-2" />
                   View Full Gallery
                 </button>

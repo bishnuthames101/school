@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -40,7 +43,6 @@ const Contact = () => {
           type: 'success',
           message: 'Thank you for your message! We will get back to you soon.'
         });
-        // Reset form
         setFormData({
           name: '',
           email: '',
@@ -69,47 +71,54 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'Address',
-      details: ['123 Education Street', 'Knowledge City, KC 12345', 'United States'],
-      color: 'text-blue-600',
+      details: config.contact.address.split(', '),
+      color: 'text-school-primary',
+      bgColor: 'bg-school-primary-100',
     },
     {
       icon: Phone,
       title: 'Phone Numbers',
-      details: ['Main Office: +1 (555) 123-4567', 'Admissions: +1 (555) 123-4568', 'Emergency: +1 (555) 123-4569'],
+      details: [
+        `Main Office: ${config.contact.phones.main}`,
+        ...(config.contact.phones.admissions ? [`Admissions: ${config.contact.phones.admissions}`] : []),
+        ...(config.contact.phones.emergency ? [`Emergency: ${config.contact.phones.emergency}`] : []),
+      ],
       color: 'text-green-600',
+      bgColor: 'bg-green-100',
     },
     {
       icon: Mail,
       title: 'Email Addresses',
-      details: ['info@kopess.edu', 'admissions@kopess.edu', 'principal@kopess.edu'],
+      details: [
+        config.contact.emails.info,
+        ...(config.contact.emails.admissions ? [config.contact.emails.admissions] : []),
+        ...(config.contact.emails.principal ? [config.contact.emails.principal] : []),
+      ],
       color: 'text-purple-600',
+      bgColor: 'bg-purple-100',
     },
     {
       icon: Clock,
       title: 'Office Hours',
-      details: ['Monday - Friday: 8:00 AM - 5:00 PM', 'Saturday: 9:00 AM - 2:00 PM', 'Sunday: Closed'],
+      details: [
+        config.contact.officeHours.weekdays,
+        ...(config.contact.officeHours.saturday ? [config.contact.officeHours.saturday] : []),
+        'Sunday: Closed',
+      ],
       color: 'text-yellow-600',
+      bgColor: 'bg-yellow-100',
     },
-  ];
-
-  const departments = [
-    { name: 'Principal\'s Office', phone: '+1 (555) 123-4567', email: 'principal@kopess.edu' },
-    { name: 'Admissions Office', phone: '+1 (555) 123-4568', email: 'admissions@kopess.edu' },
-    { name: 'Academic Office', phone: '+1 (555) 123-4570', email: 'academics@kopess.edu' },
-    { name: 'Student Affairs', phone: '+1 (555) 123-4571', email: 'students@kopess.edu' },
-    { name: 'Finance Department', phone: '+1 (555) 123-4572', email: 'finance@kopess.edu' },
-    { name: 'IT Support', phone: '+1 (555) 123-4573', email: 'support@kopess.edu' },
   ];
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-cyan-600 to-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
           <p className="text-xl text-cyan-100 max-w-3xl mx-auto">
-            We're here to help! Get in touch with us for any questions, concerns, or information
-            about KOPESS. We look forward to hearing from you.
+            We&apos;re here to help! Get in touch with us for any questions, concerns, or information
+            about {config.name}. We look forward to hearing from you.
           </p>
         </div>
       </section>
@@ -125,7 +134,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {contactInfo.map((info, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-200">
-                <div className={`w-16 h-16 ${info.color.replace('text-', 'bg-').replace('-600', '-100')} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <div className={`w-16 h-16 ${info.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}>
                   <info.icon className={`h-8 w-8 ${info.color}`} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{info.title}</h3>
@@ -147,7 +156,7 @@ const Contact = () => {
             {/* Contact Form */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <MessageCircle className="h-6 w-6 mr-2 text-blue-600" />
+                <MessageCircle className="h-6 w-6 mr-2 text-school-primary" />
                 Send us a Message
               </h2>
               <div className="bg-white rounded-lg shadow-lg p-8">
@@ -172,7 +181,7 @@ const Contact = () => {
                         required
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       />
                     </div>
 
@@ -187,7 +196,7 @@ const Contact = () => {
                         required
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       />
                     </div>
                   </div>
@@ -203,7 +212,7 @@ const Contact = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       />
                     </div>
 
@@ -217,7 +226,7 @@ const Contact = () => {
                         required
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       >
                         <option value="">Select Subject</option>
                         <option value="admission">Admission Inquiry</option>
@@ -242,7 +251,7 @@ const Contact = () => {
                       required
                       value={formData.message}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       placeholder="Please provide details about your inquiry..."
                     ></textarea>
                   </div>
@@ -250,7 +259,7 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-school-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="h-5 w-5 mr-2" />
                     {submitting ? 'Sending...' : 'Send Message'}
@@ -265,7 +274,7 @@ const Contact = () => {
 
               <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.471852291576!2d85.34655857525254!3d27.671807676202977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19f0a50c9419%3A0xb91aba5ece08fc44!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1770864556743!5m2!1sen!2snp"
+                  src={config.contact.googleMapsEmbedUrl}
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
@@ -308,8 +317,8 @@ const Contact = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {departments.map((dept, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow border-l-4 border-blue-600 hover:shadow-lg transition-shadow duration-200">
+            {config.departments.map((dept, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow border-l-4 border-school-primary hover:shadow-lg transition-shadow duration-200">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">{dept.name}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center text-sm">
@@ -343,7 +352,7 @@ const Contact = () => {
 
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="font-bold text-gray-900 mb-2">How can I schedule a school tour?</h3>
-              <p className="text-gray-600">You can schedule a tour by calling our admissions office at +1 (555) 123-4568 or using our online contact form.</p>
+              <p className="text-gray-600">You can schedule a tour by calling our admissions office at {config.contact.phones.admissions || config.contact.phones.main} or using our online contact form.</p>
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">

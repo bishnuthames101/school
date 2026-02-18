@@ -3,16 +3,13 @@ import { PrismaClient } from '@prisma/client';
 // Export Prisma types
 export type {
   Event,
-  EventCategory,
   Notice,
-  NoticeCategory,
-  NoticePriority,
   GalleryImage,
-  GalleryCategory,
   ApplicationForm,
-  ApplicationStatus,
   ContactForm,
-  ContactStatus,
+  School,
+  Admin,
+  Popup,
 } from '@prisma/client';
 
 // Global type for Prisma Client

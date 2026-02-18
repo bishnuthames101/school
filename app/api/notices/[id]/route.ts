@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { scopedPrisma } from '@/lib/db-scoped';
+import { deleteFile } from '@/lib/storage';
 
 // GET single notice
 export async function GET(
@@ -8,7 +9,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const notice = await prisma.notice.findUnique({
+    const db = await scopedPrisma();
+    const notice = await db.notice.findUnique({
       where: { id: params.id },
     });
 
@@ -43,8 +45,9 @@ export async function PUT(
       );
     }
 
+    const db = await scopedPrisma();
     const body = await request.json();
-    const notice = await prisma.notice.update({
+    const notice = await db.notice.update({
       where: { id: params.id },
       data: body,
     });
@@ -81,7 +84,15 @@ export async function DELETE(
       );
     }
 
-    const notice = await prisma.notice.delete({
+    const db = await scopedPrisma();
+
+    // Get notice to clean up attachment
+    const existing = await db.notice.findUnique({ where: { id: params.id } });
+    if (existing?.attachment) {
+      await deleteFile(existing.attachment);
+    }
+
+    const notice = await db.notice.delete({
       where: { id: params.id },
     });
 

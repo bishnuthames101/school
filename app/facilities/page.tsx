@@ -13,6 +13,9 @@ import {
   Palette,
   Users
 } from 'lucide-react';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Facilities = () => {
   const facilities = [
@@ -22,7 +25,7 @@ const Facilities = () => {
       icon: BookOpen,
       features: ['50,000+ books', 'Digital catalog system', 'Study rooms', 'Research assistance'],
       image: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=600',
-      color: 'text-blue-600',
+      color: 'text-school-primary',
       bgColor: 'bg-blue-100',
     },
     {
@@ -129,7 +132,7 @@ const Facilities = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">World-Class Facilities</h1>
           <p className="text-xl text-violet-100 max-w-3xl mx-auto">
-            KOPESS provides state-of-the-art facilities designed to enhance learning,
+            {config.name} provides state-of-the-art facilities designed to enhance learning,
             promote creativity, and ensure the safety and well-being of our students.
           </p>
         </div>
@@ -157,7 +160,7 @@ const Facilities = () => {
                   <div className="grid grid-cols-2 gap-3">
                     {facility.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                        <div className="w-2 h-2 bg-school-primary rounded-full mr-3"></div>
                         <span className="text-gray-700 text-sm">{feature}</span>
                       </div>
                     ))}
@@ -190,14 +193,14 @@ const Facilities = () => {
             {additionalFacilities.map((facility, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
                 <div className="flex items-center mb-4">
-                  <facility.icon className="h-8 w-8 text-blue-600 mr-3" />
+                  <facility.icon className="h-8 w-8 text-school-primary mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">{facility.name}</h3>
                 </div>
                 <p className="text-gray-600 mb-4">{facility.description}</p>
                 <ul className="space-y-2">
                   {facility.details.map((detail, detailIndex) => (
                     <li key={detailIndex} className="flex items-center text-sm text-gray-700">
-                      <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
+                      <div className="w-1.5 h-1.5 bg-school-primary rounded-full mr-2"></div>
                       {detail}
                     </li>
                   ))}
@@ -235,29 +238,29 @@ const Facilities = () => {
       </section>
 
       {/* Facility Stats */}
-      <section className="py-16 bg-blue-600">
+      <section className="py-16 bg-school-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Facility Highlights</h2>
-            <p className="text-xl text-blue-100">Numbers that showcase our commitment to excellence</p>
+            <p className="text-xl text-school-primary-100">Numbers that showcase our commitment to excellence</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-4xl font-bold text-white mb-2">50,000+</div>
-              <div className="text-blue-100">Books in Library</div>
+              <div className="text-school-primary-100">Books in Library</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-white mb-2">15</div>
-              <div className="text-blue-100">Science Labs</div>
+              <div className="text-school-primary-100">Science Labs</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-white mb-2">100+</div>
-              <div className="text-blue-100">Computers</div>
+              <div className="text-school-primary-100">Computers</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-white mb-2">24/7</div>
-              <div className="text-blue-100">Security</div>
+              <div className="text-school-primary-100">Security</div>
             </div>
           </div>
         </div>
@@ -269,14 +272,14 @@ const Facilities = () => {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Experience Our Campus</h2>
           <p className="text-xl text-gray-600 mb-8">
             See our world-class facilities in person. Schedule a campus tour or take our virtual tour
-            to explore everything KOPESS has to offer.
+            to explore everything {config.name} has to offer.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+            <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200">
               <Users className="h-5 w-5 mr-2" />
               Schedule Campus Tour
             </button>
-            <button className="inline-flex items-center px-8 py-3 border-2 border-blue-600 text-base font-medium rounded-md text-blue-600 hover:bg-blue-50 transition-colors duration-200">
+            <button className="inline-flex items-center px-8 py-3 border-2 border-school-primary text-base font-medium rounded-md text-school-primary hover:bg-school-primary-50 transition-colors duration-200">
               <Monitor className="h-5 w-5 mr-2" />
               Take Virtual Tour
             </button>

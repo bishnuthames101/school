@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
-import { saveUploadedFile, deleteUploadedFile } from '@/lib/fileUpload';
+import { scopedPrisma } from '@/lib/db-scoped';
+import { getSchoolSlug } from '@/lib/school';
+import { uploadImage, deleteFile } from '@/lib/storage';
 
 // GET all events with pagination and filtering
 export async function GET(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
@@ -27,14 +29,11 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get total count for pagination metadata with filters applied
-    const total = await prisma.event.count({ where });
+    const total = await db.event.count({ where });
 
-    const events = await prisma.event.findMany({
+    const events = await db.event.findMany({
       where,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     });
@@ -61,7 +60,6 @@ export async function GET(request: NextRequest) {
 // POST new event (requires auth)
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
     const authenticated = await isAuthenticated();
     if (!authenticated) {
       return NextResponse.json(
@@ -70,6 +68,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
+    const schoolSlug = getSchoolSlug();
     const formData = await request.formData();
     const file = formData.get('image') as File;
     const title = formData.get('title') as string;
@@ -91,23 +91,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the uploaded file
-    const uploadResult = await saveUploadedFile(file, 'uploads/events');
+    // Upload to Supabase Storage
+    const imageUrl = await uploadImage(schoolSlug, 'events', file, file.name);
 
-    if (!uploadResult.success) {
-      return NextResponse.json(
-        { success: false, error: uploadResult.error || 'Failed to upload file' },
-        { status: 400 }
-      );
-    }
-
-    // Create database record
-    const event = await prisma.event.create({
+    const event = await db.event.create({
       data: {
         title,
         date,
-        category: category as any,
-        image: uploadResult.filePath!,
+        category,
+        image: imageUrl,
         description,
       },
     });
@@ -133,6 +125,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
+    const schoolSlug = getSchoolSlug();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -162,30 +156,20 @@ export async function PUT(request: NextRequest) {
 
     // If new file is uploaded, save it and delete old one
     if (file) {
-      const uploadResult = await saveUploadedFile(file, 'uploads/events');
+      imageUrl = await uploadImage(schoolSlug, 'events', file, file.name);
 
-      if (!uploadResult.success) {
-        return NextResponse.json(
-          { success: false, error: uploadResult.error || 'Failed to upload file' },
-          { status: 400 }
-        );
-      }
-
-      imageUrl = uploadResult.filePath!;
-
-      // Delete old image if it exists
+      // Delete old image from storage
       if (existingImage) {
-        await deleteUploadedFile(existingImage);
+        await deleteFile(existingImage);
       }
     }
 
-    // Update database record
-    const event = await prisma.event.update({
+    const event = await db.event.update({
       where: { id },
       data: {
         title,
         date,
-        category: category as any,
+        category,
         image: imageUrl!,
         description,
       },
@@ -212,6 +196,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -223,19 +208,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get the event to delete the file
-    const event = await prisma.event.findUnique({
-      where: { id },
-    });
+    const event = await db.event.findUnique({ where: { id } });
 
-    if (event) {
-      // Delete the physical file
-      await deleteUploadedFile(event.image);
+    if (event?.image) {
+      await deleteFile(event.image);
     }
 
-    // Delete from database
-    await prisma.event.delete({
-      where: { id },
-    });
+    await db.event.delete({ where: { id } });
 
     return NextResponse.json({ success: true, message: 'Event deleted successfully' });
   } catch (error: any) {

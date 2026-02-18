@@ -1,18 +1,18 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from '@/lib/auth';
+import { scopedPrisma } from '@/lib/db-scoped';
 
 // GET - Fetch popups (use ?all=true for admin to get all popups)
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
+    const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const all = searchParams.get('all');
 
     if (all === 'true') {
       // Admin: return all popups
-      const popups = await prisma.popup.findMany({
-        orderBy: {
-          createdAt: 'desc',
-        },
+      const popups = await db.popup.findMany({
+        orderBy: { createdAt: 'desc' },
       });
       return NextResponse.json(popups);
     }
@@ -20,19 +20,13 @@ export async function GET(request: Request) {
     // Public: return only active popups within date range
     const now = new Date();
 
-    const popups = await prisma.popup.findMany({
+    const popups = await db.popup.findMany({
       where: {
         isActive: true,
-        startDate: {
-          lte: now,
-        },
-        endDate: {
-          gte: now,
-        },
+        startDate: { lte: now },
+        endDate: { gte: now },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
     });
 
     return NextResponse.json(popups);
@@ -42,13 +36,19 @@ export async function GET(request: Request) {
   }
 }
 
-// POST - Create new popup
-export async function POST(request: Request) {
+// POST - Create new popup (requires auth)
+export async function POST(request: NextRequest) {
   try {
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const db = await scopedPrisma();
     const body = await request.json();
     const { title, imageUrl, linkUrl, startDate, endDate, isActive } = body;
 
-    const popup = await prisma.popup.create({
+    const popup = await db.popup.create({
       data: {
         title,
         imageUrl,

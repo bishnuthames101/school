@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { scopedPrisma } from '@/lib/db-scoped';
+import { deleteFile } from '@/lib/storage';
 
 // GET single gallery image
 export async function GET(
@@ -8,7 +9,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const image = await prisma.galleryImage.findUnique({
+    const db = await scopedPrisma();
+    const image = await db.galleryImage.findUnique({
       where: { id: params.id },
     });
 
@@ -43,8 +45,9 @@ export async function PUT(
       );
     }
 
+    const db = await scopedPrisma();
     const body = await request.json();
-    const image = await prisma.galleryImage.update({
+    const image = await db.galleryImage.update({
       where: { id: params.id },
       data: body,
     });
@@ -81,7 +84,15 @@ export async function DELETE(
       );
     }
 
-    const image = await prisma.galleryImage.delete({
+    const db = await scopedPrisma();
+
+    // Get image to clean up storage
+    const existing = await db.galleryImage.findUnique({ where: { id: params.id } });
+    if (existing?.imageUrl) {
+      await deleteFile(existing.imageUrl);
+    }
+
+    const image = await db.galleryImage.delete({
       where: { id: params.id },
     });
 
