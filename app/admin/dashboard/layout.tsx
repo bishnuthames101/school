@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 import {
   LayoutDashboard,
   Calendar,
@@ -139,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <GraduationCap className="h-4 w-4 text-white" />
           </div>
-          <span className="font-semibold text-gray-900">KOPESS</span>
+          <span className="font-semibold text-gray-900">{config.name}</span>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -171,7 +174,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <GraduationCap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-sm font-bold leading-tight">KOPESS</h1>
+                <h1 className="text-sm font-bold leading-tight">{config.name}</h1>
                 <p className="text-[11px] text-gray-400">Admin Panel</p>
               </div>
             </div>

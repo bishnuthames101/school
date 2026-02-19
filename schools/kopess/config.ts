@@ -15,7 +15,7 @@ const config: SchoolConfig = {
     type: "video",
     videoSrc: "/school-assets/hero-video.mp4",
     videoWebmSrc: "/school-assets/hero-video.webm",
-    fallbackImage: "/school-assets/juniors1.jpg",
+    fallbackImage: "/school-assets/kopess logo.jpg",
     headline: "KOPESS",
     subheadline:
       "Nurturing young minds, building bright futures, and creating tomorrow's leaders through innovative education and holistic development.",
@@ -33,173 +33,177 @@ const config: SchoolConfig = {
 
   // === CONTACT INFO ===
   contact: {
-    address: "123 Education Street, Knowledge City, KC 12345",
+    address: "Kotdevi, Kirtipur-5, Kathmandu, Nepal", // TODO: confirm exact address with school
     phones: {
       main: "+977 (01) 5202000",
-      admissions: "+1 (555) 123-4568",
-      emergency: "+1 (555) 123-4569",
+      admissions: "+977 (01) 5202001", // TODO: confirm with school
+      emergency: "+977 (01) 5202002",  // TODO: confirm with school
     },
     emails: {
-      info: "info@kopess.edu",
-      admissions: "admissions@kopess.edu",
-      principal: "principal@kopess.edu",
+      info: "info@kopess.edu.np",
+      admissions: "admissions@kopess.edu.np",
+      principal: "principal@kopess.edu.np",
     },
     officeHours: {
-      weekdays: "Mon-Fri: 8:00 AM - 5:00 PM",
-      saturday: "Saturday: 9:00 AM - 2:00 PM",
+      weekdays: "Sunday - Friday: 10:00 AM - 4:00 PM",
+      saturday: "Saturday: Closed",
     },
     googleMapsEmbedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8464774651875!2d85.29512287546706!3d27.693538676191747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19b19295555f%3A0xabfe5f7a860c4297!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1736765372498!5m2!1sen!2snp",
   },
 
   // === DEPARTMENTS (Contact Page) ===
+  // TODO: Confirm real department phone numbers with school
   departments: [
     {
       name: "Principal's Office",
-      phone: "+1 (555) 123-4567",
-      email: "principal@kopess.edu",
+      phone: "+977 (01) 5202000",
+      email: "principal@kopess.edu.np",
     },
     {
       name: "Admissions Office",
-      phone: "+1 (555) 123-4568",
-      email: "admissions@kopess.edu",
+      phone: "+977 (01) 5202001",
+      email: "admissions@kopess.edu.np",
     },
     {
       name: "Academic Office",
-      phone: "+1 (555) 123-4570",
-      email: "academics@kopess.edu",
+      phone: "+977 (01) 5202002",
+      email: "academics@kopess.edu.np",
     },
     {
       name: "Student Affairs",
-      phone: "+1 (555) 123-4571",
-      email: "students@kopess.edu",
+      phone: "+977 (01) 5202003",
+      email: "students@kopess.edu.np",
     },
     {
       name: "Finance Department",
-      phone: "+1 (555) 123-4572",
-      email: "finance@kopess.edu",
+      phone: "+977 (01) 5202004",
+      email: "finance@kopess.edu.np",
     },
     {
       name: "IT Support",
-      phone: "+1 (555) 123-4573",
-      email: "support@kopess.edu",
+      phone: "+977 (01) 5202005",
+      email: "support@kopess.edu.np",
     },
   ],
 
   // === LEADERSHIP TEAM (About Page) ===
+  // TODO: Update with real names, roles and qualifications from school
   leadership: [
     {
-      name: "Dr. Sarah Johnson",
+      name: "To be updated",
       role: "Principal",
-      qualification: "Ph.D. in Education",
+      qualification: "M.Ed.",
     },
     {
-      name: "Mr. Robert Davis",
+      name: "To be updated",
       role: "Vice Principal",
-      qualification: "M.Ed. Mathematics",
+      qualification: "M.Ed.",
     },
     {
-      name: "Ms. Emily Chen",
-      role: "Academic Director",
-      qualification: "M.A. Curriculum Design",
+      name: "To be updated",
+      role: "Academic Coordinator",
+      qualification: "M.A.",
     },
     {
-      name: "Dr. Michael Brown",
-      role: "Dean of Students",
-      qualification: "Ph.D. Psychology",
+      name: "To be updated",
+      role: "Head of Administration",
+      qualification: "MBA",
     },
   ],
 
   // === MILESTONES (About Page) ===
   milestones: [
-    { year: "1999", title: "School established with 50 students" },
-    { year: "2005", title: "First graduation ceremony" },
-    { year: "2010", title: "New campus expansion" },
-    { year: "2015", title: "Technology integration program" },
-    { year: "2020", title: "Digital learning platform launch" },
+    { year: "1999", title: "School established in Kotdevi, Kirtipur" },
+    { year: "2005", title: "First SEE batch graduated" },
+    { year: "2010", title: "New academic block inaugurated" },
+    { year: "2015", title: "Computer lab and science lab upgraded" },
+    { year: "2020", title: "Online learning program launched" },
+    { year: "2024", title: "25 years of excellence celebrated" },
   ],
 
   // === ACHIEVEMENTS (About Page) ===
   achievements: [
-    { year: "2023", title: "Best School in Academic Excellence Award" },
-    {
-      year: "2022",
-      title: "National Recognition for Innovation in Teaching",
-    },
-    { year: "2021", title: "Excellence in Extracurricular Activities" },
-    { year: "2020", title: "Outstanding Community Service Award" },
+    { year: "2080", title: "Best School in Academic Excellence — District Level" },
+    { year: "2079", title: "Outstanding SEE Results — Multiple A+ students" },
+    { year: "2078", title: "Excellence in Extracurricular Activities Award" },
+    { year: "2077", title: "Community Service Recognition Award" },
   ],
 
   // === MISSION & VISION ===
   mission:
-    "To provide a nurturing environment that promotes academic excellence, character development, and lifelong learning, preparing students to become responsible global citizens.",
+    "To provide a nurturing environment that promotes academic excellence, character development, and lifelong learning, preparing students to become responsible and contributing citizens of Nepal.",
   vision:
-    "To be a leading institution that inspires innovation, fosters creativity, and builds future leaders who contribute positively to society.",
+    "To be a leading institution in Nepal that inspires innovation, fosters creativity, and builds future leaders who contribute positively to society.",
   coreValues: [
     "Excellence",
     "Integrity",
-    "Respect for diversity",
+    "Respect",
     "Innovation",
-    "Community service",
-    "Lifelong learning",
+    "Community Service",
+    "Lifelong Learning",
   ],
 
-  // === ACADEMICS ===
+  // === ACADEMICS (Nepal NCF — National Curriculum Framework) ===
   academics: {
     programs: [
       {
-        level: "Elementary (K-5)",
-        grades: "Kindergarten - Grade 5",
+        level: "Primary (Grade 1-5)",
+        grades: "Grade 1 - Grade 5",
         subjects: [
-          "English Language Arts",
+          "English",
+          "Nepali",
           "Mathematics",
           "Science",
           "Social Studies",
-          "Arts & Music",
-          "Physical Education",
+          "Health & Physical Education",
+          "Arts & Craft",
         ],
       },
       {
-        level: "Middle School (6-8)",
+        level: "Lower Secondary (Grade 6-8)",
         grades: "Grade 6 - Grade 8",
         subjects: [
-          "Advanced English",
-          "Pre-Algebra & Algebra",
-          "Life & Physical Science",
-          "World History",
-          "Foreign Languages",
+          "English",
+          "Nepali",
+          "Mathematics",
+          "Science",
+          "Social Studies",
           "Computer Science",
-          "Health & Wellness",
+          "Health & Physical Education",
+          "Optional Mathematics",
         ],
       },
       {
-        level: "High School (9-12)",
-        grades: "Grade 9 - Grade 12",
+        level: "Secondary (Grade 9-10 — SEE)",
+        grades: "Grade 9 - Grade 10",
         subjects: [
-          "AP English Literature",
-          "Calculus & Statistics",
-          "Biology, Chemistry, Physics",
-          "US & World History",
-          "Computer Programming",
-          "Fine Arts",
-          "Economics",
+          "Compulsory English",
+          "Compulsory Nepali",
+          "Compulsory Mathematics",
+          "Compulsory Science",
+          "Compulsory Social Studies",
+          "Optional I (Opt. Maths / Account)",
+          "Optional II (Computer / EPH)",
         ],
       },
     ],
+    // Nepal NEB grading scale
     gradingScale: [
-      { grade: "A", range: "90-100%", gpa: "4.0" },
-      { grade: "B", range: "80-89%", gpa: "3.0" },
-      { grade: "C", range: "70-79%", gpa: "2.0" },
-      { grade: "D", range: "60-69%", gpa: "1.0" },
-      { grade: "F", range: "Below 60%", gpa: "0.0" },
+      { grade: "A+", range: "90-100%", gpa: "4.0" },
+      { grade: "A",  range: "80-89%",  gpa: "3.6" },
+      { grade: "B+", range: "70-79%",  gpa: "3.2" },
+      { grade: "B",  range: "60-69%",  gpa: "2.8" },
+      { grade: "C+", range: "50-59%",  gpa: "2.4" },
+      { grade: "C",  range: "40-49%",  gpa: "2.0" },
+      { grade: "D",  range: "Below 40%", gpa: "0.0" },
     ],
-    assessmentWeights:
-      "Continuous Assessment (30%), Mid-term (30%), Final (40%), Project Work, Practical",
+    assessmentWeights: "Continuous Assessment (40%), Terminal Examination (60%)",
     calendarSlides: 6, // 6 scanned calendar images in assets/calendar/
     features: [
-      { title: "Small Class Sizes", detail: "15:1 student-teacher ratio" },
-      { title: "AP Courses", detail: "15+ Advanced Placement courses" },
-      { title: "Extended Learning", detail: "After-school programs available" },
+      { title: "Small Class Sizes", detail: "25:1 student-teacher ratio" },
+      { title: "Practical Labs", detail: "Science & Computer labs" },
+      { title: "SEE Preparation", detail: "Dedicated SEE coaching & revision" },
     ],
   },
 
@@ -207,73 +211,73 @@ const config: SchoolConfig = {
   facilities: {
     main: [
       {
-        name: "Modern Library",
+        name: "Library",
         description:
-          "Our state-of-the-art library houses over 50,000 books and digital resources.",
+          "Our library houses books, reference materials and digital learning resources for all grade levels.",
         icon: "BookOpen",
         highlights: [
-          "50,000+ books",
-          "Digital catalog",
+          "10,000+ books",
+          "Reference materials",
           "Study rooms",
-          "Research assistance",
+          "Nepali & English titles",
         ],
       },
       {
-        name: "Science Laboratories",
+        name: "Science Laboratory",
         description:
-          "Fully equipped labs for physics, chemistry, and biology experiments.",
+          "Fully equipped lab for physics, chemistry, and biology practical experiments.",
         icon: "FlaskConical",
         highlights: [
-          "Advanced equipment",
+          "Modern equipment",
           "Safety protocols",
-          "Interactive experiments",
-          "Research projects",
+          "Practical experiments",
+          "SEE practical preparation",
         ],
       },
       {
-        name: "Computer Labs",
+        name: "Computer Lab",
         description:
-          "Modern computer facilities with the latest hardware and software.",
+          "Modern computer facilities with internet access for digital literacy programs.",
         icon: "Monitor",
         highlights: [
-          "Latest computers",
+          "50+ computers",
           "High-speed internet",
-          "Programming software",
-          "Multimedia tools",
+          "Microsoft Office",
+          "Typing & programming",
         ],
       },
       {
-        name: "Sports Complex",
+        name: "Sports Ground",
         description:
-          "Complete sports facilities for physical education and athletics.",
+          "Open sports ground for football, cricket, volleyball and athletics.",
         icon: "Trophy",
         highlights: [
-          "Basketball court",
-          "Swimming pool",
           "Football field",
-          "Gymnasium",
+          "Cricket pitch",
+          "Volleyball court",
+          "Badminton court",
         ],
       },
       {
-        name: "Cafeteria",
-        description: "Healthy and nutritious meals prepared daily.",
+        name: "Canteen",
+        description: "Clean canteen providing healthy and affordable snacks and meals.",
         icon: "UtensilsCrossed",
         highlights: [
-          "Healthy menu",
-          "Dietary options",
-          "Clean environment",
+          "Hygienic preparation",
           "Affordable prices",
+          "Nutritious options",
+          "Clean environment",
         ],
       },
       {
-        name: "Art Studios",
-        description: "Creative spaces for visual arts and crafts.",
-        icon: "Palette",
+        name: "Multipurpose Hall",
+        description: "Hall for assemblies, cultural programs, examinations and events.",
+        icon: "Theater",
         highlights: [
-          "Art supplies",
-          "Natural lighting",
-          "Exhibition space",
-          "Pottery wheel",
+          "Seating capacity",
+          "Stage & sound system",
+          "Assembly ground",
+          "Cultural events",
         ],
       },
     ],
@@ -282,10 +286,10 @@ const config: SchoolConfig = {
         name: "Transportation",
         icon: "Bus",
         highlights: [
-          "GPS tracking",
+          "School bus routes",
           "Trained drivers",
           "Multiple routes",
-          "Safety protocols",
+          "Safe & reliable",
         ],
       },
       {
@@ -293,44 +297,29 @@ const config: SchoolConfig = {
         icon: "Shield",
         highlights: [
           "CCTV surveillance",
-          "Access control",
-          "Security guards",
+          "Gated campus",
+          "Security personnel",
           "Emergency protocols",
         ],
       },
       {
-        name: "Wi-Fi Campus",
-        icon: "Wifi",
-        highlights: [
-          "Campus-wide coverage",
-          "High-speed connection",
-          "Student access",
-          "Educational content",
-        ],
-      },
-      {
-        name: "Health Center",
+        name: "Health Room",
         icon: "Heart",
         highlights: [
-          "Qualified nurse",
-          "First aid",
+          "First aid facility",
           "Health monitoring",
-          "Emergency care",
+          "Emergency response",
+          "Staff trained in first aid",
         ],
       },
       {
-        name: "Music Room",
+        name: "Music & Arts Room",
         icon: "Music",
-        highlights: ["Piano", "Guitars", "Drums", "Sound system"],
-      },
-      {
-        name: "Auditorium",
-        icon: "Theater",
         highlights: [
-          "500 seating capacity",
-          "Sound system",
-          "Stage lighting",
-          "Air conditioning",
+          "Musical instruments",
+          "Art supplies",
+          "Cultural activities",
+          "Talent development",
         ],
       },
     ],
@@ -338,16 +327,15 @@ const config: SchoolConfig = {
       "Fire safety systems",
       "Emergency evacuation procedures",
       "First aid stations",
-      "24/7 Security personnel",
       "CCTV monitoring",
-      "Secure entry/exit points",
+      "Gated entry/exit",
       "Emergency communication systems",
-      "Regular safety inspections",
+      "Regular safety drills",
     ],
     stats: {
-      books: "50,000+",
-      labs: "15",
-      computers: "100+",
+      books: "10,000+",
+      labs: "5",
+      computers: "50+",
       security: "24/7",
     },
   },
@@ -355,117 +343,103 @@ const config: SchoolConfig = {
   // === BEYOND ACADEMICS (Others Page) ===
   houses: [
     {
-      name: "Phoenix House",
-      color: "Red",
-      motto: "Rise with Courage",
-      achievements: [
-        "Sports Championship 2023",
-        "Academic Excellence Award",
-      ],
+      name: "Sagarmatha House",
+      color: "Blue",
+      motto: "Reach for the Summit",
+      achievements: ["Sports Championship 2080", "Academic Excellence Award"],
     },
     {
-      name: "Eagle House",
-      color: "Blue",
-      motto: "Soar to Heights",
+      name: "Lumbini House",
+      color: "Green",
+      motto: "Peace and Wisdom",
       achievements: ["Cultural Fest Winner", "Community Service Award"],
     },
     {
-      name: "Lion House",
-      color: "Gold",
-      motto: "Lead with Pride",
+      name: "Pashupatinath House",
+      color: "Red",
+      motto: "Strength and Devotion",
       achievements: ["Debate Championship", "Leadership Excellence"],
     },
     {
-      name: "Tiger House",
-      color: "Green",
-      motto: "Strength in Unity",
-      achievements: ["Environmental Club Award", "Science Olympiad"],
+      name: "Janakpur House",
+      color: "Gold",
+      motto: "Heritage and Pride",
+      achievements: ["Environmental Award", "Science Olympiad"],
     },
   ],
 
   clubs: [
-    { name: "Drama Club", members: 45 },
-    { name: "Art & Craft Club", members: 38 },
-    { name: "Science Club", members: 52 },
-    { name: "Sports Club", members: 68 },
-    { name: "Music Club", members: 41 },
-    { name: "Debate Society", members: 29 },
+    { name: "Drama Club", members: 35 },
+    { name: "Science Club", members: 42 },
+    { name: "Debate Society", members: 28 },
+    { name: "Sports Club", members: 60 },
+    { name: "Music Club", members: 30 },
+    { name: "Environment Club", members: 25 },
   ],
 
   extracurriculars: {
     sports: [
-      "Basketball",
-      "Soccer",
-      "Swimming",
-      "Tennis",
-      "Track & Field",
+      "Football",
+      "Cricket",
       "Volleyball",
+      "Basketball",
+      "Badminton",
+      "Athletics",
     ],
     arts: [
       "Painting",
+      "Classical Dance",
       "Music",
-      "Dance",
-      "Photography",
-      "Sculpture",
       "Drama",
+      "Photography",
+      "Handicrafts",
     ],
     academic: [
       "Math Olympiad",
       "Science Fair",
-      "Spelling Bee",
-      "Quiz Bowl",
-      "Model UN",
-      "Robotics",
+      "Essay Writing",
+      "Quiz Competition",
+      "Spelling Contest",
+      "Debate",
     ],
     community: [
-      "Environmental Club",
-      "Volunteer Service",
+      "Environment Club",
+      "Social Service",
       "Student Council",
       "Peer Tutoring",
-      "Charity Drives",
+      "Community Clean-up",
     ],
   },
 
+  // TODO: Update with real KOPESS alumni and their verified achievements
   alumni: [
     {
-      name: "Dr. Sarah Mitchell",
+      name: "To be updated",
       classOf: "2010",
-      achievement: "Pediatric Surgeon at Harvard Medical",
-      role: "Pediatric Surgeon",
+      achievement: "Notable alumni — details to be confirmed",
+      role: "Professional",
     },
     {
-      name: "James Rodriguez",
+      name: "To be updated",
       classOf: "2015",
-      achievement: "Tech Entrepreneur, Forbes 30 Under 30",
-      role: "Tech Entrepreneur",
-    },
-    {
-      name: "Maria Chen",
-      classOf: "2012",
-      achievement: "Environmental Scientist at NASA",
-      role: "Environmental Scientist",
-    },
-    {
-      name: "David Thompson",
-      classOf: "2008",
-      achievement: "Olympic Swimmer, 2x medalist",
-      role: "Olympic Swimmer",
+      achievement: "Notable alumni — details to be confirmed",
+      role: "Professional",
     },
   ],
 
-  // === ADMISSION ===
+  // === ADMISSION (Nepal BS Calendar) ===
   admissionDates: {
-    applicationPeriod: "January 1 - March 31, 2024",
-    assessmentDates: "April 5-15, 2024",
-    results: "April 25, 2024",
-    enrollmentDeadline: "May 15, 2024",
+    applicationPeriod: "Poush - Falgun 2081 (Dec 2024 - Feb 2025)",
+    assessmentDates: "Chaitra 2081 (March 2025)",
+    results: "Chaitra 30, 2081",
+    enrollmentDeadline: "Baishakh 15, 2082",
   },
 
   scholarships: [
     {
       name: "Academic Excellence",
       discount: "Up to 50% tuition",
-      criteria: "Outstanding academic performance",
+      criteria: "Outstanding academic performance in previous class",
     },
     {
       name: "Need-Based",
@@ -475,41 +449,41 @@ const config: SchoolConfig = {
     {
       name: "Talent",
       discount: "Up to 25% tuition",
-      criteria: "Exceptional talent in arts/sports",
+      criteria: "Exceptional talent in sports or arts",
     },
     {
       name: "Sibling",
       discount: "10% tuition",
-      criteria: "Siblings enrolled in school",
+      criteria: "Siblings currently enrolled in KOPESS",
     },
   ],
 
-  // === HOMEPAGE CONTENT ===
+  // === HOMEPAGE CONTENT (Nepal BS Calendar) ===
   upcomingHighlights: [
-    { title: "Annual Cultural Festival", date: "March 25-27, 2024" },
-    { title: "Parent-Teacher Conference", date: "April 2, 2024" },
-    { title: "Science Exhibition", date: "April 10, 2024" },
+    { title: "Annual Sports Day", date: "Falgun 15, 2081" },
+    { title: "Parent-Teacher Meeting", date: "Falgun 25, 2081" },
+    { title: "Science Exhibition", date: "Chaitra 10, 2081" },
   ],
 
   newsItems: [
     {
-      title: "Annual Science Fair 2024",
-      date: "March 15, 2024",
-      category: "Academic",
-    },
-    {
-      title: "Admission Open for 2024-25",
-      date: "March 10, 2024",
+      title: "Admission Open for 2081-82",
+      date: "Poush 15, 2081",
       category: "Admission",
     },
     {
-      title: "Sports Day Celebration",
-      date: "March 8, 2024",
+      title: "Annual Science Fair Results",
+      date: "Poush 10, 2081",
+      category: "Academic",
+    },
+    {
+      title: "Inter-School Cricket Tournament",
+      date: "Mangsir 28, 2081",
       category: "Sports",
     },
     {
-      title: "Parent-Teacher Meeting",
-      date: "March 5, 2024",
+      title: "Parents Meeting — Falgun",
+      date: "Mangsir 20, 2081",
       category: "Event",
     },
   ],
@@ -519,10 +493,11 @@ const config: SchoolConfig = {
     titleTemplate: "%s | KOPESS - Nurturing Future Leaders",
     defaultTitle: "KOPESS - Kotdevi Public English Sec. School",
     description:
-      "KOPESS provides quality education committed to fostering holistic development of students through innovative teaching methods.",
+      "KOPESS provides quality education in Kirtipur, Kathmandu, committed to fostering holistic development of students through innovative teaching methods.",
     keywords: [
       "KOPESS",
       "Kotdevi Public English Sec. School",
+      "school in Kirtipur",
       "school in Kathmandu",
       "best school Nepal",
       "education Nepal",
@@ -556,11 +531,12 @@ const config: SchoolConfig = {
   },
 
   // === SOCIAL MEDIA ===
+  // TODO: Update with real KOPESS social media URLs
   social: {
-    facebook: "#",
-    instagram: "#",
-    youtube: "#",
-    twitter: "#",
+    facebook: "https://facebook.com/kopess",
+    instagram: "https://instagram.com/kopess",
+    youtube: "",
+    twitter: "",
   },
 };
 

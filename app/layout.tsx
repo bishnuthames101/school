@@ -1,30 +1,17 @@
-'use client';
-
 import './globals.css';
-import TopNavbar from '@/components/TopNavbar';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ScrollToTop from '@/components/ScrollToTop';
-import { usePathname } from 'next/navigation';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
+
+const fontsUrl =
+  `https://fonts.googleapis.com/css2?family=${encodeURIComponent(config.fonts.heading)}:wght@400;600;700` +
+  `&family=${encodeURIComponent(config.fonts.body)}:wght@300;400;500;600;700&display=swap`;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith('/admin');
-
-  // Google Fonts URL for the school's heading and body fonts
-  const fontsUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
-    config.fonts.heading
-  )}:wght@400;600;700&family=${encodeURIComponent(
-    config.fonts.body
-  )}:wght@300;400;500;600;700&display=swap`;
-
   return (
     <html
       lang="en"
@@ -47,26 +34,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href={fontsUrl} rel="stylesheet" />
       </head>
-      <body className="font-body">
-        {isAdminRoute ? (
-          // Admin routes - no public navigation
-          <>
-            {children}
-            <ScrollToTop />
-          </>
-        ) : (
-          // Public routes - show navigation and footer
-          <div className="min-h-screen flex flex-col">
-            <TopNavbar />
-            <Header />
-            <main className="flex-grow pt-32 sm:pt-36 lg:pt-32">
-              {children}
-            </main>
-            <Footer />
-            <ScrollToTop />
-          </div>
-        )}
-      </body>
+      <body className="font-body">{children}</body>
     </html>
   );
 }

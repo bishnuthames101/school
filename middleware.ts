@@ -39,8 +39,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Note: Cross-school token validation is handled in API routes via isAuthenticated()
-    // which verifies the token's schoolId matches the deployment's school record.
+    // Reject tokens issued for a different school deployment
+    if (payload.schoolSlug && payload.schoolSlug !== process.env.SCHOOL_ID) {
+      const loginUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   // If accessing login page while already authenticated, redirect to dashboard

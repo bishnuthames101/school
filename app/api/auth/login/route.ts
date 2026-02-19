@@ -23,11 +23,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Include schoolId in the JWT payload
+    // Include schoolId + schoolSlug in the JWT payload
     const schoolId = await getSchoolId();
+    const schoolSlug = process.env.SCHOOL_ID || '';
     const token = generateToken({
       role: 'admin',
       schoolId,
+      schoolSlug,
       loginTime: new Date().toISOString(),
     });
 

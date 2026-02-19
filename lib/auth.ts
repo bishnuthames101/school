@@ -81,11 +81,12 @@ export async function isAuthenticated(): Promise<boolean> {
   const payload = verifyToken(token);
   if (!payload) return false;
 
+  // Require schoolId in token — old tokens without it are rejected
+  if (!payload.schoolId) return false;
+
   // Verify the token's schoolId matches this deployment
-  if (payload.schoolId) {
-    const schoolId = await getSchoolId();
-    if (payload.schoolId !== schoolId) return false;
-  }
+  const schoolId = await getSchoolId();
+  if (payload.schoolId !== schoolId) return false;
 
   return true;
 }

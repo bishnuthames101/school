@@ -16,7 +16,7 @@ export interface SchoolConfig {
     type: "video" | "image";
     videoSrc?: string;
     videoWebmSrc?: string;
-    fallbackImage: string;
+    fallbackImage?: string;
     headline: string;
     subheadline: string;
     ctaPrimary: { label: string; href: string };

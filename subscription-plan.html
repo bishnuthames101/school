@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomorrow's Tech - School Website Plans</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: white;
+            color: #000;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            padding: 18mm 15mm 12mm 15mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 5mm;
+        }
+
+        .company-name {
+            font-size: 22pt;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: 1px;
+        }
+
+        .company-name span {
+            color: #000;
+        }
+
+        .tagline {
+            font-size: 9pt;
+            color: #000;
+            margin-top: 1mm;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            height: 3px;
+            background: #1a1a2e;
+            margin: 4mm 0;
+            border-radius: 2px;
+        }
+
+        /* Title */
+        .title-section {
+            text-align: center;
+            margin-bottom: 5mm;
+        }
+
+        .title {
+            font-size: 16pt;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 9pt;
+            color: #000;
+            margin-top: 1.5mm;
+        }
+
+        /* What You Get */
+        .features-section {
+            background: #f0f0f0;
+            border-radius: 4mm;
+            padding: 4mm 5mm;
+            margin-bottom: 5mm;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2.5mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5mm 8mm;
+        }
+
+        .feature-item {
+            font-size: 8.5pt;
+            color: #000;
+            padding-left: 4mm;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .feature-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* Plans */
+        .plans-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3mm;
+            margin-bottom: 5mm;
+            flex-grow: 0;
+        }
+
+        .plan-card {
+            border: 2px solid #555;
+            border-radius: 4mm;
+            padding: 4mm 4mm 3.5mm 4mm;
+            position: relative;
+            text-align: center;
+        }
+
+        .plan-card.popular {
+            border-color: #000;
+            border-width: 3px;
+            background: #f5f5f5;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -3mm;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a2e;
+            color: white;
+            font-size: 6.5pt;
+            font-weight: 700;
+            padding: 1mm 4mm;
+            border-radius: 3mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-name {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1mm;
+            margin-top: 1mm;
+        }
+
+        .plan-price {
+            font-size: 22pt;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .plan-price-label {
+            font-size: 8pt;
+            color: #000;
+            margin-bottom: 2.5mm;
+        }
+
+        .plan-features {
+            text-align: left;
+            margin-top: 2mm;
+        }
+
+        .plan-feature {
+            font-size: 8pt;
+            color: #000;
+            padding: 1mm 0;
+            padding-left: 4mm;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .plan-feature::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .plan-highlight {
+            background: #e8e8e8;
+            border-radius: 2mm;
+            padding: 1.5mm 3mm;
+            font-size: 7.5pt;
+            color: #000;
+            font-weight: 600;
+            margin-top: 2.5mm;
+            display: inline-block;
+        }
+
+        /* After Free Period */
+        .subscription-section {
+            background: #f0f0f0;
+            border: 2px solid #1a1a2e;
+            border-radius: 4mm;
+            padding: 4mm 5mm;
+            margin-bottom: 5mm;
+            color: #000;
+        }
+
+        .sub-title {
+            font-size: 10pt;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4mm;
+        }
+
+        .sub-option {
+            background: #fff;
+            border-radius: 3mm;
+            padding: 3mm;
+            text-align: center;
+            border: 2px solid #333;
+        }
+
+        .sub-option-price {
+            font-size: 16pt;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .sub-option-label {
+            font-size: 7.5pt;
+            color: #000;
+            margin-top: 0.5mm;
+        }
+
+        .save-badge {
+            display: inline-block;
+            background: #1a1a2e;
+            color: white;
+            font-size: 6.5pt;
+            font-weight: 700;
+            padding: 0.8mm 2.5mm;
+            border-radius: 2mm;
+            margin-top: 1.5mm;
+        }
+
+        .sub-note {
+            text-align: center;
+            font-size: 7.5pt;
+            color: #000;
+            margin-top: 2.5mm;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            border-top: 2px solid #555;
+            padding-top: 3.5mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            font-size: 7.5pt;
+            color: #000;
+            line-height: 1.7;
+        }
+
+        .contact-info strong {
+            color: #000;
+        }
+
+        .contact-right {
+            text-align: right;
+        }
+
+        .website {
+            font-size: 10pt;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .footer-tagline {
+            font-size: 7pt;
+            color: #000;
+            margin-top: 1mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Header -->
+        <div class="header">
+            <div class="company-name">Tomorrow's <span>Tech</span> Pvt. Ltd.</div>
+            <div class="tagline">Empowering Schools with Modern Technology</div>
+        </div>
+        <div class="divider"></div>
+
+        <!-- Title -->
+        <div class="title-section">
+            <div class="title">Complete School Website Solution</div>
+            <div class="subtitle">Professional website with admin dashboard — designed for schools, managed by us</div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-section">
+            <div class="section-title">What's Included</div>
+            <div class="features-grid">
+                <div class="feature-item">Modern, responsive school website</div>
+                <div class="feature-item">Admin dashboard for easy management</div>
+                <div class="feature-item">Events &amp; notice management</div>
+                <div class="feature-item">Photo gallery management</div>
+                <div class="feature-item">Online admission form system</div>
+                <div class="feature-item">Contact form with inbox</div>
+                <div class="feature-item">Popup announcements system</div>
+                <div class="feature-item">Free .edu.np domain &amp; SSL security</div>
+                <div class="feature-item">Regular data backups &amp; recovery</div>
+                <div class="feature-item">Free training on website &amp; admin panel</div>
+                <div class="feature-item">Cloud infrastructure (fast &amp; reliable)</div>
+                <div class="feature-item">Mobile-friendly design</div>
+            </div>
+        </div>
+
+        <!-- Plans -->
+        <div class="plans-section">
+            <!-- Plan 1 -->
+            <div class="plan-card">
+                <div class="plan-name">Basic Plan</div>
+                <div class="plan-price">Rs.12,000</div>
+                <div class="plan-price-label">one-time setup</div>
+                <div class="plan-features">
+                    <div class="plan-feature">Complete website development</div>
+                    <div class="plan-feature">Admin dashboard setup</div>
+                    <div class="plan-feature">3 months free infrastructure cost</div>
+                    <div class="plan-feature">Free .edu.np domain setup</div>
+                    <div class="plan-feature">Free training on admin panel usage</div>
+                    <div class="plan-feature">Data backups &amp; support for 3 months</div>
+                    <div class="plan-feature">Subscription starts from month 4</div>
+                </div>
+                <div class="plan-highlight">Best for: Quick start</div>
+            </div>
+
+            <!-- Plan 2 -->
+            <div class="plan-card">
+                <div class="plan-name">Starter Plan</div>
+                <div class="plan-price">Rs.20,000</div>
+                <div class="plan-price-label">one-time setup</div>
+                <div class="plan-features">
+                    <div class="plan-feature">Complete website development</div>
+                    <div class="plan-feature">Admin dashboard setup</div>
+                    <div class="plan-feature">6 months free infrastructure cost</div>
+                    <div class="plan-feature">Free .edu.np domain setup</div>
+                    <div class="plan-feature">Free training on admin panel usage</div>
+                    <div class="plan-feature">Data backups &amp; support for 6 months</div>
+                    <div class="plan-feature">Subscription starts from month 7</div>
+                </div>
+                <div class="plan-highlight">Best for: Budget-friendly start</div>
+            </div>
+
+            <!-- Plan 3 -->
+            <div class="plan-card popular">
+                <div class="popular-badge">Recommended</div>
+                <div class="plan-name">Annual Plan</div>
+                <div class="plan-price">Rs.30,000</div>
+                <div class="plan-price-label">one-time setup</div>
+                <div class="plan-features">
+                    <div class="plan-feature">Complete website development</div>
+                    <div class="plan-feature">Admin dashboard setup</div>
+                    <div class="plan-feature">12 months free infrastructure cost</div>
+                    <div class="plan-feature">Free .edu.np domain setup</div>
+                    <div class="plan-feature">Free training on admin panel usage</div>
+                    <div class="plan-feature">Data backups &amp; support for 1 year</div>
+                    <div class="plan-feature">Subscription starts from year 2 only</div>
+                </div>
+                <div class="plan-highlight">Save Rs.5,000+ over 18 months</div>
+            </div>
+        </div>
+
+        <!-- Subscription After Free Period -->
+        <div class="subscription-section">
+            <div class="sub-title">Subscription After Free Period</div>
+            <div class="sub-options">
+                <div class="sub-option">
+                    <div class="sub-option-price">Rs.1,500</div>
+                    <div class="sub-option-label">per month</div>
+                </div>
+                <div class="sub-option">
+                    <div class="sub-option-price">Rs.15,000</div>
+                    <div class="sub-option-label">per year</div>
+                    <div class="save-badge">SAVE Rs.3,000/yr</div>
+                </div>
+            </div>
+            <div class="sub-note">Includes infrastructure cost (hosting, maintenance, security updates), data backups &amp; technical support</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="contact-info">
+                <strong>Contact Us</strong><br>
+                Phone: 9810323270<br>
+                Email: info@tomorrowstech.com.np<br>
+                Address: Balkumari, Lalitpur
+            </div>
+            <div class="contact-right">
+                <div class="website">tomorrowstech.com.np</div>
+                <div class="footer-tagline">Building tomorrow's digital schools, today.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
