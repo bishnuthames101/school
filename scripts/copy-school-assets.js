@@ -1,10 +1,14 @@
 import { cpSync, existsSync, mkdirSync, rmSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, "..");
+
+// Load .env for local development (Vercel sets env vars directly)
+dotenv.config({ path: join(rootDir, ".env") });
 
 const schoolId = process.env.SCHOOL_ID;
 

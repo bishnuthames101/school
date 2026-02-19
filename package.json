@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "predev": "node scripts/copy-school-assets.js",
     "prebuild": "node scripts/copy-school-assets.js",
     "build": "prisma generate && next build",
     "start": "next start",

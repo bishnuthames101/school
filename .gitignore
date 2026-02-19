@@ -29,5 +29,8 @@ nul
 # Next.js
 .next/
 
+# Generated school assets (copied from schools/{slug}/assets/ at build time)
+public/school-assets/
+
 # Claude AI workspace
 .claude/

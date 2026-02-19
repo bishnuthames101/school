@@ -15,7 +15,7 @@ const config: SchoolConfig = {
     type: "video",
     videoSrc: "/school-assets/hero-video.mp4",
     videoWebmSrc: "/school-assets/hero-video.webm",
-    fallbackImage: "/school-assets/kopess logo.jpg",
+    fallbackImage: "/school-assets/kopess_logo.jpg",
     headline: "KOPESS",
     subheadline:
       "Nurturing young minds, building bright futures, and creating tomorrow's leaders through innovative education and holistic development.",

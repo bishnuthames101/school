@@ -29,7 +29,7 @@ const CalendarCarousel = () => {
         {/* Main Image Display */}
         <div className="relative aspect-[3/4] md:aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden shadow-2xl">
           <Image
-            src={`/calendar/${currentSlide + 1}.jpg`}
+            src={`/school-assets/calendar/${currentSlide + 1}.jpg`}
             alt={`Academic Calendar ${currentSlide + 1}`}
             fill
             className="object-contain"
@@ -73,7 +73,7 @@ const CalendarCarousel = () => {
               aria-label={`Go to slide ${index + 1}`}
             >
               <Image
-                src={`/calendar/${index + 1}.jpg`}
+                src={`/school-assets/calendar/${index + 1}.jpg`}
                 alt={`Calendar thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
