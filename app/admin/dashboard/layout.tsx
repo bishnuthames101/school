@@ -100,7 +100,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               sidebarCollapsed ? 'justify-center px-2 py-3' : 'space-x-3 px-4 py-2.5'
             } ${
               isActive
-                ? 'border-l-[3px] border-blue-400 bg-blue-600/10 text-white'
+                ? 'border-l-[3px] border-school-primary bg-white/10 text-white'
                 : 'border-l-[3px] border-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
             }`}
           >
@@ -116,11 +116,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-school-primary mb-6">
             <GraduationCap className="h-8 w-8 text-white" />
           </div>
           <div className="w-48 h-1.5 bg-gray-200 rounded-full overflow-hidden mx-auto">
-            <div className="h-full bg-blue-600 rounded-full animate-pulse" style={{ width: '60%' }} />
+            <div className="h-full bg-school-primary rounded-full animate-pulse" style={{ width: '60%' }} />
           </div>
           <p className="mt-4 text-sm text-gray-500">Loading dashboard...</p>
         </div>
@@ -139,7 +139,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md z-50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-school-primary rounded-lg flex items-center justify-center">
             <GraduationCap className="h-4 w-4 text-white" />
           </div>
           <span className="font-semibold text-gray-900">{config.name}</span>
@@ -170,7 +170,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Header */}
           <div className="p-4 border-b border-gray-800 flex items-center justify-between">
             <div className={`flex items-center space-x-3 ${sidebarCollapsed ? 'lg:hidden' : ''}`}>
-              <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 bg-school-primary rounded-lg flex items-center justify-center flex-shrink-0">
                 <GraduationCap className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -180,7 +180,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             {/* Collapsed: just icon */}
             <div className={`hidden ${sidebarCollapsed ? 'lg:flex' : ''} items-center justify-center w-full`}>
-              <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-school-primary rounded-lg flex items-center justify-center">
                 <GraduationCap className="h-5 w-5 text-white" />
               </div>
             </div>

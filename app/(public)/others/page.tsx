@@ -1,10 +1,24 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Trophy, Users, Camera, GraduationCap, Music, Palette, BookOpen, Award } from 'lucide-react';
+import { Trophy, Users, Camera, GraduationCap, Palette, BookOpen, Award } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
+
+const colorMap: Record<string, { bg: string; text: string; light: string }> = {
+  Blue:  { bg: 'bg-blue-500',   text: 'text-blue-600',   light: 'bg-blue-50'   },
+  Green: { bg: 'bg-green-500',  text: 'text-green-600',  light: 'bg-green-50'  },
+  Red:   { bg: 'bg-red-500',    text: 'text-red-600',    light: 'bg-red-50'    },
+  Gold:  { bg: 'bg-yellow-500', text: 'text-yellow-600', light: 'bg-yellow-50' },
+};
+
+const ecaCategories = [
+  { category: 'Sports',    key: 'sports'    as const, icon: Trophy,   color: 'text-green-600'  },
+  { category: 'Arts',      key: 'arts'      as const, icon: Palette,  color: 'text-purple-600' },
+  { category: 'Academic',  key: 'academic'  as const, icon: BookOpen, color: 'text-blue-600'   },
+  { category: 'Community', key: 'community' as const, icon: Users,    color: 'text-orange-600' },
+];
 
 const Others = () => {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
@@ -28,158 +42,14 @@ const Others = () => {
 
     fetchGallery();
   }, []);
-  const houses = [
-    {
-      name: 'Phoenix House',
-      color: 'Red',
-      motto: 'Rise with Courage',
-      achievements: ['Sports Championship 2023', 'Academic Excellence Award'],
-      bgColor: 'bg-red-500',
-      textColor: 'text-red-600',
-      bgLight: 'bg-red-50',
-    },
-    {
-      name: 'Eagle House',
-      color: 'Blue',
-      motto: 'Soar to Heights',
-      achievements: ['Cultural Fest Winner', 'Community Service Award'],
-      bgColor: 'bg-blue-500',
-      textColor: 'text-blue-600',
-      bgLight: 'bg-blue-50',
-    },
-    {
-      name: 'Lion House',
-      color: 'Gold',
-      motto: 'Lead with Pride',
-      achievements: ['Debate Championship', 'Leadership Excellence'],
-      bgColor: 'bg-yellow-500',
-      textColor: 'text-yellow-600',
-      bgLight: 'bg-yellow-50',
-    },
-    {
-      name: 'Tiger House',
-      color: 'Green',
-      motto: 'Strength in Unity',
-      achievements: ['Environmental Club Award', 'Science Olympiad'],
-      bgColor: 'bg-green-500',
-      textColor: 'text-green-600',
-      bgLight: 'bg-green-50',
-    },
-  ];
-
-  const clubs = [
-    {
-      name: 'Drama Club',
-      description: 'Develop acting skills and stage performances',
-      icon: Music,
-      members: 45,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-    },
-    {
-      name: 'Art & Craft Club',
-      description: 'Express creativity through various art forms',
-      icon: Palette,
-      members: 38,
-      color: 'text-pink-600',
-      bgColor: 'bg-pink-100',
-    },
-    {
-      name: 'Science Club',
-      description: 'Explore scientific concepts through experiments',
-      icon: BookOpen,
-      members: 52,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-    },
-    {
-      name: 'Sports Club',
-      description: 'Promote physical fitness and sportsmanship',
-      icon: Trophy,
-      members: 68,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
-    },
-    {
-      name: 'Music Club',
-      description: 'Learn and perform various musical instruments',
-      icon: Music,
-      members: 41,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-100',
-    },
-    {
-      name: 'Debate Society',
-      description: 'Develop public speaking and critical thinking',
-      icon: Users,
-      members: 29,
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-100',
-    },
-  ];
-
-  const ecaActivities = [
-    {
-      category: 'Sports',
-      activities: ['Basketball', 'Soccer', 'Swimming', 'Tennis', 'Track & Field', 'Volleyball'],
-      icon: Trophy,
-      color: 'text-green-600',
-    },
-    {
-      category: 'Arts',
-      activities: ['Painting', 'Music', 'Dance', 'Photography', 'Sculpture', 'Drama'],
-      icon: Palette,
-      color: 'text-purple-600',
-    },
-    {
-      category: 'Academic',
-      activities: ['Math Olympiad', 'Science Fair', 'Spelling Bee', 'Quiz Bowl', 'Model UN', 'Robotics'],
-      icon: BookOpen,
-      color: 'text-blue-600',
-    },
-    {
-      category: 'Community',
-      activities: ['Environmental Club', 'Volunteer Service', 'Student Council', 'Peer Tutoring', 'Charity Drives'],
-      icon: Users,
-      color: 'text-orange-600',
-    },
-  ];
-
-
-  const alumni = [
-    {
-      name: 'Dr. Sarah Mitchell',
-      year: '2010',
-      achievement: 'Leading Pediatric Surgeon',
-      description: 'Harvard Medical School graduate, now practicing at Children\'s Hospital',
-    },
-    {
-      name: 'James Rodriguez',
-      year: '2015',
-      achievement: 'Tech Entrepreneur',
-      description: 'Founded successful AI startup, featured in Forbes 30 Under 30',
-    },
-    {
-      name: 'Maria Chen',
-      year: '2012',
-      achievement: 'Environmental Scientist',
-      description: 'Leading climate research at NASA, published 15+ research papers',
-    },
-    {
-      name: 'David Thompson',
-      year: '2008',
-      achievement: 'Olympic Athlete',
-      description: 'Swimming champion, 2x Olympic medalist, now coaching future athletes',
-    },
-  ];
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-16">
+      <section className="bg-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Beyond Academics</h1>
-          <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto">
             Discover the vibrant community life at {config.name} through our house system,
             clubs, extracurricular activities, and the inspiring achievements of our alumni.
           </p>
@@ -195,26 +65,29 @@ const Others = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {houses.map((house, index) => (
-              <div key={index} className={`${house.bgLight} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200`}>
-                <div className={`${house.bgColor} h-2`}></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{house.name}</h3>
-                  <p className={`${house.textColor} font-semibold mb-4`}>"{house.motto}"</p>
-                  <div>
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Recent Achievements:</h4>
-                    <ul className="space-y-1">
-                      {house.achievements.map((achievement, achIndex) => (
-                        <li key={achIndex} className="text-sm text-gray-600 flex items-center">
-                          <Award className="h-3 w-3 mr-2 text-yellow-500" />
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
+            {config.houses.map((house, index) => {
+              const colors = colorMap[house.color] ?? { bg: 'bg-gray-500', text: 'text-gray-600', light: 'bg-gray-50' };
+              return (
+                <div key={index} className={`${colors.light} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200`}>
+                  <div className={`${colors.bg} h-2`}></div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{house.name}</h3>
+                    <p className={`${colors.text} font-semibold mb-4`}>&ldquo;{house.motto}&rdquo;</p>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">Recent Achievements:</h4>
+                      <ul className="space-y-1">
+                        {house.achievements.map((achievement, achIndex) => (
+                          <li key={achIndex} className="text-sm text-gray-600 flex items-center">
+                            <Award className="h-3 w-3 mr-2 text-yellow-500" />
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -228,13 +101,9 @@ const Others = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {clubs.map((club, index) => (
+            {config.clubs.map((club, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
-                <div className={`w-12 h-12 ${club.bgColor} rounded-lg flex items-center justify-center mb-4`}>
-                  <club.icon className={`h-6 w-6 ${club.color}`} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{club.name}</h3>
-                <p className="text-gray-600 mb-4">{club.description}</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{club.name}</h3>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{club.members} members</span>
                   <button className="text-school-primary hover:text-school-primary-dark font-medium text-sm">
@@ -256,21 +125,24 @@ const Others = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ecaActivities.map((category, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center mb-4">
-                  <category.icon className={`h-8 w-8 ${category.color} mr-3`} />
-                  <h3 className="text-xl font-bold text-gray-900">{category.category}</h3>
+            {ecaCategories.map(({ category, key, icon: Icon, color }) => {
+              const activities = config.extracurriculars[key];
+              return (
+                <div key={category} className="bg-white rounded-lg shadow-lg p-6">
+                  <div className="flex items-center mb-4">
+                    <Icon className={`h-8 w-8 ${color} mr-3`} />
+                    <h3 className="text-xl font-bold text-gray-900">{category}</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {activities.map((activity, actIndex) => (
+                      <div key={actIndex} className="bg-gray-50 px-3 py-2 rounded-lg text-sm text-gray-700">
+                        {activity}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {category.activities.map((activity, actIndex) => (
-                    <div key={actIndex} className="bg-gray-50 px-3 py-2 rounded-lg text-sm text-gray-700">
-                      {activity}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -332,17 +204,17 @@ const Others = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {alumni.map((alum, index) => (
+            {config.alumni.map((alum, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-purple-600 hover:shadow-xl transition-shadow duration-200">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">{alum.name}</h3>
-                    <p className="text-purple-600 font-semibold">Class of {alum.year}</p>
+                    <p className="text-purple-600 font-semibold">Class of {alum.classOf}</p>
                   </div>
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full"></div>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">{alum.achievement}</h4>
-                <p className="text-gray-600">{alum.description}</p>
+                <p className="text-gray-600">{alum.role}</p>
               </div>
             ))}
           </div>

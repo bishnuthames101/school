@@ -16,10 +16,10 @@ const Academics = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-600 to-school-primary text-white py-16">
+      <section className="bg-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Academic Excellence</h1>
-          <p className="text-xl text-green-100 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto">
             Comprehensive educational programs designed to challenge, inspire, and prepare students
             for success in higher education and beyond.
           </p>
