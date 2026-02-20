@@ -5,8 +5,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getSchoolConfig } from '@/lib/school-config';
-
-const config = getSchoolConfig();
 import {
   LayoutDashboard,
   Calendar,
@@ -24,6 +22,8 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { clearSession } from '@/components/SessionManager';
+
+const config = getSchoolConfig();
 
 const mainNav = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
