@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   MapPin,
   Phone,
@@ -8,7 +9,6 @@ import {
   Twitter,
   Instagram,
   Youtube,
-  GraduationCap,
   Lock
 } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
@@ -23,7 +23,7 @@ const FooterFull: React.FC = () => {
           {/* School Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <GraduationCap className="h-8 w-8 text-school-primary-light" />
+              <Image src={config.logo} alt={config.name} width={36} height={36} className="object-contain" />
               <div>
                 <h3 className="text-xl font-bold">{config.name}</h3>
                 <p className="text-sm text-gray-400">{config.tagline}</p>
