@@ -7,6 +7,7 @@ export interface SchoolConfig {
   id: string;
   name: string;
   fullName: string;
+  logo: string;
   tagline: string;
   description: string;
   foundedYear: number;

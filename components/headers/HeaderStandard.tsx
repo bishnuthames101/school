@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, GraduationCap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
@@ -60,7 +61,7 @@ const HeaderStandard: React.FC = () => {
         <div className="flex justify-between items-center py-3 sm:py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" onClick={handleLinkClick}>
-            <GraduationCap className="h-7 w-7 sm:h-8 sm:w-8 text-school-primary" />
+            <Image src={config.logo} alt={config.name} width={36} height={36} className="object-contain" />
             <div>
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">{config.name}</h1>
               <p className="text-xs text-gray-600 hidden sm:block">{config.tagline}</p>

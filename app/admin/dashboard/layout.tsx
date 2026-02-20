@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
@@ -10,7 +11,7 @@ import {
   LayoutDashboard,
   Calendar,
   Bell,
-  Image,
+  Image as ImageIcon,
   FileText,
   MessageSquare,
   LogOut,
@@ -18,7 +19,6 @@ import {
   X,
   MonitorPlay,
   Settings,
-  GraduationCap,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
@@ -32,7 +32,7 @@ const mainNav = [
 const contentNav = [
   { name: 'Events', href: '/admin/dashboard/events', icon: Calendar },
   { name: 'Notices', href: '/admin/dashboard/notices', icon: Bell },
-  { name: 'Gallery', href: '/admin/dashboard/gallery', icon: Image },
+  { name: 'Gallery', href: '/admin/dashboard/gallery', icon: ImageIcon },
   { name: 'Popups', href: '/admin/dashboard/popups', icon: MonitorPlay },
 ];
 
@@ -116,8 +116,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-school-primary mb-6">
-            <GraduationCap className="h-8 w-8 text-white" />
+          <div className="mb-6">
+            <Image src={config.logo} alt={config.name} width={64} height={64} className="object-contain mx-auto" />
           </div>
           <div className="w-48 h-1.5 bg-gray-200 rounded-full overflow-hidden mx-auto">
             <div className="h-full bg-school-primary rounded-full animate-pulse" style={{ width: '60%' }} />
@@ -139,9 +139,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md z-50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-school-primary rounded-lg flex items-center justify-center">
-            <GraduationCap className="h-4 w-4 text-white" />
-          </div>
+          <Image src={config.logo} alt={config.name} width={32} height={32} className="object-contain" />
           <span className="font-semibold text-gray-900">{config.name}</span>
         </div>
         <button
@@ -170,9 +168,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Header */}
           <div className="p-4 border-b border-gray-800 flex items-center justify-between">
             <div className={`flex items-center space-x-3 ${sidebarCollapsed ? 'lg:hidden' : ''}`}>
-              <div className="w-9 h-9 bg-school-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                <GraduationCap className="h-5 w-5 text-white" />
-              </div>
+              <Image src={config.logo} alt={config.name} width={36} height={36} className="object-contain flex-shrink-0" />
               <div>
                 <h1 className="text-sm font-bold leading-tight">{config.name}</h1>
                 <p className="text-[11px] text-gray-400">Admin Panel</p>
@@ -180,9 +176,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             {/* Collapsed: just icon */}
             <div className={`hidden ${sidebarCollapsed ? 'lg:flex' : ''} items-center justify-center w-full`}>
-              <div className="w-9 h-9 bg-school-primary rounded-lg flex items-center justify-center">
-                <GraduationCap className="h-5 w-5 text-white" />
-              </div>
+              <Image src={config.logo} alt={config.name} width={36} height={36} className="object-contain" />
             </div>
           </div>
 

@@ -5,6 +5,7 @@ const config: SchoolConfig = {
   id: "kopess",
   name: "KOPESS",
   fullName: "Kotdevi Public English Sec. School",
+  logo: "/school-assets/kopess_logo.jpg",
   tagline: "Nurturing Future Leaders",
   description:
     "Committed to providing quality education and fostering holistic development of students through innovative teaching methods and comprehensive learning experiences.",
