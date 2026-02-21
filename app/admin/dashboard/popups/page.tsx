@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Eye, EyeOff, X, MonitorPlay } from 'lucide-react';
+import { Plus, Edit2, Trash2, Eye, EyeOff, X, MonitorPlay, Upload, Link } from 'lucide-react';
 import Image from 'next/image';
 
 interface Popup {
@@ -30,9 +30,11 @@ const PopupsPage = () => {
     isActive: true,
   });
 
+  const [imageTab, setImageTab] = useState<'upload' | 'url'>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
   const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   useEffect(() => {
     fetchPopups();
@@ -42,11 +44,9 @@ const PopupsPage = () => {
     try {
       const response = await fetch('/api/popups?all=true');
       const data = await response.json();
-
       if (Array.isArray(data)) {
         setPopups(data);
       } else {
-        console.error('Invalid data format:', data);
         setPopups([]);
       }
     } catch (error) {
@@ -61,33 +61,33 @@ const PopupsPage = () => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setFormData({ ...formData, imageUrl: '' });
+      setUploadedImageUrl('');
+      setUploadStatus(null);
+      setFormData((prev) => ({ ...prev, imageUrl: '' }));
     }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
-
     setUploading(true);
+    setUploadStatus(null);
     try {
       const formDataUpload = new FormData();
       formDataUpload.append('file', selectedFile);
-
       const response = await fetch('/api/upload-image', {
         method: 'POST',
         body: formDataUpload,
       });
-
       const data = await response.json();
-
       if (data.url) {
         setUploadedImageUrl(data.url);
-        setFormData({ ...formData, imageUrl: data.url });
-        alert('Image uploaded successfully!');
+        setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+        setUploadStatus({ type: 'success', message: 'Image uploaded successfully' });
+      } else {
+        setUploadStatus({ type: 'error', message: 'Upload failed. Please try again.' });
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to upload image');
+      setUploadStatus({ type: 'error', message: 'Upload failed. Please try again.' });
     } finally {
       setUploading(false);
     }
@@ -95,12 +95,10 @@ const PopupsPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (selectedFile && !uploadedImageUrl) {
-      alert('Please click "Upload" button first');
+    if (imageTab === 'upload' && selectedFile && !uploadedImageUrl) {
+      setUploadStatus({ type: 'error', message: 'Please upload the selected image first.' });
       return;
     }
-
     try {
       if (editingPopup) {
         await fetch(`/api/popups/${editingPopup.id}`, {
@@ -115,7 +113,6 @@ const PopupsPage = () => {
           body: JSON.stringify(formData),
         });
       }
-
       fetchPopups();
       closeForm();
     } catch (error) {
@@ -125,11 +122,8 @@ const PopupsPage = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this popup?')) return;
-
     try {
-      await fetch(`/api/popups/${id}`, {
-        method: 'DELETE',
-      });
+      await fetch(`/api/popups/${id}`, { method: 'DELETE' });
       fetchPopups();
     } catch (error) {
       console.error('Error deleting popup:', error);
@@ -146,22 +140,32 @@ const PopupsPage = () => {
       endDate: popup.endDate.split('T')[0],
       isActive: popup.isActive,
     });
+    setImageTab('url'); // existing popup always has a URL
+    setSelectedFile(null);
+    setUploadedImageUrl('');
+    setUploadStatus(null);
     setIsFormOpen(true);
   };
 
   const closeForm = () => {
     setIsFormOpen(false);
     setEditingPopup(null);
-    setFormData({
-      title: '',
-      imageUrl: '',
-      linkUrl: '',
-      startDate: '',
-      endDate: '',
-      isActive: true,
-    });
+    setFormData({ title: '', imageUrl: '', linkUrl: '', startDate: '', endDate: '', isActive: true });
     setSelectedFile(null);
     setUploadedImageUrl('');
+    setUploadStatus(null);
+    setImageTab('upload');
+  };
+
+  const handleSwitchTab = (tab: 'upload' | 'url') => {
+    setImageTab(tab);
+    setUploadStatus(null);
+    if (tab === 'url') {
+      setSelectedFile(null);
+      setUploadedImageUrl('');
+    } else {
+      setFormData((prev) => ({ ...prev, imageUrl: '' }));
+    }
   };
 
   const toggleActive = async (popup: Popup) => {
@@ -169,10 +173,7 @@ const PopupsPage = () => {
       await fetch(`/api/popups/${popup.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...popup,
-          isActive: !popup.isActive,
-        }),
+        body: JSON.stringify({ ...popup, isActive: !popup.isActive }),
       });
       fetchPopups();
     } catch (error) {
@@ -219,12 +220,7 @@ const PopupsPage = () => {
           {popups.map((popup) => (
             <div key={popup.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all">
               <div className="relative h-48">
-                <Image
-                  src={popup.imageUrl}
-                  alt={popup.title}
-                  fill
-                  className="object-contain bg-gray-100"
-                />
+                <Image src={popup.imageUrl} alt={popup.title} fill className="object-contain bg-gray-100" />
               </div>
               <div className="p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">{popup.title}</h3>
@@ -236,34 +232,16 @@ const PopupsPage = () => {
                   <button
                     onClick={() => toggleActive(popup)}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
-                      popup.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600'
+                      popup.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
                     }`}
                   >
-                    {popup.isActive ? (
-                      <>
-                        <Eye className="h-4 w-4" />
-                        Active
-                      </>
-                    ) : (
-                      <>
-                        <EyeOff className="h-4 w-4" />
-                        Inactive
-                      </>
-                    )}
+                    {popup.isActive ? <><Eye className="h-4 w-4" />Active</> : <><EyeOff className="h-4 w-4" />Inactive</>}
                   </button>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(popup)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
+                    <button onClick={() => handleEdit(popup)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                       <Edit2 className="h-5 w-5" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(popup.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
+                    <button onClick={() => handleDelete(popup.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                       <Trash2 className="h-5 w-5" />
                     </button>
                   </div>
@@ -292,161 +270,200 @@ const PopupsPage = () => {
         </div>
       )}
 
-      {/* Form Modal */}
+      {/* Form Modal — bottom sheet on mobile, centered dialog on sm+ */}
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-2 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full my-4 max-h-[calc(100vh-2rem)] flex flex-col">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 sm:px-6 sm:py-4 flex justify-between items-center rounded-t-xl">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+        <div
+          className="fixed inset-0 bg-black/50 z-[60] flex items-end sm:items-center justify-center sm:p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) closeForm(); }}
+        >
+          <div className="bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl shadow-xl max-h-[92vh] sm:max-h-[calc(100vh-2rem)] flex flex-col">
+
+            {/* Drag handle — mobile only */}
+            <div className="flex justify-center pt-3 sm:hidden">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* Sticky header */}
+            <div className="flex-shrink-0 px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-900">
                 {editingPopup ? 'Edit Popup' : 'Add New Popup'}
               </h2>
               <button
                 onClick={closeForm}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
+            {/* Scrollable form body */}
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto flex flex-col">
+              <div className="flex-1 px-5 py-5 space-y-5">
 
-              {/* Image Upload or URL Section */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Popup Image
-                </label>
-
-                {/* File Upload Option */}
+                {/* Title */}
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Option 1: Upload Image
-                  </label>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileSelect}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Title *</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g. Admission Open 2082"
+                    required
+                  />
+                </div>
+
+                {/* Image — tabbed */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Popup Image *</label>
+
+                  {/* Tab switcher */}
+                  <div className="flex rounded-lg border border-gray-200 overflow-hidden mb-3">
                     <button
                       type="button"
-                      onClick={handleUpload}
-                      disabled={!selectedFile || uploading}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap"
+                      onClick={() => handleSwitchTab('upload')}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors ${
+                        imageTab === 'upload'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                      }`}
                     >
-                      {uploading ? 'Uploading...' : 'Upload'}
+                      <Upload className="h-4 w-4" />
+                      Upload File
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSwitchTab('url')}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors ${
+                        imageTab === 'url'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Link className="h-4 w-4" />
+                      Enter URL
                     </button>
                   </div>
-                  {uploadedImageUrl && (
-                    <p className="text-sm text-green-600 mt-1 break-all">
-                      Image uploaded successfully
-                    </p>
+
+                  {/* Upload panel */}
+                  {imageTab === 'upload' && (
+                    <div className="space-y-2.5">
+                      <input
+                        type="file"
+                        id="popupFileInput"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="popupFileInput"
+                        className="flex items-center gap-2.5 w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                      >
+                        <Upload className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <span className={`truncate ${selectedFile ? 'text-gray-800' : 'text-gray-400'}`}>
+                          {selectedFile ? selectedFile.name : 'Choose image file…'}
+                        </span>
+                      </label>
+
+                      {selectedFile && !uploadedImageUrl && (
+                        <button
+                          type="button"
+                          onClick={handleUpload}
+                          disabled={uploading}
+                          className="w-full py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {uploading ? 'Uploading…' : 'Upload Image'}
+                        </button>
+                      )}
+
+                      {uploadStatus && (
+                        <p className={`text-sm ${uploadStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                          {uploadStatus.type === 'success' ? '✓' : '✗'} {uploadStatus.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* URL panel */}
+                  {imageTab === 'url' && (
+                    <div className="space-y-1.5">
+                      <input
+                        type="text"
+                        value={formData.imageUrl}
+                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                      <p className="text-xs text-gray-400">Paste any public image URL</p>
+                    </div>
                   )}
                 </div>
 
-                <div className="text-center text-gray-400 text-sm">OR</div>
-
-                {/* URL Input Option */}
+                {/* Link URL */}
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Option 2: Enter Image URL
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Link URL <span className="text-gray-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="text"
-                    value={formData.imageUrl}
-                    onChange={(e) => {
-                      setFormData({ ...formData, imageUrl: e.target.value });
-                      setSelectedFile(null);
-                      setUploadedImageUrl('');
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="https://example.com/image.jpg or /popup-image.jpg"
-                    disabled={!!uploadedImageUrl}
+                    value={formData.linkUrl}
+                    onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="/admission"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Paste any image URL from the internet or local path
-                  </p>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Link URL (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={formData.linkUrl}
-                  onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="/admission"
-                />
-              </div>
+                {/* Dates */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Start Date *</label>
+                    <input
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">End Date *</label>
+                    <input
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date *
-                  </label>
+                {/* Active toggle */}
+                <div className="flex items-center gap-3">
                   <input
-                    type="date"
-                    value={formData.startDate}
-                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
+                    type="checkbox"
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 rounded"
                   />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    End Date *
+                  <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                    Active <span className="text-gray-400 font-normal">(visible on website)</span>
                   </label>
-                  <input
-                    type="date"
-                    value={formData.endDate}
-                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                  />
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={formData.isActive}
-                  onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-4 h-4 text-blue-600 rounded"
-                />
-                <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
-                  Active
-                </label>
-              </div>
-
-              {/* Form Actions */}
-              <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+              {/* Sticky footer actions */}
+              <div className="flex-shrink-0 px-5 py-4 border-t border-gray-200 flex gap-3">
                 <button
                   type="button"
                   onClick={closeForm}
-                  className="w-full sm:flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   {editingPopup ? 'Update Popup' : 'Create Popup'}
                 </button>
