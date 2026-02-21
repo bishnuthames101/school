@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, X, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Calendar, Upload } from 'lucide-react';
 
 interface Event {
   id: string;
@@ -31,6 +31,7 @@ export default function EventsManagement() {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [formStatus, setFormStatus] = useState<{ type: 'error'; message: string } | null>(null);
   const [formData, setFormData] = useState<EventFormData>({
     title: '',
     date: '',
@@ -82,6 +83,7 @@ export default function EventsManagement() {
       });
       setImagePreview('');
     }
+    setFormStatus(null);
     setShowModal(true);
   };
 
@@ -96,6 +98,7 @@ export default function EventsManagement() {
       description: '',
     });
     setImagePreview('');
+    setFormStatus(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,11 +117,12 @@ export default function EventsManagement() {
     e.preventDefault();
 
     if (!editingEvent && !formData.image) {
-      alert('Please select an image file');
+      setFormStatus({ type: 'error', message: 'Please select an image file' });
       return;
     }
 
     setSubmitting(true);
+    setFormStatus(null);
 
     try {
       const url = editingEvent ? `/api/events?id=${editingEvent.id}` : '/api/events';
@@ -149,7 +153,7 @@ export default function EventsManagement() {
       await fetchEvents();
       handleCloseModal();
     } catch (err: any) {
-      alert(err.message || 'Failed to save event. Please try again.');
+      setFormStatus({ type: 'error', message: err.message || 'Failed to save event. Please try again.' });
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -295,129 +299,151 @@ export default function EventsManagement() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal — bottom sheet on mobile, centered dialog on sm+ */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-2 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full my-4 max-h-[calc(100vh-2rem)] flex flex-col">
-            <div className="sticky top-0 bg-white border-b px-4 py-3 sm:px-6 sm:py-4 flex justify-between items-center rounded-t-xl">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+        <div
+          className="fixed inset-0 bg-black/50 z-[60] flex items-end sm:items-center justify-center sm:p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) handleCloseModal(); }}
+        >
+          <div className="bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl shadow-xl max-h-[92vh] sm:max-h-[calc(100vh-2rem)] flex flex-col">
+
+            {/* Drag handle — mobile only */}
+            <div className="flex justify-center pt-3 sm:hidden">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* Sticky header */}
+            <div className="flex-shrink-0 px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-900">
                 {editingEvent ? 'Edit Event' : 'Add New Event'}
               </h2>
               <button
                 onClick={handleCloseModal}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-              {/* Title */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Event Title *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter event title"
-                />
-              </div>
+            {/* Scrollable form body */}
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto flex flex-col">
+              <div className="flex-1 px-5 py-5 space-y-5">
 
-              {/* Date and Category */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Event Date *
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Event Title *
                   </label>
                   <input
-                    type="date"
+                    type="text"
                     required
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter event title"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category *
-                  </label>
-                  <select
-                    required
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="Academic">Academic</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Cultural">Cultural</option>
-                    <option value="Social">Social</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
 
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Event Image {!editingEvent && '*'}
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                    required={!editingEvent}
-                    onChange={handleFileChange}
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                  />
-                  <p className="mt-1 text-xs text-gray-500">
-                    {editingEvent
-                      ? 'Leave empty to keep existing image. Accepted formats: JPEG, PNG, GIF, WebP (Max 5MB)'
-                      : 'Accepted formats: JPEG, PNG, GIF, WebP (Max 5MB)'}
-                  </p>
-                </div>
-                {imagePreview && (
-                  <div className="mt-3 border border-gray-300 rounded-lg overflow-hidden">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="w-full h-48 object-cover"
+                {/* Date and Category */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Event Date *
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Category *
+                    </label>
+                    <select
+                      required
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="Academic">Academic</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Social">Social</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Image Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Event Image {!editingEvent && '*'}
+                  </label>
+                  <input
+                    type="file"
+                    id="eventImageInput"
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="eventImageInput"
+                    className="flex items-center gap-2.5 w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                  >
+                    <Upload className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <span className={`truncate ${formData.image ? 'text-gray-800' : 'text-gray-400'}`}>
+                      {formData.image ? formData.image.name : 'Choose image file…'}
+                    </span>
+                  </label>
+                  <p className="mt-1 text-xs text-gray-400">
+                    {editingEvent
+                      ? 'Leave empty to keep existing image. JPEG, PNG, GIF, WebP · Max 5MB'
+                      : 'JPEG, PNG, GIF, WebP · Max 5MB'}
+                  </p>
+                  {imagePreview && (
+                    <div className="mt-3 border border-gray-200 rounded-lg overflow-hidden">
+                      <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Description *
+                  </label>
+                  <textarea
+                    required
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    rows={4}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter event description"
+                  />
+                </div>
+
+                {/* Inline status */}
+                {formStatus && (
+                  <p className="text-sm text-red-600">✗ {formStatus.message}</p>
                 )}
               </div>
 
-              {/* Description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description *
-                </label>
-                <textarea
-                  required
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter event description"
-                />
-              </div>
-
-              {/* Form Actions */}
-              <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+              {/* Sticky footer actions */}
+              <div className="flex-shrink-0 px-5 py-4 border-t border-gray-200 flex gap-3">
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="w-full sm:flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full sm:flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {submitting ? 'Saving...' : editingEvent ? 'Update Event' : 'Create Event'}
                 </button>
