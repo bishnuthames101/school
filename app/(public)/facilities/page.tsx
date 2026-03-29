@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { BookOpen, FlaskConical, Monitor, Trophy, UtensilsCrossed, Theater, Bus, Shield, Heart, Music, Users } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
@@ -175,24 +176,20 @@ const Facilities = () => {
         </div>
       </section>
 
-      {/* Virtual Tour CTA */}
+      {/* Campus Tour CTA */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Experience Our Campus</h2>
           <p className="text-xl text-gray-600 mb-8">
-            See our world-class facilities in person. Schedule a campus tour or take our virtual tour
-            to explore everything {config.name} has to offer.
+            See our facilities in person. Schedule a visit and we will be happy to show you around.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200">
-              <Users className="h-5 w-5 mr-2" />
-              Schedule Campus Tour
-            </button>
-            <button className="inline-flex items-center px-8 py-3 border-2 border-school-primary text-base font-medium rounded-md text-school-primary hover:bg-school-primary-50 transition-colors duration-200">
-              <Monitor className="h-5 w-5 mr-2" />
-              Take Virtual Tour
-            </button>
-          </div>
+          <Link
+            href="/contact?subject=Campus+Tour+Request"
+            className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200"
+          >
+            <Users className="h-5 w-5 mr-2" />
+            Schedule a Campus Tour
+          </Link>
         </div>
       </section>
     </div>

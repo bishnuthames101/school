@@ -206,6 +206,12 @@ const config: SchoolConfig = {
       { title: "Practical Labs", detail: "Science & Computer labs" },
       { title: "SEE Preparation", detail: "Dedicated SEE coaching & revision" },
     ],
+    examSchedule: [
+      { exam: "First Terminal Examination", date: "Ashwin (October)", grade: "All Grades" },
+      { exam: "Second Terminal Examination", date: "Poush (January)", grade: "All Grades" },
+      { exam: "Final Examination", date: "Chaitra (March–April)", grade: "Grades 1–9" },
+      { exam: "SEE (School Leaving Exam)", date: "Chaitra–Baisakh", grade: "Grade 10" },
+    ],
   },
 
   // === FACILITIES ===
@@ -486,6 +492,22 @@ const config: SchoolConfig = {
       title: "Parents Meeting — Falgun",
       date: "Mangsir 20, 2081",
       category: "Event",
+    },
+  ],
+
+  // === FAQS (Contact Page) ===
+  faqs: [
+    {
+      question: "What are your school hours?",
+      answer: "School hours are Sunday–Friday, 10:00 AM to 4:00 PM. The administrative office is open from 10:00 AM to 5:00 PM.",
+    },
+    {
+      question: "How can I schedule a school visit?",
+      answer: `You can schedule a visit by calling our admissions office at +977 (01) 5202001 or by submitting our online contact form. We welcome parents and prospective students anytime during office hours.`,
+    },
+    {
+      question: "When does the admission process start?",
+      answer: "Admissions typically open in Magh–Falgun (January–February) for the upcoming academic year. Check the Notices section for the exact dates each year.",
     },
   ],
 

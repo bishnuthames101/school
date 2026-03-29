@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FileText, Search, Calendar, User, Mail, Phone, GraduationCap, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Search, User, Mail, Phone, GraduationCap, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Application {
   id: string;
@@ -39,6 +39,7 @@ export default function ApplicationsManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterGrade, setFilterGrade] = useState('All');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -57,6 +58,26 @@ export default function ApplicationsManagement() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id: string, newStatus: string) => {
+    setUpdatingId(id);
+    try {
+      const response = await fetch(`/api/applications/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error('Failed to update status');
+      setApplications(applications.map((app) =>
+        app.id === id ? { ...app, status: newStatus } : app
+      ));
+    } catch (err) {
+      alert('Failed to update status. Please try again.');
+      console.error(err);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -393,6 +414,25 @@ export default function ApplicationsManagement() {
                       <p className="text-sm text-gray-700">{app.message}</p>
                     </div>
                   )}
+
+                  {/* Status Actions */}
+                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-700 mr-1">Update Status:</span>
+                    {(['pending', 'reviewed', 'accepted', 'rejected'] as const).map((s) => (
+                      <button
+                        key={s}
+                        disabled={app.status === s || updatingId === app.id}
+                        onClick={() => updateStatus(app.id, s)}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                          app.status === s
+                            ? getStatusColor(s) + ' border-transparent'
+                            : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                        }`}
+                      >
+                        {updatingId === app.id && app.status !== s ? '...' : s.charAt(0).toUpperCase() + s.slice(1)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

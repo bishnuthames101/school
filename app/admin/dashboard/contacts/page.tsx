@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageSquare, Search, Mail, Calendar, CheckCircle, Circle, X } from 'lucide-react';
+import { MessageSquare, Search, Mail, Calendar, CheckCircle, Circle, X, Trash2 } from 'lucide-react';
 
 interface Contact {
   id: string;
@@ -21,6 +21,8 @@ export default function ContactsManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchContacts();
@@ -61,6 +63,22 @@ export default function ContactsManagement() {
     } catch (err) {
       alert('Failed to update status. Please try again.');
       console.error(err);
+    }
+  };
+
+  const deleteContact = async (id: string) => {
+    setDeletingId(id);
+    try {
+      const response = await fetch(`/api/contacts?id=${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete');
+      setContacts(contacts.filter((c) => c.id !== id));
+      if (selectedContact?.id === id) setSelectedContact(null);
+      setConfirmDeleteId(null);
+    } catch (err) {
+      alert('Failed to delete message. Please try again.');
+      console.error(err);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -238,12 +256,21 @@ export default function ContactsManagement() {
                       minute: '2-digit',
                     })}
                   </div>
-                  <button
-                    onClick={() => setSelectedContact(contact)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    View Full Message
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setSelectedContact(contact)}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      View Full Message
+                    </button>
+                    <button
+                      onClick={() => setConfirmDeleteId(contact.id)}
+                      className="text-red-400 hover:text-red-600 transition-colors"
+                      title="Delete message"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -273,6 +300,31 @@ export default function ContactsManagement() {
         <div className="text-sm text-gray-500 text-center">
           Showing {filteredContacts.length} of {contacts.length} message
           {contacts.length !== 1 ? 's' : ''}
+        </div>
+      )}
+
+      {/* Confirm Delete Dialog */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Message?</h3>
+            <p className="text-sm text-gray-500 mb-6">This action cannot be undone. The message will be permanently deleted.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteContact(confirmDeleteId)}
+                disabled={!!deletingId}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium disabled:opacity-50"
+              >
+                {deletingId ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -364,15 +416,22 @@ export default function ContactsManagement() {
                 </div>
               </div>
 
-              {/* Action */}
-              <div className="pt-4 border-t">
+              {/* Actions */}
+              <div className="pt-4 border-t flex gap-3">
                 <a
                   href={`mailto:${selectedContact.email}?subject=Re: ${selectedContact.subject}`}
-                  className="w-full inline-flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="flex-1 inline-flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   <Mail className="h-5 w-5" />
                   <span>Reply via Email</span>
                 </a>
+                <button
+                  onClick={() => setConfirmDeleteId(selectedContact.id)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors font-medium"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Delete</span>
+                </button>
               </div>
             </div>
           </div>

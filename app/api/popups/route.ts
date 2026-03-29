@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
+import { logAction } from '@/lib/audit';
 
 // GET - Fetch popups (use ?all=true for admin to get all popups)
 export async function GET(request: NextRequest) {
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    logAction('CREATE', 'Popup', popup.id, popup.title);
     return NextResponse.json(popup, { status: 201 });
   } catch (error) {
     console.error('Error creating popup:', error);

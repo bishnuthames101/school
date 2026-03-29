@@ -10,7 +10,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:admin": "tsx scripts/migrate-admin-password.ts"
+    "migrate:admin": "tsx scripts/migrate-admin-password.ts",
+    "create-admin": "tsx scripts/create-school-admin.ts",
+    "reset-admin": "tsx scripts/reset-admin-password.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -22,7 +24,8 @@
     "lucide-react": "^0.344.0",
     "next": "^14.2.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "resend": "^6.9.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

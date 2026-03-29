@@ -3,6 +3,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { getSchoolSlug } from '@/lib/school';
 import { uploadImage, deleteFile } from '@/lib/storage';
+import { logAction } from '@/lib/audit';
 
 // GET all gallery images with pagination
 export async function GET(request: NextRequest) {
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    logAction('CREATE', 'Gallery', image.id, image.caption || image.category);
     return NextResponse.json({ success: true, data: image }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating gallery image:', error);
@@ -124,6 +126,7 @@ export async function DELETE(request: NextRequest) {
 
     await db.galleryImage.delete({ where: { id } });
 
+    logAction('DELETE', 'Gallery', id!);
     return NextResponse.json({ success: true, message: 'Image deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting gallery image:', error);

@@ -7,7 +7,6 @@ const supabase = createClient(
 
 const BUCKET = "school-uploads";
 
-// Allowed MIME types
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 const DOCUMENT_TYPES = [
   "application/pdf",
@@ -29,6 +28,62 @@ export type UploadFolder =
   | "popups"
   | "applications";
 
+// ---------------------------------------------------------------------------
+// Image Optimization — Supabase Pro image transformations
+// Docs: https://supabase.com/docs/guides/storage/serving/image-transformations
+// ---------------------------------------------------------------------------
+
+export interface ImageTransformOptions {
+  width?: number;
+  height?: number;
+  quality?: number;                       // 1–100
+  format?: "webp" | "avif" | "origin";
+  resize?: "cover" | "contain" | "fill";
+}
+
+export const IMAGE_PRESETS = {
+  thumbnail: { width: 400, quality: 70, format: "webp" as const },
+  card:      { width: 800, quality: 75, format: "webp" as const },
+  full:      { width: 1200, quality: 80, format: "webp" as const },
+  avatar:    { width: 200, height: 200, quality: 80, format: "webp" as const, resize: "cover" as const },
+} satisfies Record<string, ImageTransformOptions>;
+
+/**
+ * Returns an optimized image URL using Supabase Pro image transformations.
+ * Non-Supabase URLs (pexels, placeholders, etc.) are returned unchanged.
+ *
+ * Usage:
+ *   getImageUrl(url, IMAGE_PRESETS.thumbnail)  // 400px WebP, quality 70
+ *   getImageUrl(url, IMAGE_PRESETS.card)        // 800px WebP, quality 75
+ *   getImageUrl(url, IMAGE_PRESETS.full)        // 1200px WebP, quality 80
+ *   getImageUrl(url, IMAGE_PRESETS.avatar)      // 200×200 cropped WebP
+ */
+export function getImageUrl(
+  url: string,
+  options: ImageTransformOptions = IMAGE_PRESETS.card
+): string {
+  if (!url || !url.includes("supabase.co/storage")) return url;
+
+  // /storage/v1/object/public/ → /storage/v1/render/image/public/
+  const renderUrl = url.replace(
+    "/storage/v1/object/public/",
+    "/storage/v1/render/image/public/"
+  );
+
+  const params = new URLSearchParams();
+  if (options.width)   params.set("width",   String(options.width));
+  if (options.height)  params.set("height",  String(options.height));
+  if (options.quality) params.set("quality", String(options.quality));
+  if (options.format)  params.set("format",  options.format);
+  if (options.resize)  params.set("resize",  options.resize);
+
+  return `${renderUrl}?${params.toString()}`;
+}
+
+// ---------------------------------------------------------------------------
+// Upload
+// ---------------------------------------------------------------------------
+
 /**
  * Upload an image to Supabase Storage.
  * Returns the public URL.
@@ -45,13 +100,11 @@ export async function uploadImage(
       `Invalid image type: ${mimeType}. Allowed: ${IMAGE_TYPES.join(", ")}`
     );
   }
-
   if (file.size > MAX_IMAGE_SIZE) {
     throw new Error(
       `Image too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Max: 5MB`
     );
   }
-
   return uploadToStorage(schoolSlug, folder, file, fileName, mimeType);
 }
 
@@ -69,13 +122,11 @@ export async function uploadDocument(
   if (!DOCUMENT_TYPES.includes(mimeType)) {
     throw new Error(`Invalid document type: ${mimeType}`);
   }
-
   if (file.size > MAX_DOCUMENT_SIZE) {
     throw new Error(
       `Document too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Max: 10MB`
     );
   }
-
   return uploadToStorage(schoolSlug, folder, file, fileName, mimeType);
 }
 
@@ -89,7 +140,6 @@ async function uploadToStorage(
   fileName: string,
   contentType: string
 ): Promise<string> {
-  // Sanitize filename and add timestamp to prevent collisions
   const sanitized = fileName.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase();
   const path = `${schoolSlug}/${folder}/${Date.now()}-${sanitized}`;
 
@@ -107,6 +157,10 @@ async function uploadToStorage(
 
   return data.publicUrl;
 }
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
 
 /**
  * Delete a file from Supabase Storage by its public URL.

@@ -25,6 +25,7 @@ model School {
   popups        Popup[]
   applications  ApplicationForm[]
   contacts      ContactForm[]
+  auditLogs     AuditLog[]
 
   @@map("schools")
 }
@@ -181,4 +182,21 @@ model Popup {
   updatedAt DateTime  @updatedAt
 
   @@map("popups")
+}
+
+// === Audit Log ===
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  action    String   // LOGIN | LOGOUT | CREATE | UPDATE | DELETE
+  entity    String   // Event | Notice | Gallery | Popup | Application | Contact | Admin
+  entityId  String?
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([schoolId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
+import { sendContactNotification } from '@/lib/email';
+import { logAction } from '@/lib/audit';
 
 // GET all contacts with pagination (requires auth)
 export async function GET(request: NextRequest) {
@@ -46,22 +48,64 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST new contact (public - from contact form)
+// POST new contact (public — from contact form)
 export async function POST(request: NextRequest) {
   try {
     const db = await scopedPrisma();
     const body = await request.json();
 
+    // Destructure only known fields — unknown/injected fields are dropped entirely
+    const { name, email, phone, subject, message } = body;
+
+    // --- Required field validation ---
+    const errors: string[] = [];
+
+    if (!name?.trim())    errors.push('Name is required');
+    if (!subject?.trim()) errors.push('Subject is required');
+    if (!message?.trim()) errors.push('Message is required');
+
+    if (!email?.trim()) {
+      errors.push('Email address is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      errors.push('Invalid email address format');
+    }
+
+    if (errors.length > 0) {
+      return NextResponse.json(
+        { success: false, error: errors[0] },
+        { status: 400 }
+      );
+    }
+
+    // Build data object with only known, validated fields.
+    // status is intentionally excluded — it defaults to "unread" in the schema.
+    // schoolId is injected automatically by scopedPrisma.
     const contact = await db.contactForm.create({
-      data: body,
+      data: {
+        name:    name.trim(),
+        email:   email.trim().toLowerCase(),
+        phone:   phone?.trim() || '',
+        subject: subject.trim(),
+        message: message.trim(),
+      },
     });
+
+    // Fire-and-forget: email notification + audit log
+    sendContactNotification({
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone || undefined,
+      subject: contact.subject,
+      message: contact.message,
+    });
+    logAction('CREATE', 'Contact', contact.id, contact.subject);
 
     return NextResponse.json({ success: true, data: contact }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating contact:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to submit contact message' },
-      { status: 400 }
+      { success: false, error: 'Failed to submit message. Please try again.' },
+      { status: 500 }
     );
   }
 }
@@ -108,6 +152,39 @@ export async function PUT(request: NextRequest) {
     console.error('Error updating contact:', error);
     return NextResponse.json(
       { success: false, error: error.message || 'Failed to update contact' },
+      { status: 400 }
+    );
+  }
+}
+
+// DELETE contact message (requires auth)
+export async function DELETE(request: NextRequest) {
+  try {
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const db = await scopedPrisma();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Contact ID is required' },
+        { status: 400 }
+      );
+    }
+
+    await db.contactForm.delete({ where: { id } });
+
+    logAction('DELETE', 'Contact', id);
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error('Error deleting contact:', error);
+    return NextResponse.json(
+      { success: false, error: error.message || 'Failed to delete contact' },
       { status: 400 }
     );
   }

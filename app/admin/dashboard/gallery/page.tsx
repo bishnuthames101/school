@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, X, Image as ImageIcon, Upload } from 'lucide-react';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
 
 interface GalleryImage {
   id: string;
@@ -221,7 +222,7 @@ export default function GalleryManagement() {
             <div key={image.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all group">
               <div className="relative aspect-square bg-gray-200 overflow-hidden">
                 <img
-                  src={image.imageUrl}
+                  src={getImageUrl(image.imageUrl, IMAGE_PRESETS.thumbnail)}
                   alt={image.caption}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {

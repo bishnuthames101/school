@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { deleteFile } from '@/lib/storage';
+import { logAction } from '@/lib/audit';
 
 // PUT - Update popup (requires auth)
 export async function PUT(
@@ -36,6 +37,7 @@ export async function PUT(
       },
     });
 
+    logAction('UPDATE', 'Popup', params.id, popup.title);
     return NextResponse.json(popup);
   } catch (error) {
     console.error('Error updating popup:', error);
@@ -67,6 +69,7 @@ export async function DELETE(
       where: { id: params.id },
     });
 
+    logAction('DELETE', 'Popup', params.id);
     return NextResponse.json({ message: 'Popup deleted successfully' });
   } catch (error) {
     console.error('Error deleting popup:', error);

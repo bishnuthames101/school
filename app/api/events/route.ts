@@ -3,6 +3,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { getSchoolSlug } from '@/lib/school';
 import { uploadImage, deleteFile } from '@/lib/storage';
+import { logAction } from '@/lib/audit';
 
 // GET all events with pagination and filtering
 export async function GET(request: NextRequest) {
@@ -104,6 +105,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    logAction('CREATE', 'Event', event.id, event.title);
     return NextResponse.json({ success: true, data: event }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating event:', error);
@@ -175,6 +177,7 @@ export async function PUT(request: NextRequest) {
       },
     });
 
+    logAction('UPDATE', 'Event', id!, event.title);
     return NextResponse.json({ success: true, data: event });
   } catch (error: any) {
     console.error('Error updating event:', error);
@@ -216,6 +219,7 @@ export async function DELETE(request: NextRequest) {
 
     await db.event.delete({ where: { id } });
 
+    logAction('DELETE', 'Event', id!);
     return NextResponse.json({ success: true, message: 'Event deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting event:', error);

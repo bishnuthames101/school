@@ -20,6 +20,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  Activity,
 } from 'lucide-react';
 import { clearSession } from '@/components/SessionManager';
 
@@ -39,6 +40,10 @@ const contentNav = [
 const inboxNav = [
   { name: 'Applications', href: '/admin/dashboard/applications', icon: FileText },
   { name: 'Contacts', href: '/admin/dashboard/contacts', icon: MessageSquare },
+];
+
+const systemNav = [
+  { name: 'Activity Logs', href: '/admin/dashboard/logs', icon: Activity },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -185,6 +190,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {renderNavSection('Main', mainNav)}
             {renderNavSection('Content', contentNav)}
             {renderNavSection('Inbox', inboxNav)}
+            {renderNavSection('System', systemNav)}
 
             {/* Settings, Logout, Back to Website — inside scroll area so mobile browser bars don't hide them */}
             <div className="border-t border-gray-800 mx-2 mt-4 pt-3 space-y-1 pb-4">

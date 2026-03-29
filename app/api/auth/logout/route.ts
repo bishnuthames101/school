@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { logAction } from '@/lib/audit';
 
 export async function POST() {
+  logAction('LOGOUT', 'Admin');
   const response = NextResponse.json(
     { message: 'Logout successful', success: true },
     { status: 200 }

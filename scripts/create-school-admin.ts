@@ -23,10 +23,8 @@ async function main() {
     process.exit(1);
   }
 
-  if (!password) {
-    console.error("Error: ADMIN_PASSWORD env var is required");
-    process.exit(1);
-  }
+  // Default to admin123 if not specified — school admin should change this on first login
+  const resolvedPassword = password || "admin123";
 
   // Find or create the School record
   let school = await prisma.school.findUnique({ where: { slug: schoolSlug } });
@@ -55,7 +53,7 @@ async function main() {
   }
 
   // Hash password and create admin
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(resolvedPassword, 10);
 
   const admin = await prisma.admin.create({
     data: {
@@ -66,7 +64,8 @@ async function main() {
   });
 
   console.log(`✓ Created admin "${admin.username}" for school "${schoolSlug}" (id: ${admin.id})`);
-  console.log("\nDone! You can now log in at /admin/login");
+  console.log(`✓ Password: ${resolvedPassword}`);
+  console.log("\nDone! Log in at /admin/login and change the password from Settings.");
 }
 
 main()

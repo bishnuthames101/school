@@ -1,141 +1,166 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { AlertTriangle } from 'lucide-react';
 
-const SESSION_TIMEOUT = 2 * 60 * 1000; // 2 minutes in milliseconds
-const CHECK_INTERVAL = 10 * 1000; // Check every 10 seconds
+const SESSION_TIMEOUT = 5 * 60 * 1000;   // 5 minutes
+const WARNING_BEFORE = 1 * 60 * 1000;   // Warn when 1 minute remains
+const CHECK_INTERVAL = 10 * 1000;       // Check every 10 seconds
 const SESSION_KEY = 'admin_session_active';
 const LAST_ACTIVITY_KEY = 'admin_last_activity';
 
 export default function SessionManager() {
   const router = useRouter();
   const pathname = usePathname();
-  const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const isLoggingOutRef = useRef(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const countdownRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Update last activity time
   const updateActivity = () => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString());
     }
   };
 
-  // Logout function
   const logout = async () => {
     if (isLoggingOutRef.current) return;
     isLoggingOutRef.current = true;
-
+    if (countdownRef.current) clearInterval(countdownRef.current);
     try {
-      // Clear session storage
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem(SESSION_KEY);
         sessionStorage.removeItem(LAST_ACTIVITY_KEY);
       }
-
-      // Call logout API to clear cookie
       await fetch('/api/auth/logout', { method: 'POST' });
-
-      // Redirect to login
       router.push('/admin/login?session=expired');
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Force redirect even if API call fails
+    } catch {
       router.push('/admin/login?session=expired');
     }
   };
 
-  // Check session validity
+  const handleStayLoggedIn = () => {
+    updateActivity();
+    setShowWarning(false);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+  };
+
+  const startCountdown = (secondsRemaining: number) => {
+    setSecondsLeft(secondsRemaining);
+    setShowWarning(true);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    countdownRef.current = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const checkSession = () => {
     if (typeof window === 'undefined') return;
 
-    // Check if session marker exists (clears on page reload)
     const sessionActive = sessionStorage.getItem(SESSION_KEY);
     if (!sessionActive) {
-      console.log('[SessionManager] Session not found - page was reloaded or session expired');
       logout();
       return;
     }
 
-    // Check last activity time
     const lastActivityStr = sessionStorage.getItem(LAST_ACTIVITY_KEY);
     if (!lastActivityStr) {
-      console.log('[SessionManager] No activity timestamp found');
       logout();
       return;
     }
 
-    const lastActivity = parseInt(lastActivityStr, 10);
-    const now = Date.now();
-    const timeSinceActivity = now - lastActivity;
+    const timeSinceActivity = Date.now() - parseInt(lastActivityStr, 10);
 
-    if (timeSinceActivity > SESSION_TIMEOUT) {
-      console.log(`[SessionManager] Session timeout: ${timeSinceActivity}ms since last activity`);
+    if (timeSinceActivity >= SESSION_TIMEOUT) {
       logout();
       return;
     }
 
-    // Log remaining time for debugging
-    const remainingTime = Math.ceil((SESSION_TIMEOUT - timeSinceActivity) / 1000);
-    console.log(`[SessionManager] Session valid. ${remainingTime}s remaining`);
+    const msRemaining = SESSION_TIMEOUT - timeSinceActivity;
+
+    if (msRemaining <= WARNING_BEFORE) {
+      const secondsRemaining = Math.ceil(msRemaining / 1000);
+      if (!showWarning) {
+        startCountdown(secondsRemaining);
+      }
+    } else {
+      // Still plenty of time — hide warning if it was showing
+      if (showWarning) {
+        setShowWarning(false);
+        if (countdownRef.current) clearInterval(countdownRef.current);
+      }
+    }
   };
 
   useEffect(() => {
-    // Only run in admin routes
-    if (!pathname.startsWith('/admin') || pathname === '/admin/login') {
-      return;
-    }
+    if (!pathname.startsWith('/admin') || pathname === '/admin/login') return;
 
-    // Check if session exists on mount
     const sessionActive = sessionStorage.getItem(SESSION_KEY);
     if (!sessionActive) {
-      console.log('[SessionManager] No active session on mount - redirecting to login');
       logout();
       return;
     }
 
-    // Initialize last activity time
     updateActivity();
 
-    // Activity event listeners
     const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+    activityEvents.forEach((e) => window.addEventListener(e, updateActivity));
 
-    activityEvents.forEach(event => {
-      window.addEventListener(event, updateActivity);
-    });
+    const intervalId = setInterval(checkSession, CHECK_INTERVAL);
 
-    // Start periodic session check
-    checkIntervalRef.current = setInterval(checkSession, CHECK_INTERVAL);
-
-    // Cleanup
     return () => {
-      activityEvents.forEach(event => {
-        window.removeEventListener(event, updateActivity);
-      });
-
-      if (checkIntervalRef.current) {
-        clearInterval(checkIntervalRef.current);
-      }
+      activityEvents.forEach((e) => window.removeEventListener(e, updateActivity));
+      clearInterval(intervalId);
+      if (countdownRef.current) clearInterval(countdownRef.current);
     };
-  }, [pathname, router]);
+  }, [pathname]);
 
-  return null; // This component doesn't render anything
+  if (!showWarning) return null;
+
+  const minutes = Math.floor(secondsLeft / 60);
+  const seconds = String(secondsLeft % 60).padStart(2, '0');
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-amber-50 border-t-2 border-amber-400 px-4 py-3 shadow-lg">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-amber-800">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+          <span className="text-sm font-medium">
+            Your session will expire in{' '}
+            <span className="font-bold tabular-nums">
+              {minutes}:{seconds}
+            </span>
+            . Unsaved changes will be lost.
+          </span>
+        </div>
+        <button
+          onClick={handleStayLoggedIn}
+          className="flex-shrink-0 text-sm bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-md font-medium transition-colors"
+        >
+          Stay Logged In
+        </button>
+      </div>
+    </div>
+  );
 }
 
-// Export function to initialize session (call after successful login)
 export function initializeSession() {
   if (typeof window !== 'undefined') {
     sessionStorage.setItem(SESSION_KEY, 'true');
     sessionStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString());
-    console.log('[SessionManager] Session initialized');
   }
 }
 
-// Export function to clear session
 export function clearSession() {
   if (typeof window !== 'undefined') {
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(LAST_ACTIVITY_KEY);
-    console.log('[SessionManager] Session cleared');
   }
 }

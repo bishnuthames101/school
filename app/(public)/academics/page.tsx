@@ -6,13 +6,6 @@ import { getSchoolConfig } from '@/lib/school-config';
 const config = getSchoolConfig();
 
 const Academics = () => {
-  const examSchedule = [
-    { exam: 'Mid-Term Examinations', date: 'October 15-25, 2024', grade: 'All Grades' },
-    { exam: 'Final Examinations', date: 'March 10-20, 2025', grade: 'All Grades' },
-    { exam: 'AP Examinations', date: 'May 5-15, 2025', grade: 'Grades 9-12' },
-    { exam: 'State Assessments', date: 'April 20-30, 2025', grade: 'Grades 3-8' },
-  ];
-
   return (
     <div>
       {/* Hero Section */}
@@ -102,7 +95,7 @@ const Academics = () => {
                 Examination Schedule
               </h2>
               <div className="space-y-4">
-                {examSchedule.map((exam, index) => (
+                {config.academics.examSchedule.map((exam, index) => (
                   <div key={index} className="bg-white p-4 rounded-lg shadow border-l-4 border-school-primary">
                     <h3 className="font-semibold text-gray-900">{exam.exam}</h3>
                     <p className="text-school-primary text-sm">{exam.date}</p>

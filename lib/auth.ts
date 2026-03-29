@@ -5,10 +5,18 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/db';
 import { getSchoolId } from '@/lib/school';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+// Convert string secret to Uint8Array for jose (throws if JWT_SECRET not set)
+const getSecretKey = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET environment variable is not set');
+  return new TextEncoder().encode(secret);
+};
 
-// Convert string secret to Uint8Array for jose
-const getSecretKey = () => new TextEncoder().encode(JWT_SECRET);
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET environment variable is not set');
+  return secret;
+};
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
@@ -57,13 +65,13 @@ export async function verifyTokenEdge(token: string): Promise<any> {
 
 // Node.js token generation (for API routes)
 export function generateToken(payload: object): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: '24h' });
 }
 
 // Node.js token verification (for API routes)
 export function verifyToken(token: string): any {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, getJwtSecret());
   } catch (error) {
     return null;
   }

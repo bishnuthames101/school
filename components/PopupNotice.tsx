@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { X } from 'lucide-react';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
 
 interface Popup {
   id: string;
@@ -62,7 +63,7 @@ const PopupNotice = () => {
       {/* Popup Image */}
       <div className="relative w-full aspect-[16/9] md:aspect-[21/9]">
         <Image
-          src={popup.imageUrl}
+          src={getImageUrl(popup.imageUrl, IMAGE_PRESETS.full)}
           alt={popup.title}
           fill
           className="object-contain"

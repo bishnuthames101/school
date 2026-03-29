@@ -3,6 +3,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { getSchoolSlug } from '@/lib/school';
 import { uploadDocument, deleteFile } from '@/lib/storage';
+import { logAction } from '@/lib/audit';
 
 // GET all notices with pagination and filtering
 export async function GET(request: NextRequest) {
@@ -99,6 +100,7 @@ export async function POST(request: NextRequest) {
         attachment: attachmentUrl,
       },
     });
+    logAction('CREATE', 'Notice', notice.id, notice.title);
     return NextResponse.json({ success: true, data: notice }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating notice:', error);
@@ -165,6 +167,7 @@ export async function PUT(request: NextRequest) {
       },
     });
 
+    logAction('UPDATE', 'Notice', id!, notice.title);
     return NextResponse.json({ success: true, data: notice });
   } catch (error: any) {
     console.error('Error updating notice:', error);
@@ -205,6 +208,7 @@ export async function DELETE(request: NextRequest) {
 
     await db.notice.delete({ where: { id } });
 
+    logAction('DELETE', 'Notice', id!);
     return NextResponse.json({ success: true, message: 'Notice deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting notice:', error);

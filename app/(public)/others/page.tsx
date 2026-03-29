@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Trophy, Users, Camera, GraduationCap, Palette, BookOpen, Award } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
@@ -106,9 +107,12 @@ const Others = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{club.name}</h3>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{club.members} members</span>
-                  <button className="text-school-primary hover:text-school-primary-dark font-medium text-sm">
+                  <Link
+                    href={`/contact?subject=${encodeURIComponent(`Club Membership: ${club.name}`)}`}
+                    className="text-school-primary hover:text-school-primary-dark font-medium text-sm"
+                  >
                     Join Club →
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -226,10 +230,13 @@ const Others = () => {
                 Stay connected with your alma mater and fellow graduates. Share your achievements,
                 mentor current students, and be part of our growing success story.
               </p>
-              <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200">
+              <Link
+                href="/contact?subject=Alumni+Network"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200"
+              >
                 <Users className="h-5 w-5 mr-2" />
                 Connect with Alumni
-              </button>
+              </Link>
             </div>
           </div>
         </div>

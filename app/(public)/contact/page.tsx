@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
 
 const Contact = () => {
+  const searchParams = useSearchParams();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,6 +17,14 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+
+  // Pre-fill subject from URL query param (?subject=...)
+  useEffect(() => {
+    const subjectParam = searchParams.get('subject');
+    if (subjectParam) {
+      setFormData((prev) => ({ ...prev, subject: subjectParam }));
+    }
+  }, [searchParams]);
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
@@ -345,20 +356,12 @@ const Contact = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-bold text-gray-900 mb-2">What are your school hours?</h3>
-              <p className="text-gray-600">School hours are Monday-Friday from 8:00 AM to 3:30 PM. The office is open from 8:00 AM to 5:00 PM.</p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-bold text-gray-900 mb-2">How can I schedule a school tour?</h3>
-              <p className="text-gray-600">You can schedule a tour by calling our admissions office at {config.contact.phones.admissions || config.contact.phones.main} or using our online contact form.</p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-bold text-gray-900 mb-2">What is your response time for inquiries?</h3>
-              <p className="text-gray-600">We typically respond to all inquiries within 24-48 hours during business days.</p>
-            </div>
+            {config.faqs.map((faq, index) => (
+              <div key={index} className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-bold text-gray-900 mb-2">{faq.question}</h3>
+                <p className="text-gray-600">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

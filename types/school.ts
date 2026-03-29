@@ -102,7 +102,18 @@ export interface SchoolConfig {
       detail: string;
     }>;
     calendarSlides: number; // number of calendar images (1.jpg, 2.jpg, ... N.jpg)
+    examSchedule: Array<{
+      exam: string;
+      date: string;
+      grade: string;
+    }>;
   };
+
+  // === FAQS (Contact Page) ===
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
 
   // === FACILITIES ===
   facilities: {
