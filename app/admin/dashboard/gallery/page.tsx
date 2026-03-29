@@ -12,7 +12,7 @@ interface GalleryImage {
 }
 
 interface GalleryFormData {
-  image: File | null;
+  images: File[];
   caption: string;
   category: 'Campus' | 'Events' | 'Sports' | 'Cultural' | 'Academic' | 'Other';
 }
@@ -23,11 +23,12 @@ export default function GalleryManagement() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [imagePreview, setImagePreview] = useState<string>('');
   const [formStatus, setFormStatus] = useState<{ type: 'error'; message: string } | null>(null);
   const [formData, setFormData] = useState<GalleryFormData>({
-    image: null,
+    images: [],
     caption: '',
     category: 'Campus',
   });
@@ -53,74 +54,81 @@ export default function GalleryManagement() {
   };
 
   const handleOpenModal = () => {
-    setFormData({
-      image: null,
-      caption: '',
-      category: 'Campus',
-    });
+    setFormData({ images: [], caption: '', category: 'Campus' });
     setImagePreview('');
     setFormStatus(null);
+    setUploadProgress(null);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setFormData({
-      image: null,
-      caption: '',
-      category: 'Campus',
-    });
+    setFormData({ images: [], caption: '', category: 'Campus' });
     setImagePreview('');
     setFormStatus(null);
+    setUploadProgress(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setFormData({ ...formData, images: files });
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(files[0]);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.image) {
-      setFormStatus({ type: 'error', message: 'Please select an image file' });
+    if (formData.images.length === 0) {
+      setFormStatus({ type: 'error', message: 'Please select at least one image file' });
       return;
     }
 
     setSubmitting(true);
     setFormStatus(null);
+    setUploadProgress({ current: 0, total: formData.images.length });
 
-    try {
-      const submitData = new FormData();
-      submitData.append('image', formData.image);
-      submitData.append('caption', formData.caption);
-      submitData.append('category', formData.category);
+    const failed: string[] = [];
 
-      const response = await fetch('/api/gallery', {
-        method: 'POST',
-        body: submitData,
-      });
+    for (let i = 0; i < formData.images.length; i++) {
+      const file = formData.images[i];
+      setUploadProgress({ current: i + 1, total: formData.images.length });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add image');
+      try {
+        const submitData = new FormData();
+        submitData.append('image', file);
+        // For bulk upload: use caption if provided, otherwise derive from filename
+        const caption = formData.images.length === 1 && formData.caption
+          ? formData.caption
+          : formData.caption
+            ? `${formData.caption} ${i + 1}`
+            : file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+        submitData.append('caption', caption);
+        submitData.append('category', formData.category);
+
+        const response = await fetch('/api/gallery', { method: 'POST', body: submitData });
+        if (!response.ok) {
+          const errorData = await response.json();
+          failed.push(`${file.name}: ${errorData.error || 'upload failed'}`);
+        }
+      } catch {
+        failed.push(`${file.name}: network error`);
       }
-
-      await fetchImages();
-      handleCloseModal();
-    } catch (err: any) {
-      setFormStatus({ type: 'error', message: err.message || 'Failed to add image. Please try again.' });
-      console.error(err);
-    } finally {
-      setSubmitting(false);
     }
+
+    await fetchImages();
+
+    if (failed.length > 0) {
+      setFormStatus({ type: 'error', message: `${failed.length} file(s) failed: ${failed[0]}` });
+      setSubmitting(false);
+      setUploadProgress(null);
+    } else {
+      handleCloseModal();
+    }
+    setSubmitting(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -308,7 +316,7 @@ export default function GalleryManagement() {
 
             {/* Sticky header */}
             <div className="flex-shrink-0 px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900">Add New Image</h2>
+              <h2 className="text-lg font-bold text-gray-900">Add Image{formData.images.length > 1 ? 's' : ''}</h2>
               <button
                 onClick={handleCloseModal}
                 className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -324,12 +332,13 @@ export default function GalleryManagement() {
                 {/* Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Image File *
+                    Image File(s) *
                   </label>
                   <input
                     type="file"
                     id="galleryImageInput"
                     accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                    multiple
                     onChange={handleFileChange}
                     className="hidden"
                   />
@@ -338,16 +347,30 @@ export default function GalleryManagement() {
                     className="flex items-center gap-2.5 w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm cursor-pointer hover:bg-gray-50 transition-colors"
                   >
                     <Upload className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                    <span className={`truncate ${formData.image ? 'text-gray-800' : 'text-gray-400'}`}>
-                      {formData.image ? formData.image.name : 'Choose image file…'}
+                    <span className={`truncate ${formData.images.length > 0 ? 'text-gray-800' : 'text-gray-400'}`}>
+                      {formData.images.length === 0
+                        ? 'Choose image file(s)…'
+                        : formData.images.length === 1
+                          ? formData.images[0].name
+                          : `${formData.images.length} files selected`}
                     </span>
                   </label>
                   <p className="mt-1 text-xs text-gray-400">
-                    JPEG, PNG, GIF, WebP · Max 5MB
+                    JPEG, PNG, GIF, WebP · Max 5MB each · Select multiple to bulk upload
                   </p>
-                  {imagePreview && (
+                  {imagePreview && formData.images.length === 1 && (
                     <div className="mt-3 border border-gray-200 rounded-lg overflow-hidden">
                       <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover" />
+                    </div>
+                  )}
+                  {formData.images.length > 1 && (
+                    <div className="mt-3 grid grid-cols-4 gap-2">
+                      {formData.images.slice(0, 4).map((f, i) => (
+                        <div key={i} className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded p-1.5 truncate">{f.name}</div>
+                      ))}
+                      {formData.images.length > 4 && (
+                        <div className="text-xs text-gray-400 flex items-center justify-center">+{formData.images.length - 4} more</div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -355,16 +378,21 @@ export default function GalleryManagement() {
                 {/* Caption */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Caption *
+                    Caption {formData.images.length > 1 ? '(prefix — optional)' : '*'}
                   </label>
                   <input
                     type="text"
-                    required
+                    required={formData.images.length <= 1}
                     value={formData.caption}
                     onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter image caption"
+                    placeholder={formData.images.length > 1 ? 'Optional — filenames used if blank' : 'Enter image caption'}
                   />
+                  {formData.images.length > 1 && (
+                    <p className="mt-1 text-xs text-gray-400">
+                      If provided, captions will be &ldquo;{formData.caption || 'Caption'} 1&rdquo;, &ldquo;{formData.caption || 'Caption'} 2&rdquo;, etc.
+                    </p>
+                  )}
                 </div>
 
                 {/* Category */}
@@ -407,7 +435,11 @@ export default function GalleryManagement() {
                   disabled={submitting}
                   className="flex-1 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {submitting ? 'Adding...' : 'Add Image'}
+                  {submitting && uploadProgress
+                    ? `Uploading ${uploadProgress.current} of ${uploadProgress.total}...`
+                    : formData.images.length > 1
+                      ? `Upload ${formData.images.length} Images`
+                      : 'Add Image'}
                 </button>
               </div>
             </form>

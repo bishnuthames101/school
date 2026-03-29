@@ -23,6 +23,7 @@ const HeaderStandard: React.FC = () => {
     { name: 'Events', href: '/events' },
     { name: 'Notices', href: '/notices' },
     { name: 'Facilities', href: '/facilities' },
+    { name: 'Gallery', href: '/gallery' },
     { name: 'Others', href: '/others' },
     { name: 'Contact', href: '/contact' },
   ];

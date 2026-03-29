@@ -90,26 +90,31 @@ const config: SchoolConfig = {
 
   // === LEADERSHIP TEAM (About Page) ===
   // TODO: Update with real names, roles and qualifications from school
+  // TODO: Replace image paths with real photos — place them in schools/kopess/assets/team/
   leadership: [
     {
       name: "To be updated",
       role: "Principal",
       qualification: "M.Ed.",
+      image: "/school-assets/team/principal.jpg",
     },
     {
       name: "To be updated",
       role: "Vice Principal",
       qualification: "M.Ed.",
+      image: "/school-assets/team/vice-principal.jpg",
     },
     {
       name: "To be updated",
       role: "Academic Coordinator",
       qualification: "M.A.",
+      image: "/school-assets/team/academic-coordinator.jpg",
     },
     {
       name: "To be updated",
       role: "Head of Administration",
       qualification: "MBA",
+      image: "/school-assets/team/head-administration.jpg",
     },
   ],
 
@@ -419,18 +424,21 @@ const config: SchoolConfig = {
   },
 
   // TODO: Update with real KOPESS alumni and their verified achievements
+  // TODO: Replace image paths with real photos — place them in schools/kopess/assets/alumni/
   alumni: [
     {
       name: "To be updated",
       classOf: "2010",
       achievement: "Notable alumni — details to be confirmed",
       role: "Professional",
+      image: "/school-assets/alumni/alumni-1.jpg",
     },
     {
       name: "To be updated",
       classOf: "2015",
       achievement: "Notable alumni — details to be confirmed",
       role: "Professional",
+      image: "/school-assets/alumni/alumni-2.jpg",
     },
   ],
 

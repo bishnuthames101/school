@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageSquare, Search, Mail, Calendar, CheckCircle, Circle, X, Trash2 } from 'lucide-react';
+import { MessageSquare, Search, Mail, Calendar, CheckCircle, Circle, X, Trash2, Download } from 'lucide-react';
 
 interface Contact {
   id: string;
@@ -82,6 +82,24 @@ export default function ContactsManagement() {
     }
   };
 
+  const exportCSV = () => {
+    const headers = ['Name', 'Email', 'Phone', 'Subject', 'Status', 'Date'];
+    const rows = filteredContacts.map((c) => [
+      c.name, c.email, c.phone || '', c.subject, c.status,
+      new Date(c.createdAt).toLocaleDateString(),
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'contacts.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const filteredContacts = contacts.filter((contact) => {
     const matchesSearch =
       contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,9 +132,20 @@ export default function ContactsManagement() {
         <p className="text-sm text-gray-500 mb-1">
           Dashboard &gt; <span className="text-gray-700">Contacts</span>
         </p>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Contact Messages</h1>
-          <p className="text-gray-500 mt-1 text-sm">View and manage contact form submissions</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Contact Messages</h1>
+            <p className="text-gray-500 mt-1 text-sm">View and manage contact form submissions</p>
+          </div>
+          {contacts.length > 0 && (
+            <button
+              onClick={exportCSV}
+              className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors self-start"
+            >
+              <Download className="h-4 w-4" />
+              Export CSV
+            </button>
+          )}
         </div>
       </div>
 

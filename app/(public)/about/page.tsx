@@ -108,7 +108,10 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {config.leadership.map((member, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <div className="h-48 bg-gradient-to-br from-school-primary-light to-school-primary"></div>
+                {member.image
+                  ? <img src={member.image} alt={member.name} className="w-full h-48 object-cover" />
+                  : <div className="h-48 bg-gradient-to-br from-school-primary-light to-school-primary"></div>
+                }
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
                   <p className="text-school-primary font-semibold mb-2">{member.role}</p>
@@ -130,7 +133,10 @@ const About = () => {
 
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex flex-col lg:flex-row items-start gap-8">
-                <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
+                {config.leadership[0]?.image
+                  ? <img src={config.leadership[0].image} alt={config.leadership[0].name} className="w-32 h-32 rounded-full object-cover flex-shrink-0" />
+                  : <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
+                }
                 <div className="flex-1">
                   <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
                     &ldquo;At {config.name}, we believe that every child has the potential to achieve greatness.

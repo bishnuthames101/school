@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FileText, Search, User, Mail, Phone, GraduationCap, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Search, User, Mail, Phone, GraduationCap, MapPin, ChevronDown, ChevronUp, Download } from 'lucide-react';
 
 interface Application {
   id: string;
@@ -81,6 +81,24 @@ export default function ApplicationsManagement() {
     }
   };
 
+  const exportCSV = () => {
+    const headers = ['Student Name', 'Grade Applying', 'Father Name', 'Phone', 'Email', 'District', 'Status', 'Date'];
+    const rows = filteredApplications.map((app) => [
+      app.studentNameEn, app.gradeApplying, app.fatherName, app.phone, app.email,
+      app.district, app.status, new Date(app.createdAt).toLocaleDateString(),
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'applications.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
@@ -122,9 +140,20 @@ export default function ApplicationsManagement() {
         <p className="text-sm text-gray-500 mb-1">
           Dashboard &gt; <span className="text-gray-700">Applications</span>
         </p>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Applications</h1>
-          <p className="text-gray-500 mt-1 text-sm">View and manage student admission applications</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Applications</h1>
+            <p className="text-gray-500 mt-1 text-sm">View and manage student admission applications</p>
+          </div>
+          {applications.length > 0 && (
+            <button
+              onClick={exportCSV}
+              className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors self-start"
+            >
+              <Download className="h-4 w-4" />
+              Export CSV
+            </button>
+          )}
         </div>
       </div>
 

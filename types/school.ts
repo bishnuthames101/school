@@ -162,6 +162,7 @@ export interface SchoolConfig {
     classOf: string;
     achievement: string;
     role: string;
+    image?: string;
   }>;
 
   // === ADMISSION ===

@@ -186,10 +186,13 @@ const Others = () => {
               </div>
 
               <div className="text-center mt-8">
-                <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200">
+                <Link
+                  href="/gallery"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200"
+                >
                   <Camera className="h-5 w-5 mr-2" />
                   View Full Gallery
-                </button>
+                </Link>
               </div>
             </>
           )}
@@ -215,7 +218,10 @@ const Others = () => {
                     <h3 className="text-xl font-bold text-gray-900">{alum.name}</h3>
                     <p className="text-purple-600 font-semibold">Class of {alum.classOf}</p>
                   </div>
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full"></div>
+                  {alum.image
+                    ? <img src={alum.image} alt={alum.name} className="w-16 h-16 rounded-full object-cover flex-shrink-0" />
+                    : <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex-shrink-0"></div>
+                  }
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">{alum.achievement}</h4>
                 <p className="text-gray-600">{alum.role}</p>
