@@ -1,15 +1,23 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
 
-const Contact = () => {
+// Separate component so useSearchParams is inside a Suspense boundary
+function SubjectPrefiller({ onSubject }: { onSubject: (s: string) => void }) {
   const searchParams = useSearchParams();
+  useEffect(() => {
+    const s = searchParams.get('subject');
+    if (s) onSubject(s);
+  }, [searchParams, onSubject]);
+  return null;
+}
 
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,13 +26,10 @@ const Contact = () => {
     message: ''
   });
 
-  // Pre-fill subject from URL query param (?subject=...)
-  useEffect(() => {
-    const subjectParam = searchParams.get('subject');
-    if (subjectParam) {
-      setFormData((prev) => ({ ...prev, subject: subjectParam }));
-    }
-  }, [searchParams]);
+  const handlePrefillSubject = (s: string) => {
+    setFormData((prev) => ({ ...prev, subject: s }));
+  };
+
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
@@ -123,6 +128,9 @@ const Contact = () => {
 
   return (
     <div>
+      <Suspense fallback={null}>
+        <SubjectPrefiller onSubject={handlePrefillSubject} />
+      </Suspense>
       {/* Hero Section */}
       <section className="bg-school-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
