@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Camera, X } from 'lucide-react';
-import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/image-utils';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, X, Image as ImageIcon, Upload } from 'lucide-react';
-import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/image-utils';
 
 interface GalleryImage {
   id: string;

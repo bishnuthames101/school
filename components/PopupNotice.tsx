@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { X } from 'lucide-react';
-import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/image-utils';
 
 interface Popup {
   id: string;

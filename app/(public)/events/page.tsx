@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Users } from 'lucide-react';
-import { getImageUrl, IMAGE_PRESETS } from '@/lib/storage';
+import { getImageUrl, IMAGE_PRESETS } from '@/lib/image-utils';
 
 const Events = () => {
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
