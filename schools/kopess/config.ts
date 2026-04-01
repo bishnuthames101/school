@@ -6,10 +6,10 @@ const config: SchoolConfig = {
   name: "KOPESS",
   fullName: "Kotdevi Public English Sec. School",
   logo: "/school-assets/kopess_logo.jpg",
-  tagline: "Nurturing Future Leaders",
+  tagline: "Academic Excellence Through Quality Education",
   description:
     "Committed to providing quality education and fostering holistic development of students through innovative teaching methods and comprehensive learning experiences.",
-  foundedYear: 1999,
+  foundedYear: 2051,
 
   // === HERO SECTION ===
   hero: {
@@ -26,9 +26,9 @@ const config: SchoolConfig = {
 
   // === STATS (Homepage) ===
   stats: {
-    students: "1,200+",
-    faculty: "85+",
-    programs: "50+",
+    students: "500+",
+    faculty: "25+",
+    programs: "20+",
     yearsOfExcellence: "25+",
   },
 
@@ -36,9 +36,9 @@ const config: SchoolConfig = {
   contact: {
     address: "Kotdevi, Kirtipur-5, Kathmandu, Nepal", // TODO: confirm exact address with school
     phones: {
-      main: "+977 (01) 5202000",
-      admissions: "+977 (01) 5202001", // TODO: confirm with school
-      emergency: "+977 (01) 5202002",  // TODO: confirm with school
+      main: "+977 (01) 5149662",
+      admissions: "+977 (01) 5149662", // TODO: confirm with school
+      emergency: "+977 9851079363",  // TODO: confirm with school
     },
     emails: {
       info: "info@kopess.edu.np",
@@ -50,7 +50,7 @@ const config: SchoolConfig = {
       saturday: "Saturday: Closed",
     },
     googleMapsEmbedUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8464774651875!2d85.29512287546706!3d27.693538676191747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19b19295555f%3A0xabfe5f7a860c4297!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1736765372498!5m2!1sen!2snp",
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.4718522915846!2d85.34655857525254!3d27.671807676202977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19f0a50c9419%3A0xb91aba5ece08fc44!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1775022955537!5m2!1sen!2snp",
   },
 
   // === DEPARTMENTS (Contact Page) ===
@@ -68,7 +68,7 @@ const config: SchoolConfig = {
     },
     {
       name: "Academic Office",
-      phone: "+977 (01) 5202002",
+      phone: "+977 (01) 5149662",
       email: "academics@kopess.edu.np",
     },
     {
@@ -78,12 +78,12 @@ const config: SchoolConfig = {
     },
     {
       name: "Finance Department",
-      phone: "+977 (01) 5202004",
+      phone: "+977 (01) 5149662",
       email: "finance@kopess.edu.np",
     },
     {
       name: "IT Support",
-      phone: "+977 (01) 5202005",
+      phone: "+977 (01) 5149662",
       email: "support@kopess.edu.np",
     },
   ],
@@ -93,20 +93,26 @@ const config: SchoolConfig = {
   // TODO: Replace image paths with real photos — place them in schools/kopess/assets/team/
   leadership: [
     {
-      name: "To be updated",
-      role: "Principal",
+      name: "Arjun Dahal",
+      role: "Chairman",
       qualification: "M.Ed.",
-      image: "/school-assets/team/principal.jpg",
+      image: "/school-assets/team/chairperson.jpeg",
     },
     {
-      name: "To be updated",
+      name: "Navraj Bhatta",
+      role: "Principal",
+      qualification: "M.Ed.",
+      image: "/school-assets/team/principal.jpeg",
+    },
+    {
+      name: "Puran Basnet",
       role: "Vice Principal",
       qualification: "M.Ed.",
       image: "/school-assets/team/vice-principal.jpg",
     },
     {
       name: "To be updated",
-      role: "Academic Coordinator",
+      role: "School Coordinator",
       qualification: "M.A.",
       image: "/school-assets/team/academic-coordinator.jpg",
     },
@@ -120,7 +126,7 @@ const config: SchoolConfig = {
 
   // === MILESTONES (About Page) ===
   milestones: [
-    { year: "1999", title: "School established in Kotdevi, Kirtipur" },
+    { year: "2051", title: "School established in Kotdevi, Kirtipur" },
     { year: "2005", title: "First SEE batch graduated" },
     { year: "2010", title: "New academic block inaugurated" },
     { year: "2015", title: "Computer lab and science lab upgraded" },
