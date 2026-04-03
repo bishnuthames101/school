@@ -112,12 +112,12 @@ const Academics = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Grading Scale</h3>
                 <div className="space-y-3">
                   {config.academics.gradingScale.map((item, index) => {
-                    const colors = ['text-green-600', 'text-school-primary', 'text-yellow-600', 'text-orange-600', 'text-red-600'];
-                    const labels = ['Excellent', 'Good', 'Satisfactory', 'Needs Improvement', 'Unsatisfactory'];
+                    const colors = ['text-green-600', 'text-school-primary', 'text-yellow-600', 'text-orange-600', 'text-red-500', 'text-red-700', 'text-gray-500'];
+                    const labels = ['Excellent', 'Good', 'Satisfactory', 'Needs Improvement', 'Unsatisfactory', 'Below Average', 'Fail'];
                     return (
                       <div key={index} className="flex justify-between">
                         <span className="text-gray-700">{item.grade} ({item.range})</span>
-                        <span className={`${colors[index % colors.length]} font-semibold`}>{labels[index % labels.length]}</span>
+                        <span className={`${colors[index]} font-semibold`}>{labels[index]}</span>
                       </div>
                     );
                   })}

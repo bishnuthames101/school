@@ -25,21 +25,9 @@ const About = () => {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
               <div className="space-y-4 text-gray-600">
-                <p>
-                  Founded in {config.foundedYear}, {config.name} began as a small institution with a big dream &ndash;
-                  to provide world-class education that nurtures both academic excellence and character development.
-                </p>
-                <p>
-                  Over the past {new Date().getFullYear() - config.foundedYear} years, we have grown from a humble beginning to a
-                  thriving educational community of over {config.stats.students} students. Our journey has been marked by
-                  continuous innovation, unwavering commitment to quality, and a deep understanding of
-                  each student&apos;s unique potential.
-                </p>
-                <p>
-                  Today, we stand proud as one of the region&apos;s leading educational institutions,
-                  known for our holistic approach to education that balances rigorous academics with
-                  comprehensive personal development programs.
-                </p>
+                {config.story.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
               </div>
             </div>
             <div className="bg-school-primary-50 p-8 rounded-lg">

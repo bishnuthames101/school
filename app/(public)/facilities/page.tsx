@@ -19,12 +19,11 @@ const facilityColors = [
 ];
 
 const facilityImages = [
-  'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1321909/pexels-photo-1321909.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1194420/pexels-photo-1194420.jpeg?auto=compress&cs=tinysrgb&w=600',
+  '/school-assets/facilities/library.jpeg',
+  '/school-assets/facilities/computerlab.jpeg',
+  '/school-assets/facilities/playground.jpeg',
+  '/school-assets/facilities/classroom.jpeg',
+  '/school-assets/facilities/multipurposehall.jpeg',
 ];
 
 const Facilities = () => {

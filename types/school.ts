@@ -79,6 +79,9 @@ export interface SchoolConfig {
     title: string;
   }>;
 
+  // === OUR STORY ===
+  story: string[];
+
   // === MISSION & VISION ===
   mission: string;
   vision: string;

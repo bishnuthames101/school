@@ -108,17 +108,17 @@ const config: SchoolConfig = {
       name: "Puran Basnet",
       role: "Vice Principal",
       qualification: "M.Ed.",
-      image: "/school-assets/team/vice-principal.jpg",
+      image: "/school-assets/team/vice-principal.jpeg",
     },
     {
-      name: "To be updated",
+      name: "Radha Karki ",
       role: "School Coordinator",
       qualification: "M.A.",
       image: "/school-assets/team/academic-coordinator.jpg",
     },
     {
-      name: "To be updated",
-      role: "Head of Administration",
+      name: "Laxmi Lamichane",
+      role: "School Incharge",
       qualification: "MBA",
       image: "/school-assets/team/head-administration.jpg",
     },
@@ -140,6 +140,14 @@ const config: SchoolConfig = {
     { year: "2079", title: "Outstanding SEE Results — Multiple A+ students" },
     { year: "2078", title: "Excellence in Extracurricular Activities Award" },
     { year: "2077", title: "Community Service Recognition Award" },
+  ],
+
+  // === OUR STORY ===
+  story: [
+    "Education plays vital role in the gradual development of human civilization. It is obvious that the prosperity of any nation cannot be thought in the absence of sound and productive education. Bearing the same concept in mind Kotdevi Public English Secondary School was established in 2051 B.S. (1993 A.D.) to educate and produce sensible, honest, challenging and competitive citizens by imparting them behavioral as well as scientific educational classes.",
+    "The school currently offers education from grade Nursery to X, and with a long-term vision to expand up to the Higher Secondary Level. Every step we take is guided by this goal, ensuring that our infrastructure, faculty, and academic programs are developed accordingly to provide a strong foundation for higher education in the near future.",
+    "Situated in the heart of Kathmandu Valley, our school is dedicated to offering a nurturing environment that balances academic excellence with values, creativity, discipline, and life skills. We believe that every child is unique and has the potential to make a meaningful contribution to the world when guided with the right blend of knowledge and values.",
+    "At KOPESS, we encourage holistic development through a well-rounded curriculum, ECA/CCA activities, and a strong emphasis on moral education. Our team of experienced and passionate educators work tirelessly to inspire curiosity, confidence, and compassion in every student.",
   ],
 
   // === MISSION & VISION ===
@@ -181,6 +189,7 @@ const config: SchoolConfig = {
           "Mathematics",
           "Science",
           "Social Studies",
+          "Accountancy",
           "Computer Science",
           "Health & Physical Education",
           "Optional Mathematics",
@@ -218,10 +227,10 @@ const config: SchoolConfig = {
       { title: "SEE Preparation", detail: "Dedicated SEE coaching & revision" },
     ],
     examSchedule: [
-      { exam: "First Terminal Examination", date: "Ashwin (October)", grade: "All Grades" },
-      { exam: "Second Terminal Examination", date: "Poush (January)", grade: "All Grades" },
-      { exam: "Final Examination", date: "Chaitra (March–April)", grade: "Grades 1–9" },
-      { exam: "SEE (School Leaving Exam)", date: "Chaitra–Baisakh", grade: "Grade 10" },
+      { exam: "First Terminal Examination", date: "Ashad (July)", grade: "All Grades" },
+      { exam: "Second Terminal Examination", date: "Ashwin (October)", grade: "All Grades" },
+      { exam: "Third Terminal Examination", date: "Poush (January)", grade: "All Grades" },
+      { exam: "Final Examination", date: "Chaitra (March–April)", grade: "All Grades" },
     ],
   },
 
@@ -240,7 +249,7 @@ const config: SchoolConfig = {
           "Nepali & English titles",
         ],
       },
-      {
+ /*     {
         name: "Science Laboratory",
         description:
           "Fully equipped lab for physics, chemistry, and biology practical experiments.",
@@ -251,7 +260,7 @@ const config: SchoolConfig = {
           "Practical experiments",
           "SEE practical preparation",
         ],
-      },
+      },*/
       {
         name: "Computer Lab",
         description:
