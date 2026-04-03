@@ -316,10 +316,7 @@ const Contact = () => {
                     <span className="font-medium text-gray-900">By Bus:</span>
                     <p className="text-gray-600">Bus routes 15, 22, and 45 stop nearby</p>
                   </div>
-                  <div>
-                    <span className="font-medium text-gray-900">By Metro:</span>
-                    <p className="text-gray-600">Knowledge Station - 5 minutes walk</p>
-                  </div>
+
                 </div>
               </div>
             </div>
