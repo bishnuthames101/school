@@ -459,10 +459,10 @@ const config: SchoolConfig = {
 
   // === ADMISSION (Nepal BS Calendar) ===
   admissionDates: {
-    applicationPeriod: "Poush - Falgun 2081 (Dec 2024 - Feb 2025)",
-    assessmentDates: "Chaitra 2081 (March 2025)",
-    results: "Chaitra 30, 2081",
-    enrollmentDeadline: "Baishakh 15, 2082",
+    applicationPeriod: "Poush - Falgun 2082 (Dec 2025 - Feb 2026)",
+    assessmentDates: "Chaitra 2082 (March 2026)",
+    results: "Chaitra 30, 2082",
+    enrollmentDeadline: "Baishakh 15, 2083",
   },
 
   scholarships: [
