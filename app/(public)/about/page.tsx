@@ -121,8 +121,8 @@ const About = () => {
 
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex flex-col lg:flex-row items-start gap-8">
-                {config.leadership[0]?.image
-                  ? <img src={config.leadership[0].image} alt={config.leadership[0].name} className="w-32 h-32 rounded-full object-cover flex-shrink-0" />
+                {config.leadership[1]?.image
+                  ? <img src={config.leadership[1].image} alt={config.leadership[1].name} className="w-32 h-32 rounded-full object-cover flex-shrink-0" />
                   : <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
                 }
                 <div className="flex-1">
@@ -137,9 +137,9 @@ const About = () => {
                     their lives. Together, we are building tomorrow&apos;s leaders today.&rdquo;
                   </blockquote>
                   <div className="mt-6">
-                    <p className="font-bold text-gray-900">{config.leadership[0]?.name}</p>
-                    <p className="text-school-primary">{config.leadership[0]?.role}, {config.name}</p>
-                    <p className="text-sm text-gray-600">{config.leadership[0]?.qualification}</p>
+                    <p className="font-bold text-gray-900">{config.leadership[1]?.name}</p>
+                    <p className="text-school-primary">{config.leadership[1]?.role}, {config.name}</p>
+                    <p className="text-sm text-gray-600">{config.leadership[1]?.qualification}</p>
                   </div>
                 </div>
               </div>
