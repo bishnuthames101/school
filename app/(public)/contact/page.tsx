@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
@@ -26,9 +26,12 @@ const Contact = () => {
     message: ''
   });
 
-  const handlePrefillSubject = (s: string) => {
+  const handlePrefillSubject = useCallback((s: string) => {
     setFormData((prev) => ({ ...prev, subject: s }));
-  };
+    setTimeout(() => {
+      document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }, []);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
@@ -169,7 +172,7 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Map */}
-      <section className="py-16 bg-gray-50">
+      <section id="contact-form" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
@@ -310,11 +313,11 @@ const Contact = () => {
                 <div className="space-y-3 text-sm">
                   <div>
                     <span className="font-medium text-gray-900">By Car:</span>
-                    <p className="text-gray-600">Free parking available on campus</p>
+                    <p className="text-gray-600">Free parking available on school</p>
                   </div>
                   <div>
                     <span className="font-medium text-gray-900">By Bus:</span>
-                    <p className="text-gray-600">Bus routes 15, 22, and 45 stop nearby</p>
+                    <p className="text-gray-600">Bus routes through balkumari and jadibuti</p>
                   </div>
 
                 </div>

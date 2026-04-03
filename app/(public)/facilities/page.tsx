@@ -183,7 +183,7 @@ const Facilities = () => {
             See our facilities in person. Schedule a visit and we will be happy to show you around.
           </p>
           <Link
-            href="/contact?subject=Campus+Tour+Request"
+            href="/contact?subject=facilities#contact-form"
             className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-school-primary hover:bg-school-primary-dark transition-colors duration-200"
           >
             <Users className="h-5 w-5 mr-2" />

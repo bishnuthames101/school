@@ -96,7 +96,7 @@ const Events = () => {
             Registration is open for students and parents.
           </p>
           <Link
-            href="/contact?subject=Event+Registration"
+            href="/contact?subject=events#contact-form"
             className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-school-primary bg-white hover:bg-gray-50 transition-colors duration-200"
           >
             <Users className="h-5 w-5 mr-2" />
