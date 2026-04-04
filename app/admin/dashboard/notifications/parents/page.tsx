@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, X, Users } from 'lucide-react';
+import { Plus, Edit2, X, Users, GraduationCap, Trash2 } from 'lucide-react';
 
 // Types
 interface SchoolClass {
@@ -62,6 +62,12 @@ export default function ManageParentsPage() {
   const [editForm, setEditForm] = useState<ParentFormData>(EMPTY_FORM);
   const [editSubmitting, setEditSubmitting] = useState(false);
 
+  // Classes management state
+  const [showClassForm, setShowClassForm] = useState(false);
+  const [classForm, setClassForm] = useState({ name: '', section: '' });
+  const [classSubmitting, setClassSubmitting] = useState(false);
+  const [classError, setClassError] = useState('');
+
   useEffect(() => {
     fetchAll();
   }, []);
@@ -95,6 +101,37 @@ export default function ManageParentsPage() {
   const noClassCount = parents.filter((p) => !p.classId && p.isActive).length;
 
   const activeCount = parents.filter((p) => p.isActive).length;
+
+  const handleAddClass = async () => {
+    if (!classForm.name.trim()) {
+      setClassError('Class name is required');
+      return;
+    }
+    setClassSubmitting(true);
+    setClassError('');
+    try {
+      const res = await fetch('/api/classes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: classForm.name.trim(),
+          section: classForm.section.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setClassError(data.error || 'Failed to add class');
+        return;
+      }
+      setClasses((prev) => [...prev, data.data].sort((a, b) => a.name.localeCompare(b.name)));
+      setClassForm({ name: '', section: '' });
+      setShowClassForm(false);
+    } catch {
+      setClassError('Failed to add class. Please try again.');
+    } finally {
+      setClassSubmitting(false);
+    }
+  };
 
   const handleAddSave = async () => {
     if (!addForm.studentName.trim() || !addForm.parentName.trim() || !addForm.phone.trim()) {
@@ -236,6 +273,94 @@ export default function ManageParentsPage() {
           {error}
         </div>
       )}
+
+      {/* Manage Classes section */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-gray-500" />
+            {/* [UI TEXT - can be translated to Nepali] */}
+            <h2 className="text-sm font-semibold text-gray-800">Classes</h2>
+            <span className="text-xs text-gray-400">({classes.length})</span>
+          </div>
+          {!showClassForm && (
+            <button
+              onClick={() => { setShowClassForm(true); setClassError(''); setClassForm({ name: '', section: '' }); }}
+              className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              {/* [UI TEXT - can be translated to Nepali] */}
+              Add Class
+            </button>
+          )}
+        </div>
+
+        {/* Existing classes as chips */}
+        {classes.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {classes.map((c) => (
+              <span key={c.id} className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                {classLabel(c)}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* No classes hint */}
+        {classes.length === 0 && !showClassForm && (
+          <p className="text-xs text-gray-400 mb-2">
+            {/* [UI TEXT - can be translated to Nepali] */}
+            No classes yet. Add a class so you can assign parents to it.
+          </p>
+        )}
+
+        {/* Inline add class form */}
+        {showClassForm && (
+          <div className="flex flex-wrap items-end gap-3 pt-2 border-t border-gray-100 mt-2">
+            <div>
+              {/* [UI TEXT - can be translated to Nepali] */}
+              <label className="block text-xs font-medium text-gray-600 mb-1">Class Name *</label>
+              <input
+                type="text"
+                value={classForm.name}
+                onChange={(e) => setClassForm({ ...classForm, name: e.target.value })}
+                className="w-36 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="e.g. Class 10"
+                autoFocus
+              />
+            </div>
+            <div>
+              {/* [UI TEXT - can be translated to Nepali] */}
+              <label className="block text-xs font-medium text-gray-600 mb-1">Section <span className="text-gray-400 font-normal">(optional)</span></label>
+              <input
+                type="text"
+                value={classForm.section}
+                onChange={(e) => setClassForm({ ...classForm, section: e.target.value })}
+                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="e.g. A"
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={handleAddClass}
+                disabled={classSubmitting}
+                className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {/* [UI TEXT - can be translated to Nepali] */}
+                {classSubmitting ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={() => { setShowClassForm(false); setClassError(''); }}
+                className="px-3 py-1.5 border border-gray-300 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                {/* [UI TEXT - can be translated to Nepali] */}
+                Cancel
+              </button>
+            </div>
+            {classError && <p className="w-full text-xs text-red-600">✗ {classError}</p>}
+          </div>
+        )}
+      </div>
 
       {/* Class summary row */}
       {(classCounts.some((c) => c.count > 0) || noClassCount > 0) && (
