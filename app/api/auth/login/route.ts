@@ -3,6 +3,8 @@ import { verifyAdminPassword, generateToken } from '@/lib/auth';
 import { getSchoolId } from '@/lib/school';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 // ---------------------------------------------------------------------------
 // In-memory rate limiter — 5 failed attempts per IP per 15 minutes
 // Sufficient for single-instance Vercel deployment (per-region isolation is OK)

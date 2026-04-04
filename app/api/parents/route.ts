@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { formatNepalPhone } from '@/lib/formatPhone';
 
+export const dynamic = 'force-dynamic';
+
 // GET all parents for this school (with class info) — requires auth (PII data)
 export async function GET() {
   try {

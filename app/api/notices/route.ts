@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { getSchoolSlug } from '@/lib/school';
 import { uploadDocument, deleteFile } from '@/lib/storage';
+
+export const dynamic = 'force-dynamic';
 import { logAction } from '@/lib/audit';
 
 // GET all notices with pagination and filtering

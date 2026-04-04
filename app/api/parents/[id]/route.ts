@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { formatNepalPhone } from '@/lib/formatPhone';
 
+export const dynamic = 'force-dynamic';
+
 // PUT update a parent (requires auth)
 export async function PUT(
   request: NextRequest,

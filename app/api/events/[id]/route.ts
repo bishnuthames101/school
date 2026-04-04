@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { deleteFile } from '@/lib/storage';
 
+export const dynamic = 'force-dynamic';
+
 // GET single event
 export async function GET(
   request: NextRequest,

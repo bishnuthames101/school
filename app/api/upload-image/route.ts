@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { getSchoolSlug } from '@/lib/school';
 import { uploadImage, type UploadFolder } from '@/lib/storage';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Generic authenticated image upload endpoint.
  * Used by admin pages that need to upload images separately from form submission

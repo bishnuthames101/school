@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch popups (use ?all=true for admin to get all popups)
 export async function GET(request: NextRequest) {
   try {

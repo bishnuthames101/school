@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 
+export const dynamic = 'force-dynamic';
+
 // GET count of active parents, optionally filtered by classId — requires auth
 export async function GET(request: NextRequest) {
   try {

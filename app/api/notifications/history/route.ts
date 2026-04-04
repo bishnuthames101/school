@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 
+export const dynamic = 'force-dynamic';
+
 // GET last 50 notification messages for this school (requires auth)
 export async function GET() {
   try {

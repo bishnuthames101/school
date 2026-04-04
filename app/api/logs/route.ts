@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { getSchoolId } from '@/lib/school';
 import prisma from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // GET audit logs with pagination (requires auth)
 export async function GET(request: NextRequest) {
   try {

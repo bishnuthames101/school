@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST() {
   logAction('LOGOUT', 'Admin');
   const response = NextResponse.json(

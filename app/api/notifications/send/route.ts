@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 
+export const dynamic = 'force-dynamic';
+
 interface FonnteResult {
   parentId: string;
   success: boolean;

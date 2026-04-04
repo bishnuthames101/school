@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 const VALID_STATUSES = ['pending', 'reviewed', 'accepted', 'rejected'];
 
 // PATCH /api/applications/[id] — update application status (requires auth)

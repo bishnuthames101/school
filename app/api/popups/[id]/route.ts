@@ -4,6 +4,8 @@ import { scopedPrisma } from '@/lib/db-scoped';
 import { deleteFile } from '@/lib/storage';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 // PUT - Update popup (requires auth)
 export async function PUT(
   request: Request,

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 
+export const dynamic = 'force-dynamic';
+
 // GET all classes for this school
 export async function GET() {
   try {

@@ -4,6 +4,8 @@ import { scopedPrisma } from '@/lib/db-scoped';
 import { sendApplicationNotification } from '@/lib/email';
 import { logAction } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 // GET all applications with pagination (requires auth)
 export async function GET(request: NextRequest) {
   try {
