@@ -69,6 +69,8 @@ export async function POST(request: NextRequest) {
         formBody.append('target', parent.phone);
         formBody.append('message', message.trim());
 
+        console.log(`[Fonnte] Sending to phone: ${parent.phone}`);
+
         const res = await fetch('https://api.fonnte.com/send', {
           method: 'POST',
           headers: {
@@ -78,6 +80,7 @@ export async function POST(request: NextRequest) {
         });
 
         const data = await res.json();
+        console.log(`[Fonnte] Response for ${parent.phone}:`, JSON.stringify(data));
 
         // Fonnte returns { status: true } on success
         if (!res.ok || !data.status) {
