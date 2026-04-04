@@ -65,23 +65,23 @@ export async function POST(request: NextRequest) {
     // Send to all parents via Fonnte — use Promise.allSettled so one failure doesn't stop others
     const sendResults = await Promise.allSettled(
       parents.map(async (parent: any): Promise<FonnteResult> => {
+        const formBody = new URLSearchParams();
+        formBody.append('target', parent.phone);
+        formBody.append('message', message.trim());
+
         const res = await fetch('https://api.fonnte.com/send', {
           method: 'POST',
           headers: {
             Authorization: fonnteApiKey,
-            'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            target: parent.phone,
-            message: message.trim(),
-          }),
+          body: formBody,
         });
 
         const data = await res.json();
 
         // Fonnte returns { status: true } on success
         if (!res.ok || !data.status) {
-          throw new Error(data.reason || 'Send failed');
+          throw new Error(data.reason || data.message || 'Send failed');
         }
 
         return { parentId: parent.id, success: true };
@@ -94,7 +94,8 @@ export async function POST(request: NextRequest) {
     // Log failed sends for debugging
     sendResults.forEach((result, i) => {
       if (result.status === 'rejected') {
-        console.error(`Failed to send to parent ${parents[i].id}:`, result.reason);
+        const p = parents[i];
+        console.error(`Failed to send to parent ${p.id} (phone: ${p.phone}):`, result.reason);
       }
     });
 
