@@ -18,14 +18,17 @@ model School {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  admins        Admin[]
-  events        Event[]
-  notices       Notice[]
-  galleryImages GalleryImage[]
-  popups        Popup[]
-  applications  ApplicationForm[]
-  contacts      ContactForm[]
-  auditLogs     AuditLog[]
+  admins               Admin[]
+  events               Event[]
+  notices              Notice[]
+  galleryImages        GalleryImage[]
+  popups               Popup[]
+  applications         ApplicationForm[]
+  contacts             ContactForm[]
+  auditLogs            AuditLog[]
+  classes              SchoolClass[]
+  parents              Parent[]
+  notificationMessages NotificationMessage[]
 
   @@map("schools")
 }
@@ -182,6 +185,59 @@ model Popup {
   updatedAt DateTime  @updatedAt
 
   @@map("popups")
+}
+
+// === School Class ===
+
+model SchoolClass {
+  id        String   @id @default(cuid())
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  name      String
+  section   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parents              Parent[]
+  notificationMessages NotificationMessage[]
+
+  @@map("school_classes")
+}
+
+// === Parent (WhatsApp notification recipient) ===
+
+model Parent {
+  id          String      @id @default(cuid())
+  schoolId    String
+  school      School      @relation(fields: [schoolId], references: [id])
+  studentName String
+  parentName  String
+  phone       String      // Stored as 977XXXXXXXXXX
+  classId     String?
+  class       SchoolClass? @relation(fields: [classId], references: [id])
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("parents")
+}
+
+// === Notification Message (WhatsApp send log) ===
+
+model NotificationMessage {
+  id             String       @id @default(cuid())
+  schoolId       String
+  school         School       @relation(fields: [schoolId], references: [id])
+  message        String       @db.Text
+  messageType    String       // fee_reminder | result | holiday | exam | general
+  sentToClassId  String?
+  sentToClass    SchoolClass? @relation(fields: [sentToClassId], references: [id])
+  totalSent      Int          @default(0)
+  totalDelivered Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("notification_messages")
 }
 
 // === Audit Log ===

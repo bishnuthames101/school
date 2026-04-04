@@ -91,5 +91,8 @@ export async function scopedPrisma() {
     applicationForm: createScopedModel("applicationForm", schoolId),
     contactForm: createScopedModel("contactForm", schoolId),
     admin: createScopedModel("admin", schoolId),
+    schoolClass: createScopedModel("schoolClass", schoolId),
+    parent: createScopedModel("parent", schoolId),
+    notificationMessage: createScopedModel("notificationMessage", schoolId),
   };
 }

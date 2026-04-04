@@ -21,6 +21,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
+  BellRing,
+  Send,
+  History,
+  Users,
 } from 'lucide-react';
 import { clearSession } from '@/components/SessionManager';
 
@@ -40,6 +44,12 @@ const contentNav = [
 const inboxNav = [
   { name: 'Applications', href: '/admin/dashboard/applications', icon: FileText },
   { name: 'Contacts', href: '/admin/dashboard/contacts', icon: MessageSquare },
+];
+
+const notificationsNav = [
+  { name: 'Send Message', href: '/admin/dashboard/notifications/send', icon: Send },
+  { name: 'Message History', href: '/admin/dashboard/notifications/history', icon: History },
+  { name: 'Manage Parents', href: '/admin/dashboard/notifications/parents', icon: Users },
 ];
 
 const systemNav = [
@@ -190,6 +200,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {renderNavSection('Main', mainNav)}
             {renderNavSection('Content', contentNav)}
             {renderNavSection('Inbox', inboxNav)}
+            {renderNavSection('Notifications', notificationsNav)}
             {renderNavSection('System', systemNav)}
 
             {/* Settings, Logout, Back to Website — inside scroll area so mobile browser bars don't hide them */}
