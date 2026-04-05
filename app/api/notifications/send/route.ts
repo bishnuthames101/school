@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
     // Send to all parents via Fonnte — use Promise.allSettled so one failure doesn't stop others
     const sendResults = await Promise.allSettled(
       parents.map(async (parent: any): Promise<FonnteResult> => {
-        const formBody = new URLSearchParams();
-        formBody.append('target', parent.phone);
-        formBody.append('message', message.trim());
+        const formData = new FormData();
+        formData.append('target', parent.phone);
+        formData.append('message', message.trim());
 
         console.log(`[Fonnte] Sending to phone: ${parent.phone}`);
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
           headers: {
             Authorization: fonnteApiKey,
           },
-          body: formBody,
+          body: formData,
         });
 
         const data = await res.json();
