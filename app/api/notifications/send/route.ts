@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         const formData = new FormData();
         formData.append('target', parent.phone);
         formData.append('message', message.trim());
+        formData.append('countryCode', '0'); // '0' = bypass auto-prefix, use full international number as-is
 
         console.log(`[Fonnte] Sending to phone: ${parent.phone}`);
 
