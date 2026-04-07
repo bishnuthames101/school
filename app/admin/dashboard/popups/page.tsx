@@ -44,8 +44,8 @@ const PopupsPage = () => {
     try {
       const response = await fetch('/api/popups?all=true');
       const data = await response.json();
-      if (Array.isArray(data)) {
-        setPopups(data);
+      if (data.success && Array.isArray(data.data)) {
+        setPopups(data.data);
       } else {
         setPopups([]);
       }

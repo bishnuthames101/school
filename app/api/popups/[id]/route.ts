@@ -40,7 +40,7 @@ export async function PUT(
     });
 
     logAction('UPDATE', 'Popup', params.id, popup.title);
-    return NextResponse.json(popup);
+    return NextResponse.json({ success: true, data: popup });
   } catch (error) {
     console.error('Error updating popup:', error);
     return NextResponse.json({ error: 'Failed to update popup' }, { status: 500 });
@@ -72,7 +72,7 @@ export async function DELETE(
     });
 
     logAction('DELETE', 'Popup', params.id);
-    return NextResponse.json({ message: 'Popup deleted successfully' });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting popup:', error);
     return NextResponse.json({ error: 'Failed to delete popup' }, { status: 500 });

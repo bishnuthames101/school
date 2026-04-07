@@ -49,9 +49,10 @@ export async function PUT(
 
     const db = await scopedPrisma();
     const body = await request.json();
+    const { imageUrl, caption, category } = body;
     const image = await db.galleryImage.update({
       where: { id: params.id },
-      data: body,
+      data: { imageUrl, caption, category },
     });
 
     return NextResponse.json({ success: true, data: image });

@@ -49,9 +49,10 @@ export async function PUT(
 
     const db = await scopedPrisma();
     const body = await request.json();
+    const { title, date, category, description, priority, attachment } = body;
     const notice = await db.notice.update({
       where: { id: params.id },
-      data: body,
+      data: { title, date, category, description, priority, attachment },
     });
 
     return NextResponse.json({ success: true, data: notice });

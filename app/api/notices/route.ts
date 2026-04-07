@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100);
     const skip = (page - 1) * limit;
     const category = searchParams.get('category');
     const priority = searchParams.get('priority');

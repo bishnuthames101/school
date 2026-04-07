@@ -27,9 +27,10 @@ const PopupNotice = () => {
   const fetchActivePopup = async () => {
     try {
       const response = await fetch('/api/popups');
-      const popups = await response.json();
+      const result = await response.json();
+      const popups = result.success && Array.isArray(result.data) ? result.data : [];
 
-      if (popups && popups.length > 0) {
+      if (popups.length > 0) {
         const activePopup = popups[0];
         // Show popup on every page load
         setPopup(activePopup);

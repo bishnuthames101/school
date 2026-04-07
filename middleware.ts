@@ -5,11 +5,6 @@ import { verifyTokenEdge } from '@/lib/auth-edge';
 // Define paths that require authentication
 const protectedPaths = [
   '/admin/dashboard',
-  '/admin/events',
-  '/admin/notices',
-  '/admin/gallery',
-  '/admin/applications',
-  '/admin/contacts',
 ];
 
 export async function middleware(request: NextRequest) {

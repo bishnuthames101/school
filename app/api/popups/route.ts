@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       const popups = await db.popup.findMany({
         orderBy: { createdAt: 'desc' },
       });
-      return NextResponse.json(popups);
+      return NextResponse.json({ success: true, data: popups });
     }
 
     // Public: return only active popups within date range
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json(popups);
+    return NextResponse.json({ success: true, data: popups });
   } catch (error) {
     console.error('Error fetching popups:', error);
     return NextResponse.json({ error: 'Failed to fetch popups' }, { status: 500 });
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     });
 
     logAction('CREATE', 'Popup', popup.id, popup.title);
-    return NextResponse.json(popup, { status: 201 });
+    return NextResponse.json({ success: true, data: popup }, { status: 201 });
   } catch (error) {
     console.error('Error creating popup:', error);
     return NextResponse.json({ error: 'Failed to create popup' }, { status: 500 });
