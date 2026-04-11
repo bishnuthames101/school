@@ -23,8 +23,11 @@ async function main() {
     process.exit(1);
   }
 
-  // Default to admin123 if not specified — school admin should change this on first login
-  const resolvedPassword = password || "admin123";
+  if (!password) {
+    console.error("Error: ADMIN_PASSWORD env var is required (e.g. ADMIN_PASSWORD=yourpassword)");
+    process.exit(1);
+  }
+  const resolvedPassword = password;
 
   // Find or create the School record
   let school = await prisma.school.findUnique({ where: { slug: schoolSlug } });

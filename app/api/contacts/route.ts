@@ -3,8 +3,12 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { sendContactNotification } from '@/lib/email';
 import { logAction } from '@/lib/audit';
+import { createRateLimiter, getClientIp } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
+
+// 10 submissions per IP per hour
+const rateLimiter = createRateLimiter(10, 60 * 60 * 1000);
 
 // GET all contacts with pagination (requires auth)
 export async function GET(request: NextRequest) {
@@ -19,8 +23,8 @@ export async function GET(request: NextRequest) {
 
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '10')), 100);
     const skip = (page - 1) * limit;
 
     const total = await db.contactForm.count();
@@ -53,6 +57,15 @@ export async function GET(request: NextRequest) {
 // POST new contact (public — from contact form)
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIp(request);
+    const rateLimit = rateLimiter(ip);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Too many submissions. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+      );
+    }
+
     const db = await scopedPrisma();
     const body = await request.json();
 
@@ -153,7 +166,7 @@ export async function PUT(request: NextRequest) {
   } catch (error: any) {
     console.error('Error updating contact:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update contact' },
+      { success: false, error: 'Failed to update contact' },
       { status: 400 }
     );
   }
@@ -186,7 +199,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     console.error('Error deleting contact:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to delete contact' },
+      { success: false, error: 'Failed to delete contact' },
       { status: 400 }
     );
   }

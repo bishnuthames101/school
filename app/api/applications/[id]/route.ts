@@ -41,7 +41,7 @@ export async function PATCH(
   } catch (error: any) {
     console.error('Error updating application status:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update status' },
+      { success: false, error: 'Failed to update status' },
       { status: 400 }
     );
   }

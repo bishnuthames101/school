@@ -34,7 +34,7 @@ const Others = () => {
           setGalleryImages(result.data || []);
         }
       } catch (error) {
-        console.error('Error fetching gallery:', error);
+        console.error('Error fetching gallery');
         setGalleryImages([]);
       } finally {
         setLoadingGallery(false);
@@ -51,8 +51,7 @@ const Others = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Beyond Academics</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Discover the vibrant community life at {config.name} through our house system,
-            clubs, extracurricular activities, and the inspiring achievements of our alumni.
+            {config.pages.others.heroSubtitle}
           </p>
         </div>
       </section>

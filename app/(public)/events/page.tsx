@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Users } from 'lucide-react';
 import { getImageUrl, IMAGE_PRESETS } from '@/lib/image-utils';
+import { getSchoolConfig } from '@/lib/school-config';
+
+const config = getSchoolConfig();
 
 const Events = () => {
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
@@ -18,7 +21,7 @@ const Events = () => {
           setUpcomingEvents(result.data || []);
         }
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching events');
         setUpcomingEvents([]);
       } finally {
         setLoading(false);
@@ -35,8 +38,7 @@ const Events = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">School Events</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Celebrating achievements, fostering community, and creating lasting memories
-            through our diverse range of school events and activities.
+            {config.pages.events.heroSubtitle}
           </p>
         </div>
       </section>

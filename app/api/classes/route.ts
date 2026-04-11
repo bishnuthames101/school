@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating class:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to create class' },
+      { success: false, error: 'Failed to create class' },
       { status: 400 }
     );
   }

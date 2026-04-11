@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
   try {
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '10')), 100);
     const skip = (page - 1) * limit;
     const category = searchParams.get('category');
     const priority = searchParams.get('priority');
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating notice:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to create notice' },
+      { success: false, error: 'Failed to create notice' },
       { status: 400 }
     );
   }
@@ -174,7 +174,7 @@ export async function PUT(request: NextRequest) {
   } catch (error: any) {
     console.error('Error updating notice:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update notice' },
+      { success: false, error: 'Failed to update notice' },
       { status: 400 }
     );
   }
@@ -215,7 +215,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     console.error('Error deleting notice:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to delete notice' },
+      { success: false, error: 'Failed to delete notice' },
       { status: 400 }
     );
   }

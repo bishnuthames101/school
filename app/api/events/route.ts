@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
   try {
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '10')), 100);
     const skip = (page - 1) * limit;
     const category = searchParams.get('category');
     const search = searchParams.get('search');
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating event:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to create event' },
+      { success: false, error: 'Failed to create event' },
       { status: 400 }
     );
   }
@@ -184,7 +184,7 @@ export async function PUT(request: NextRequest) {
   } catch (error: any) {
     console.error('Error updating event:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update event' },
+      { success: false, error: 'Failed to update event' },
       { status: 400 }
     );
   }
@@ -226,7 +226,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     console.error('Error deleting event:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to delete event' },
+      { success: false, error: 'Failed to delete event' },
       { status: 400 }
     );
   }

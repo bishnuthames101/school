@@ -53,7 +53,7 @@ export default function ActivityLogs() {
       setError('');
     } catch (err) {
       setError('Failed to load activity logs');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }

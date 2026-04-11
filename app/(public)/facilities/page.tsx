@@ -18,13 +18,6 @@ const facilityColors = [
   { color: 'text-pink-600',       bgColor: 'bg-pink-100'   },
 ];
 
-const facilityImages = [
-  '/school-assets/facilities/library.jpeg',
-  '/school-assets/facilities/computerlab.jpeg',
-  '/school-assets/facilities/playground.jpeg',
-  '/school-assets/facilities/classroom.jpeg',
-  '/school-assets/facilities/multipurposehall.jpeg',
-];
 
 const Facilities = () => {
   return (
@@ -34,8 +27,7 @@ const Facilities = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">World-Class Facilities</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            {config.name} provides state-of-the-art facilities designed to enhance learning,
-            promote creativity, and ensure the safety and well-being of our students.
+            {config.pages.facilities.heroSubtitle}
           </p>
         </div>
       </section>
@@ -52,7 +44,6 @@ const Facilities = () => {
             {config.facilities.main.map((facility, index) => {
               const Icon = iconMap[facility.icon] ?? BookOpen;
               const { color, bgColor } = facilityColors[index % facilityColors.length];
-              const image = facilityImages[index % facilityImages.length];
               return (
                 <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
                   <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
@@ -72,15 +63,17 @@ const Facilities = () => {
                       ))}
                     </div>
                   </div>
-                  <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
-                    <div className="rounded-lg overflow-hidden shadow-xl">
-                      <img
-                        src={image}
-                        alt={facility.name}
-                        className="w-full h-64 lg:h-80 object-cover hover:scale-105 transition-transform duration-300"
-                      />
+                  {facility.image && (
+                    <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
+                      <div className="rounded-lg overflow-hidden shadow-xl">
+                        <img
+                          src={facility.image}
+                          alt={facility.name}
+                          className="w-full h-64 lg:h-80 object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}

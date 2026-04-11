@@ -10,6 +10,15 @@ import { Resend } from 'resend';
 
 const FROM = process.env.RESEND_FROM_EMAIL || 'noreply@tomorrowstech.com.np';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
   if (!key) return null;
@@ -38,16 +47,16 @@ export async function sendContactNotification(contact: {
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1e40af;">New Contact Message</h2>
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
-            <tr><td style="padding: 8px 0; color: #6b7280; width: 120px;">From</td><td style="padding: 8px 0; font-weight: 600;">${contact.name}</td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Email</td><td style="padding: 8px 0;"><a href="mailto:${contact.email}" style="color: #2563eb;">${contact.email}</a></td></tr>
-            ${contact.phone ? `<tr><td style="padding: 8px 0; color: #6b7280;">Phone</td><td style="padding: 8px 0;">${contact.phone}</td></tr>` : ''}
-            <tr><td style="padding: 8px 0; color: #6b7280;">Subject</td><td style="padding: 8px 0; font-weight: 600;">${contact.subject}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280; width: 120px;">From</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(contact.name)}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Email</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(contact.email)}" style="color: #2563eb;">${escapeHtml(contact.email)}</a></td></tr>
+            ${contact.phone ? `<tr><td style="padding: 8px 0; color: #6b7280;">Phone</td><td style="padding: 8px 0;">${escapeHtml(contact.phone)}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; color: #6b7280;">Subject</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(contact.subject)}</td></tr>
           </table>
           <div style="background: #f9fafb; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px;">
-            <p style="margin: 0; white-space: pre-wrap; color: #374151;">${contact.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+            <p style="margin: 0; white-space: pre-wrap; color: #374151;">${escapeHtml(contact.message)}</p>
           </div>
           <p style="margin-top: 24px; color: #9ca3af; font-size: 12px;">
-            Reply directly to the sender: <a href="mailto:${contact.email}?subject=Re: ${encodeURIComponent(contact.subject)}" style="color: #2563eb;">Reply via email</a>
+            Reply directly to the sender: <a href="mailto:${escapeHtml(contact.email)}?subject=Re: ${encodeURIComponent(contact.subject)}" style="color: #2563eb;">Reply via email</a>
           </p>
         </div>
       `,
@@ -80,12 +89,12 @@ export async function sendApplicationNotification(app: {
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1e40af;">New Admission Application</h2>
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
-            <tr><td style="padding: 8px 0; color: #6b7280; width: 160px;">Student Name</td><td style="padding: 8px 0; font-weight: 600;">${app.studentNameEn}</td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Grade Applying</td><td style="padding: 8px 0;">${app.gradeApplying}</td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Contact Email</td><td style="padding: 8px 0;"><a href="mailto:${app.email}" style="color: #2563eb;">${app.email}</a></td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Contact Phone</td><td style="padding: 8px 0;">${app.phone}</td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Father's Name</td><td style="padding: 8px 0;">${app.fatherName}</td></tr>
-            <tr><td style="padding: 8px 0; color: #6b7280;">Father's Phone</td><td style="padding: 8px 0;">${app.fatherPhone}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280; width: 160px;">Student Name</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(app.studentNameEn)}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Grade Applying</td><td style="padding: 8px 0;">${escapeHtml(app.gradeApplying)}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Contact Email</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(app.email)}" style="color: #2563eb;">${escapeHtml(app.email)}</a></td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Contact Phone</td><td style="padding: 8px 0;">${escapeHtml(app.phone)}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Father's Name</td><td style="padding: 8px 0;">${escapeHtml(app.fatherName)}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280;">Father's Phone</td><td style="padding: 8px 0;">${escapeHtml(app.fatherPhone)}</td></tr>
           </table>
           <a href="/admin/dashboard/applications" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">
             View in Admin Panel

@@ -54,7 +54,7 @@ export default function EventsManagement() {
       setError('');
     } catch (err) {
       setError('Failed to load events');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,7 @@ export default function EventsManagement() {
       handleCloseModal();
     } catch (err: any) {
       setFormStatus({ type: 'error', message: err.message || 'Failed to save event. Please try again.' });
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setSubmitting(false);
     }
@@ -173,7 +173,7 @@ export default function EventsManagement() {
       await fetchEvents();
     } catch (err) {
       alert('Failed to delete event. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     }
   };
 

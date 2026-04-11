@@ -13,8 +13,7 @@ const Academics = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Academic Excellence</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Comprehensive educational programs designed to challenge, inspire, and prepare students
-            for success in higher education and beyond.
+            {config.pages.academics.heroSubtitle}
           </p>
         </div>
       </section>
@@ -113,11 +112,10 @@ const Academics = () => {
                 <div className="space-y-3">
                   {config.academics.gradingScale.map((item, index) => {
                     const colors = ['text-green-600', 'text-school-primary', 'text-yellow-600', 'text-orange-600', 'text-red-500', 'text-red-700', 'text-gray-500'];
-                    const labels = ['Excellent', 'Good', 'Satisfactory', 'Needs Improvement', 'Unsatisfactory', 'Below Average', 'Fail'];
                     return (
                       <div key={index} className="flex justify-between">
                         <span className="text-gray-700">{item.grade} ({item.range})</span>
-                        <span className={`${colors[index]} font-semibold`}>{labels[index]}</span>
+                        <span className={`${colors[index % colors.length]} font-semibold`}>{item.label}</span>
                       </div>
                     );
                   })}
@@ -155,29 +153,13 @@ const Academics = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 bg-white rounded-lg shadow-lg">
-              <div className="text-3xl font-bold text-school-primary mb-2">98%</div>
-              <div className="text-gray-900 font-semibold">Graduation Rate</div>
-              <div className="text-gray-600 text-sm">Class of 2024</div>
-            </div>
-
-            <div className="text-center p-6 bg-white rounded-lg shadow-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">95%</div>
-              <div className="text-gray-900 font-semibold">College Acceptance</div>
-              <div className="text-gray-600 text-sm">4-year institutions</div>
-            </div>
-
-            <div className="text-center p-6 bg-white rounded-lg shadow-lg">
-              <div className="text-3xl font-bold text-yellow-600 mb-2">4.2</div>
-              <div className="text-gray-900 font-semibold">Average GPA</div>
-              <div className="text-gray-600 text-sm">Graduating class</div>
-            </div>
-
-            <div className="text-center p-6 bg-white rounded-lg shadow-lg">
-              <div className="text-3xl font-bold text-purple-600 mb-2">85%</div>
-              <div className="text-gray-900 font-semibold">AP Pass Rate</div>
-              <div className="text-gray-600 text-sm">Score 3 or higher</div>
-            </div>
+            {config.academics.resultsStats.map((stat, index) => (
+              <div key={index} className="text-center p-6 bg-white rounded-lg shadow-lg">
+                <div className="text-3xl font-bold text-school-primary mb-2">{stat.value}</div>
+                <div className="text-gray-900 font-semibold">{stat.label}</div>
+                <div className="text-gray-600 text-sm">{stat.subtitle}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

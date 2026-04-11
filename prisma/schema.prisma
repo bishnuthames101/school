@@ -96,6 +96,8 @@ model ApplicationForm {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("application_forms")
 }
 
@@ -114,6 +116,8 @@ model ContactForm {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("contact_forms")
 }
 
@@ -133,6 +137,8 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("events")
 }
 
@@ -148,6 +154,8 @@ model GalleryImage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("gallery_images")
 }
 
@@ -166,6 +174,8 @@ model Notice {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("notices")
 }
 
@@ -219,6 +229,8 @@ model Parent {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("parents")
 }
 
@@ -237,6 +249,8 @@ model NotificationMessage {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
+  @@index([schoolId])
+  @@index([createdAt])
   @@map("notification_messages")
 }
 

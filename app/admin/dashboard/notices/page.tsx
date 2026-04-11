@@ -56,7 +56,7 @@ export default function NoticesManagement() {
       setError('');
     } catch (err) {
       setError('Failed to load notices');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }
@@ -138,7 +138,7 @@ export default function NoticesManagement() {
       handleCloseModal();
     } catch (err: any) {
       setFormStatus({ type: 'error', message: err.message || 'Failed to save notice. Please try again.' });
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setSubmitting(false);
     }
@@ -157,7 +157,7 @@ export default function NoticesManagement() {
       await fetchNotices();
     } catch (err) {
       alert('Failed to delete notice. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     }
   };
 

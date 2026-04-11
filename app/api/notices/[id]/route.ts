@@ -67,7 +67,7 @@ export async function PUT(
     }
 
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update notice' },
+      { success: false, error: 'Failed to update notice' },
       { status: 400 }
     );
   }

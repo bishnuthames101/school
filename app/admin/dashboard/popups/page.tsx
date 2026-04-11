@@ -50,7 +50,7 @@ const PopupsPage = () => {
         setPopups([]);
       }
     } catch (error) {
-      console.error('Error fetching popups:', error);
+      console.error('Error fetching popups');
       setPopups([]);
     } finally {
       setLoading(false);
@@ -116,7 +116,7 @@ const PopupsPage = () => {
       fetchPopups();
       closeForm();
     } catch (error) {
-      console.error('Error saving popup:', error);
+      console.error('Error saving popup');
     }
   };
 
@@ -126,7 +126,7 @@ const PopupsPage = () => {
       await fetch(`/api/popups/${id}`, { method: 'DELETE' });
       fetchPopups();
     } catch (error) {
-      console.error('Error deleting popup:', error);
+      console.error('Error deleting popup');
     }
   };
 
@@ -177,7 +177,7 @@ const PopupsPage = () => {
       });
       fetchPopups();
     } catch (error) {
-      console.error('Error toggling popup status:', error);
+      console.error('Error toggling popup status');
     }
   };
 

@@ -15,18 +15,7 @@ const HeaderStandard: React.FC = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Academics', href: '/academics' },
-    { name: 'Admission', href: '/admission' },
-    { name: 'Events', href: '/events' },
-    { name: 'Notices', href: '/notices' },
-    { name: 'Facilities', href: '/facilities' },
-    { name: 'Gallery', href: '/gallery' },
-    { name: 'Others', href: '/others' },
-    { name: 'Contact', href: '/contact' },
-  ];
+  const navigation = config.layout.navItems;
 
   const isActive = (href: string) => pathname === href;
 

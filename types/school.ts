@@ -48,8 +48,14 @@ export interface SchoolConfig {
     officeHours: {
       weekdays: string;
       saturday?: string;
+      holiday?: string; // e.g. "Public holidays: Closed"
     };
     googleMapsEmbedUrl: string;
+    transportation?: {
+      byCar: string;
+      byBus: string;
+    };
+    formSubjects: Array<{ value: string; label: string }>; // contact form subject dropdown options
   };
 
   // === DEPARTMENTS (Contact Page) ===
@@ -98,6 +104,7 @@ export interface SchoolConfig {
       grade: string;
       range: string;
       gpa: string;
+      label: string; // e.g. "Excellent", "Good", "Satisfactory"
     }>;
     assessmentWeights: string;
     features: Array<{
@@ -109,6 +116,11 @@ export interface SchoolConfig {
       exam: string;
       date: string;
       grade: string;
+    }>;
+    resultsStats: Array<{
+      value: string;   // e.g. "98%"
+      label: string;   // e.g. "SEE Pass Rate"
+      subtitle: string; // e.g. "2081 Batch"
     }>;
   };
 
@@ -125,6 +137,7 @@ export interface SchoolConfig {
       description: string;
       icon: string;
       highlights: string[];
+      image?: string; // path to facility photo, e.g. "/school-assets/facilities/library.jpeg"
     }>;
     additional: Array<{
       name: string;
@@ -169,6 +182,12 @@ export interface SchoolConfig {
   }>;
 
   // === ADMISSION ===
+  admission: {
+    heroSubtitle: string;
+    steps: Array<{ step: number; title: string; description: string }>;
+    requiredDocuments: string[];
+  };
+
   admissionDates: {
     applicationPeriod: string;
     assessmentDates: string;
@@ -181,6 +200,43 @@ export interface SchoolConfig {
     discount: string;
     criteria: string;
   }>;
+
+  // === HOMEPAGE FEATURE CARDS ===
+  features: Array<{
+    title: string;
+    description: string;
+    icon: string; // lucide icon name: "BookOpen" | "Users" | "Award" | etc.
+  }>;
+
+  // === HOMEPAGE CTA SECTION ===
+  cta: {
+    title: string;
+    description: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+
+  // === GALLERY ===
+  gallery: {
+    categories: string[]; // filter categories shown on gallery page, first item should be "All"
+  };
+
+  // === NOTICES ===
+  notices: {
+    categories: string[]; // filter categories shown on notices page, first item should be "All"
+  };
+
+  // === PAGE HERO SUBTITLES ===
+  pages: {
+    about:     { heroSubtitle: string };
+    academics: { heroSubtitle: string };
+    contact:   { heroSubtitle: string };
+    events:    { heroSubtitle: string };
+    facilities:{ heroSubtitle: string };
+    gallery:   { heroSubtitle: string };
+    notices:   { heroSubtitle: string };
+    others:    { heroSubtitle: string };
+  };
 
   // === HOMEPAGE CONTENT ===
   upcomingHighlights: Array<{
@@ -226,7 +282,11 @@ export interface SchoolConfig {
     headerStyle: "standard" | "transparent" | "centered";
     footerStyle: "full" | "compact" | "minimal";
     homeSections: Array<"stats" | "features" | "news" | "events" | "cta">;
+    navItems: Array<{ name: string; href: string }>; // navigation menu items
   };
+
+  // === PRINCIPAL'S MESSAGE (About Page) ===
+  principalMessage: string[]; // array of quote paragraphs shown in the Principal's Message section
 
   // === SOCIAL MEDIA ===
   social: {

@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       await fetch('/api/auth/logout', { method: 'POST' });
       window.location.href = '/admin/login';
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Logout error');
     }
   };
 

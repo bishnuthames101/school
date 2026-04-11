@@ -1,8 +1,7 @@
 /**
- * Resets the admin password for a school to admin123 (or a custom password).
+ * Resets the admin password for a school.
  *
  * Usage:
- *   npx tsx scripts/reset-admin-password.ts
  *   ADMIN_PASSWORD=newpassword npx tsx scripts/reset-admin-password.ts
  *
  * Requires SCHOOL_ID to be set in .env or environment.
@@ -18,10 +17,15 @@ const prisma = new PrismaClient();
 
 async function main() {
   const schoolSlug = process.env.SCHOOL_ID;
-  const newPassword = process.env.ADMIN_PASSWORD || "admin123";
+  const newPassword = process.env.ADMIN_PASSWORD;
 
   if (!schoolSlug) {
     console.error("Error: SCHOOL_ID env var is required");
+    process.exit(1);
+  }
+
+  if (!newPassword) {
+    console.error("Error: ADMIN_PASSWORD env var is required (e.g. ADMIN_PASSWORD=newpassword)");
     process.exit(1);
   }
 

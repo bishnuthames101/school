@@ -86,24 +86,8 @@ const Admission = () => {
     }
   };
 
-  const admissionSteps = [
-    { step: 1, title: 'Submit Application', description: 'Complete and submit the online application form' },
-    { step: 2, title: 'Document Review', description: 'We review your application and supporting documents' },
-    { step: 3, title: 'Assessment', description: 'Student assessment and parent interview' },
-    { step: 4, title: 'Decision', description: 'Receive admission decision within 5-7 business days' },
-    { step: 5, title: 'Enrollment', description: 'Complete enrollment process and pay fees' },
-  ];
-
-  const requiredDocuments = [
-    'Completed application form',
-    'Previous school transcripts',
-    'Birth certificate',
-    'Immunization records',
-    'Passport-size photographs (2)',
-    'Parent/Guardian citizenship copy',
-    'Previous school leaving certificate',
-    'Medical examination report',
-  ];
+  const admissionSteps = config.admission.steps;
+  const requiredDocuments = config.admission.requiredDocuments;
 
   const availableDistricts = formData.province ? districtsByProvince[formData.province] || [] : [];
 
@@ -114,8 +98,7 @@ const Admission = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Join Our Community</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Begin your child&apos;s journey of excellence with us. We&apos;re committed to nurturing
-            young minds and building bright futures through quality education.
+            {config.admission.heroSubtitle}
           </p>
         </div>
       </section>

@@ -55,7 +55,7 @@ export default function ApplicationsManagement() {
       setError('');
     } catch (err) {
       setError('Failed to load applications');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function ApplicationsManagement() {
       ));
     } catch (err) {
       alert('Failed to update status. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setUpdatingId(null);
     }

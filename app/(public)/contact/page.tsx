@@ -122,7 +122,7 @@ const Contact = () => {
       details: [
         config.contact.officeHours.weekdays,
         ...(config.contact.officeHours.saturday ? [config.contact.officeHours.saturday] : []),
-        'Sunday: Closed',
+        ...(config.contact.officeHours.holiday ? [config.contact.officeHours.holiday] : []),
       ],
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-100',
@@ -139,8 +139,7 @@ const Contact = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            We&apos;re here to help! Get in touch with us for any questions, concerns, or information
-            about {config.name}. We look forward to hearing from you.
+            {config.pages.contact.heroSubtitle}
           </p>
         </div>
       </section>
@@ -251,13 +250,9 @@ const Contact = () => {
                         className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-school-primary"
                       >
                         <option value="">Select Subject</option>
-                        <option value="admission">Admission Inquiry</option>
-                        <option value="academic">Academic Information</option>
-                        <option value="facilities">Facilities</option>
-                        <option value="events">Events & Activities</option>
-                        <option value="general">General Inquiry</option>
-                        <option value="complaint">Complaint</option>
-                        <option value="other">Other</option>
+                        {config.contact.formSubjects.map((s) => (
+                          <option key={s.value} value={s.value}>{s.label}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -308,20 +303,21 @@ const Contact = () => {
               </div>
 
               {/* Transportation Info */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Transportation</h3>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="font-medium text-gray-900">By Car:</span>
-                    <p className="text-gray-600">Free parking available on school</p>
+              {config.contact.transportation && (
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Transportation</h3>
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-900">By Car:</span>
+                      <p className="text-gray-600">{config.contact.transportation.byCar}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-900">By Bus:</span>
+                      <p className="text-gray-600">{config.contact.transportation.byBus}</p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="font-medium text-gray-900">By Bus:</span>
-                    <p className="text-gray-600">Bus routes through balkumari and jadibuti</p>
-                  </div>
-
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

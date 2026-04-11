@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const fonnteApiKey = process.env.FONNTE_API_KEY;
     if (!fonnteApiKey || fonnteApiKey === 'your_fonnte_api_key_here') {
       return NextResponse.json(
-        { success: false, error: 'Fonnte API key is not configured' },
+        { success: false, error: 'Notification service is not configured' },
         { status: 500 }
       );
     }
@@ -70,8 +70,6 @@ export async function POST(request: NextRequest) {
         formData.append('message', message.trim());
         formData.append('countryCode', '0'); // '0' = bypass auto-prefix, use full international number as-is
 
-        console.log(`[Fonnte] Sending to phone: ${parent.phone}`);
-
         const res = await fetch('https://api.fonnte.com/send', {
           method: 'POST',
           headers: {
@@ -81,7 +79,6 @@ export async function POST(request: NextRequest) {
         });
 
         const data = await res.json();
-        console.log(`[Fonnte] Response for ${parent.phone}:`, JSON.stringify(data));
 
         // Fonnte returns { status: true } on success
         if (!res.ok || !data.status) {
@@ -95,13 +92,10 @@ export async function POST(request: NextRequest) {
     const totalSent = sendResults.filter((r) => r.status === 'fulfilled').length;
     const totalFailed = sendResults.filter((r) => r.status === 'rejected').length;
 
-    // Log failed sends for debugging
-    sendResults.forEach((result, i) => {
-      if (result.status === 'rejected') {
-        const p = parents[i];
-        console.error(`Failed to send to parent ${p.id} (phone: ${p.phone}):`, result.reason);
-      }
-    });
+    // Log failed send count only — no PII in logs
+    if (totalFailed > 0) {
+      console.error(`Notification delivery failed for ${totalFailed} recipient(s)`);
+    }
 
     // Save notification log to DB
     await db.notificationMessage.create({
@@ -118,7 +112,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error sending notifications:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to send notifications' },
+      { success: false, error: 'Failed to send notifications' },
       { status: 500 }
     );
   }

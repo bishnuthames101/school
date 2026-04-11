@@ -19,7 +19,7 @@ const Notices = () => {
           setNotices(result.data || []);
         }
       } catch (error) {
-        console.error('Error fetching notices:', error);
+        console.error('Error fetching notices');
         setNotices([]);
       } finally {
         setLoading(false);
@@ -72,7 +72,7 @@ const Notices = () => {
     }
   };
 
-  const categories = ['All', 'Academic', 'Sports', 'Health', 'Arts', 'General'];
+  const categories = config.notices.categories;
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [searchTerm, setSearchTerm] = React.useState('');
 
@@ -92,8 +92,7 @@ const Notices = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">School Notices</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Stay informed with the latest announcements, updates, and important information
-            from {config.name} administration.
+            {config.pages.notices.heroSubtitle}
           </p>
         </div>
       </section>

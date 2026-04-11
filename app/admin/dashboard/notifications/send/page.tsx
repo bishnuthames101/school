@@ -53,7 +53,7 @@ export default function SendNotificationPage() {
       .then((data) => {
         if (data.success) setClasses(data.data);
       })
-      .catch(console.error);
+      .catch(() => console.error('Failed to load classes'));
   }, []);
 
   // Fetch parent count whenever classId changes
@@ -68,7 +68,7 @@ export default function SendNotificationPage() {
       .then((data) => {
         if (data.success) setParentCount(data.count);
       })
-      .catch(console.error)
+      .catch(() => console.error('Failed to load parent count'))
       .finally(() => setCountLoading(false));
   }, [selectedClassId]);
 

@@ -38,7 +38,7 @@ export default function ContactsManagement() {
       setError('');
     } catch (err) {
       setError('Failed to load contact messages');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export default function ContactsManagement() {
       );
     } catch (err) {
       alert('Failed to update status. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     }
   };
 
@@ -76,7 +76,7 @@ export default function ContactsManagement() {
       setConfirmDeleteId(null);
     } catch (err) {
       alert('Failed to delete message. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setDeletingId(null);
     }

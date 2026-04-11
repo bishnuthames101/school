@@ -58,7 +58,7 @@ export async function verifyTokenEdge(token: string): Promise<any> {
     const { payload } = await jwtVerify(token, getSecretKey());
     return payload;
   } catch (error) {
-    console.error('[verifyTokenEdge] Verification failed:', error);
+    console.error('[verifyTokenEdge] Token verification failed');
     return null;
   }
 }

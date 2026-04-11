@@ -49,6 +49,19 @@ const config: SchoolConfig = {
       weekdays: "Sunday - Friday: 10:00 AM - 4:00 PM",
       saturday: "Saturday: Closed",
     },
+    transportation: {
+      byCar: "Free parking available on school premises",
+      byBus: "Bus routes through Balkumari and Jadibuti",
+    },
+    formSubjects: [
+      { value: "admission",  label: "Admission Inquiry"    },
+      { value: "academic",   label: "Academic Information" },
+      { value: "facilities", label: "Facilities"           },
+      { value: "events",     label: "Events & Activities"  },
+      { value: "general",    label: "General Inquiry"      },
+      { value: "complaint",  label: "Complaint"            },
+      { value: "other",      label: "Other"                },
+    ],
     googleMapsEmbedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.4718522915846!2d85.34655857525254!3d27.671807676202977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19f0a50c9419%3A0xb91aba5ece08fc44!2sKotdevi%20Public%20English%20Sec.%20School!5e0!3m2!1sen!2snp!4v1775022955537!5m2!1sen!2snp",
   },
@@ -211,13 +224,13 @@ const config: SchoolConfig = {
     ],
     // Nepal NEB grading scale
     gradingScale: [
-      { grade: "A+", range: "90-100%", gpa: "4.0" },
-      { grade: "A",  range: "80-89%",  gpa: "3.6" },
-      { grade: "B+", range: "70-79%",  gpa: "3.2" },
-      { grade: "B",  range: "60-69%",  gpa: "2.8" },
-      { grade: "C+", range: "50-59%",  gpa: "2.4" },
-      { grade: "C",  range: "40-49%",  gpa: "2.0" },
-      { grade: "D",  range: "Below 40%", gpa: "0.0" },
+      { grade: "A+", range: "90-100%",   gpa: "4.0", label: "Outstanding"     },
+      { grade: "A",  range: "80-89%",    gpa: "3.6", label: "Excellent"        },
+      { grade: "B+", range: "70-79%",    gpa: "3.2", label: "Very Good"        },
+      { grade: "B",  range: "60-69%",    gpa: "2.8", label: "Good"             },
+      { grade: "C+", range: "50-59%",    gpa: "2.4", label: "Satisfactory"     },
+      { grade: "C",  range: "40-49%",    gpa: "2.0", label: "Acceptable"       },
+      { grade: "D",  range: "Below 40%", gpa: "0.0", label: "Not Sufficient"   },
     ],
     assessmentWeights: "Continuous Assessment (40%), Terminal Examination (60%)",
     calendarSlides: 6, // 6 scanned calendar images in assets/calendar/
@@ -232,6 +245,13 @@ const config: SchoolConfig = {
       { exam: "Third Terminal Examination", date: "Poush (January)", grade: "All Grades" },
       { exam: "Final Examination", date: "Chaitra (March–April)", grade: "All Grades" },
     ],
+    // TODO: Update with real KOPESS SEE results data
+    resultsStats: [
+      { value: "98%",  label: "SEE Pass Rate",        subtitle: "2081 Batch"         },
+      { value: "45%",  label: "Distinction (A+/A)",   subtitle: "SEE 2081"           },
+      { value: "3.5",  label: "Average GPA",          subtitle: "Graduating batch"   },
+      { value: "85%",  label: "College Enrollment",   subtitle: "Of SEE graduates"   },
+    ],
   },
 
   // === FACILITIES ===
@@ -242,6 +262,7 @@ const config: SchoolConfig = {
         description:
           "Our library houses books, reference materials and digital learning resources for all grade levels.",
         icon: "BookOpen",
+        image: "/school-assets/facilities/library.jpeg",
         highlights: [
           "10,000+ books",
           "Reference materials",
@@ -266,6 +287,7 @@ const config: SchoolConfig = {
         description:
           "Modern computer facilities with internet access for digital literacy programs.",
         icon: "Monitor",
+        image: "/school-assets/facilities/computerlab.jpeg",
         highlights: [
           "50+ computers",
           "High-speed internet",
@@ -278,6 +300,7 @@ const config: SchoolConfig = {
         description:
           "Open sports ground for football, cricket, volleyball and athletics.",
         icon: "Trophy",
+        image: "/school-assets/facilities/playground.jpeg",
         highlights: [
           "Football field",
           "Cricket pitch",
@@ -289,6 +312,7 @@ const config: SchoolConfig = {
         name: "Canteen",
         description: "Clean canteen providing healthy and affordable snacks and meals.",
         icon: "UtensilsCrossed",
+        image: "/school-assets/facilities/canteen.jpeg",
         highlights: [
           "Hygienic preparation",
           "Affordable prices",
@@ -300,6 +324,7 @@ const config: SchoolConfig = {
         name: "Multipurpose Hall",
         description: "Hall for assemblies, cultural programs, examinations and events.",
         icon: "Theater",
+        image: "/school-assets/facilities/multipurposehall.jpeg",
         highlights: [
           "Seating capacity",
           "Stage & sound system",
@@ -457,7 +482,29 @@ const config: SchoolConfig = {
     },
   ],
 
-  // === ADMISSION (Nepal BS Calendar) ===
+  // === ADMISSION ===
+  admission: {
+    heroSubtitle: "Begin your child's journey of excellence with us. We are committed to nurturing young minds and building bright futures through quality education.",
+    steps: [
+      { step: 1, title: "Submit Application",  description: "Complete and submit the online application form"                  },
+      { step: 2, title: "Document Review",     description: "We review your application and supporting documents"              },
+      { step: 3, title: "Assessment",          description: "Student assessment and parent interview"                          },
+      { step: 4, title: "Decision",            description: "Receive admission decision within 5-7 working days"              },
+      { step: 5, title: "Enrollment",          description: "Complete enrollment process and pay fees"                         },
+    ],
+    requiredDocuments: [
+      "Completed application form",
+      "Previous school transcripts",
+      "Birth certificate",
+      "Immunization records",
+      "Passport-size photographs (2)",
+      "Parent/Guardian citizenship copy",
+      "Previous school leaving certificate",
+      "Medical examination report",
+    ],
+  },
+
+  // === ADMISSION DATES (Nepal BS Calendar) ===
   admissionDates: {
     applicationPeriod: "Poush - Falgun 2082 (Dec 2025 - Feb 2026)",
     assessmentDates: "Chaitra 2082 (March 2026)",
@@ -487,6 +534,71 @@ const config: SchoolConfig = {
       criteria: "Siblings currently enrolled in KOPESS",
     },
   ],
+
+  // === HOMEPAGE FEATURE CARDS ===
+  features: [
+    {
+      title: "Academic Excellence",
+      description: "Rigorous curriculum designed to challenge and inspire students to reach their full potential.",
+      icon: "BookOpen",
+    },
+    {
+      title: "Expert Faculty",
+      description: "Dedicated and experienced teachers committed to student success and personal growth.",
+      icon: "Users",
+    },
+    {
+      title: "Extracurricular Activities",
+      description: "Wide range of sports, arts, and cultural activities to develop well-rounded personalities.",
+      icon: "Award",
+    },
+  ],
+
+  // === HOMEPAGE CTA SECTION ===
+  cta: {
+    title: "Ready to Join Our Community?",
+    description: "Take the first step towards your child's bright future. Apply now and become part of our excellence tradition.",
+    buttonLabel: "Start Your Application",
+    buttonHref: "/admission",
+  },
+
+  // === GALLERY ===
+  gallery: {
+    categories: ["All", "Campus", "Events", "Sports", "Cultural", "Academic", "Other"],
+  },
+
+  // === NOTICES ===
+  notices: {
+    categories: ["All", "Academic", "Sports", "Health", "Arts", "General"],
+  },
+
+  // === PAGE HERO SUBTITLES ===
+  pages: {
+    about: {
+      heroSubtitle: "Discover our rich history, unwavering mission, and commitment to educational excellence that has shaped generations of successful leaders.",
+    },
+    academics: {
+      heroSubtitle: "Comprehensive educational programs designed to challenge, inspire, and prepare students for success in higher education and beyond.",
+    },
+    contact: {
+      heroSubtitle: `We're here to help! Get in touch with us for any questions, concerns, or information about KOPESS. We look forward to hearing from you.`,
+    },
+    events: {
+      heroSubtitle: "Celebrating achievements, fostering community, and creating lasting memories through our diverse range of school events and activities.",
+    },
+    facilities: {
+      heroSubtitle: "KOPESS provides state-of-the-art facilities designed to enhance learning, promote creativity, and ensure the safety and well-being of our students.",
+    },
+    gallery: {
+      heroSubtitle: "A visual journey through life at KOPESS — campus moments, events, sports, and more.",
+    },
+    notices: {
+      heroSubtitle: "Stay informed with the latest announcements, updates, and important information from KOPESS administration.",
+    },
+    others: {
+      heroSubtitle: "Discover the vibrant community life at KOPESS through our house system, clubs, extracurricular activities, and the inspiring achievements of our alumni.",
+    },
+  },
 
   // === HOMEPAGE CONTENT (Nepal BS Calendar) ===
   upcomingHighlights: [
@@ -534,6 +646,13 @@ const config: SchoolConfig = {
     },
   ],
 
+  // === PRINCIPAL'S MESSAGE (About Page) ===
+  // TODO: Replace with real principal's message
+  principalMessage: [
+    "At KOPESS, we believe that every child has the potential to achieve greatness. Our role is to provide the nurturing environment, exceptional resources, and inspiring guidance that allows each student to discover and develop their unique talents.",
+    "We are committed to fostering not just academic excellence, but also the development of character, creativity, and critical thinking skills that will serve our students throughout their lives. Together, we are building tomorrow's leaders today.",
+  ],
+
   // === SEO ===
   seo: {
     titleTemplate: "%s | KOPESS - Nurturing Future Leaders",
@@ -574,6 +693,18 @@ const config: SchoolConfig = {
     headerStyle: "standard",
     footerStyle: "full",
     homeSections: ["stats", "features", "news", "events", "cta"],
+    navItems: [
+      { name: "Home",      href: "/"          },
+      { name: "About",     href: "/about"     },
+      { name: "Academics", href: "/academics" },
+      { name: "Admission", href: "/admission" },
+      { name: "Events",    href: "/events"    },
+      { name: "Notices",   href: "/notices"   },
+      { name: "Facilities",href: "/facilities"},
+      { name: "Gallery",   href: "/gallery"   },
+      { name: "Others",    href: "/others"    },
+      { name: "Contact",   href: "/contact"   },
+    ],
   },
 
   // === SOCIAL MEDIA ===

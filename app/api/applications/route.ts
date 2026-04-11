@@ -3,8 +3,12 @@ import { isAuthenticated } from '@/lib/auth';
 import { scopedPrisma } from '@/lib/db-scoped';
 import { sendApplicationNotification } from '@/lib/email';
 import { logAction } from '@/lib/audit';
+import { createRateLimiter, getClientIp } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
+
+// 5 submissions per IP per hour — prevents spam while allowing legitimate re-submissions
+const rateLimiter = createRateLimiter(5, 60 * 60 * 1000);
 
 // GET all applications with pagination (requires auth)
 export async function GET(request: NextRequest) {
@@ -19,8 +23,8 @@ export async function GET(request: NextRequest) {
 
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '10')), 100);
     const skip = (page - 1) * limit;
 
     const total = await db.applicationForm.count();
@@ -53,6 +57,15 @@ export async function GET(request: NextRequest) {
 // POST new application (public — from admission form)
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIp(request);
+    const rateLimit = rateLimiter(ip);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Too many submissions. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+      );
+    }
+
     const db = await scopedPrisma();
     const body = await request.json();
 

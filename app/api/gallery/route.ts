@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
   try {
     const db = await scopedPrisma();
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '10')), 100);
     const skip = (page - 1) * limit;
 
     const total = await db.galleryImage.count();
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating gallery image:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to create gallery image' },
+      { success: false, error: 'Failed to create gallery image' },
       { status: 400 }
     );
   }
@@ -133,7 +133,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     console.error('Error deleting gallery image:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to delete image' },
+      { success: false, error: 'Failed to delete image' },
       { status: 400 }
     );
   }

@@ -7,7 +7,7 @@ import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
 
-const categories = ['All', 'Campus', 'Events', 'Sports', 'Cultural', 'Academic', 'Other'];
+const categories = config.gallery.categories;
 
 const Gallery = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -35,7 +35,7 @@ const Gallery = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Photo Gallery</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            A visual journey through life at {config.name} — campus moments, events, sports, and more.
+            {config.pages.gallery.heroSubtitle}
           </p>
         </div>
       </section>

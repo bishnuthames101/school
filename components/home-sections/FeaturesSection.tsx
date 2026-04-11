@@ -1,7 +1,15 @@
-import { Award, BookOpen, Users } from 'lucide-react';
+import { Award, BookOpen, Users, type LucideIcon } from 'lucide-react';
 import { getSchoolConfig } from '@/lib/school-config';
 
 const config = getSchoolConfig();
+
+const iconMap: Record<string, LucideIcon> = { BookOpen, Users, Award };
+
+const cardStyles = [
+  { bg: 'bg-school-primary-100', text: 'text-school-primary'   },
+  { bg: 'bg-green-100',          text: 'text-school-secondary' },
+  { bg: 'bg-yellow-100',         text: 'text-school-accent'    },
+];
 
 export default function FeaturesSection() {
   return (
@@ -17,35 +25,19 @@ export default function FeaturesSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
-            <div className="w-12 h-12 bg-school-primary-100 rounded-lg flex items-center justify-center mb-4">
-              <BookOpen className="h-6 w-6 text-school-primary" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Academic Excellence</h3>
-            <p className="text-gray-600">
-              Rigorous curriculum designed to challenge and inspire students to reach their full potential.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-              <Users className="h-6 w-6 text-school-secondary" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Expert Faculty</h3>
-            <p className="text-gray-600">
-              Dedicated and experienced teachers committed to student success and personal growth.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-              <Award className="h-6 w-6 text-school-accent" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Extracurricular Activities</h3>
-            <p className="text-gray-600">
-              Wide range of sports, arts, and cultural activities to develop well-rounded personalities.
-            </p>
-          </div>
+          {config.features.map((feature, index) => {
+            const Icon = iconMap[feature.icon] ?? BookOpen;
+            const { bg, text } = cardStyles[index % cardStyles.length];
+            return (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
+                <div className={`w-12 h-12 ${bg} rounded-lg flex items-center justify-center mb-4`}>
+                  <Icon className={`h-6 w-6 ${text}`} />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

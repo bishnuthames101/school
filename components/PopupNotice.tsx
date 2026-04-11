@@ -37,7 +37,7 @@ const PopupNotice = () => {
         setIsVisible(true);
       }
     } catch (error) {
-      console.error('Error fetching popup:', error);
+      console.error('Error fetching popup');
     }
   };
 

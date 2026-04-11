@@ -12,8 +12,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">About {config.name}</h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Discover our rich history, unwavering mission, and commitment to educational excellence
-            that has shaped generations of successful leaders.
+            {config.pages.about.heroSubtitle}
           </p>
         </div>
       </section>
@@ -121,27 +120,29 @@ const About = () => {
 
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex flex-col lg:flex-row items-start gap-8">
-                {config.leadership[1]?.image
-                  ? <img src={config.leadership[1].image} alt={config.leadership[1].name} className="w-32 h-32 rounded-full object-cover flex-shrink-0" />
-                  : <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
-                }
-                <div className="flex-1">
-                  <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                    &ldquo;At {config.name}, we believe that every child has the potential to achieve greatness.
-                    Our role is to provide the nurturing environment, exceptional resources, and inspiring guidance
-                    that allows each student to discover and develop their unique talents.&rdquo;
-                  </blockquote>
-                  <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                    &ldquo;We are committed to fostering not just academic excellence, but also the development of
-                    character, creativity, and critical thinking skills that will serve our students throughout
-                    their lives. Together, we are building tomorrow&apos;s leaders today.&rdquo;
-                  </blockquote>
-                  <div className="mt-6">
-                    <p className="font-bold text-gray-900">{config.leadership[1]?.name}</p>
-                    <p className="text-school-primary">{config.leadership[1]?.role}, {config.name}</p>
-                    <p className="text-sm text-gray-600">{config.leadership[1]?.qualification}</p>
-                  </div>
-                </div>
+                {(() => {
+                  const principal = config.leadership.find(m => m.role === 'Principal') ?? config.leadership[1];
+                  return (
+                    <>
+                      {principal?.image
+                        ? <img src={principal.image} alt={principal.name} className="w-32 h-32 rounded-full object-cover flex-shrink-0" />
+                        : <div className="w-32 h-32 bg-gradient-to-br from-school-primary-light to-school-primary rounded-full flex-shrink-0"></div>
+                      }
+                      <div className="flex-1">
+                        {config.principalMessage.map((paragraph, i) => (
+                          <blockquote key={i} className="text-lg text-gray-700 italic leading-relaxed mb-4">
+                            &ldquo;{paragraph}&rdquo;
+                          </blockquote>
+                        ))}
+                        <div className="mt-6">
+                          <p className="font-bold text-gray-900">{principal?.name}</p>
+                          <p className="text-school-primary">{principal?.role}, {config.name}</p>
+                          <p className="text-sm text-gray-600">{principal?.qualification}</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>

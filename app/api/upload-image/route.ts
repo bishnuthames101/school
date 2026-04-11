@@ -5,6 +5,8 @@ import { uploadImage, type UploadFolder } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
+const VALID_FOLDERS: UploadFolder[] = ['events', 'gallery', 'notices', 'popups', 'applications'];
+
 /**
  * Generic authenticated image upload endpoint.
  * Used by admin pages that need to upload images separately from form submission
@@ -23,7 +25,12 @@ export async function POST(request: NextRequest) {
     const schoolSlug = getSchoolSlug();
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const folder = (formData.get('folder') as UploadFolder) || 'popups';
+    const folderParam = (formData.get('folder') as string) || 'popups';
+
+    if (!VALID_FOLDERS.includes(folderParam as UploadFolder)) {
+      return NextResponse.json({ error: 'Invalid upload folder' }, { status: 400 });
+    }
+    const folder = folderParam as UploadFolder;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -35,7 +42,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Upload error:', error);
     return NextResponse.json(
-      { error: error.message || 'Upload failed' },
+      { error: 'Upload failed' },
       { status: 400 }
     );
   }

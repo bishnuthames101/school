@@ -47,7 +47,7 @@ export default function GalleryManagement() {
       setError('');
     } catch (err) {
       setError('Failed to load gallery images');
-      console.error(err);
+      console.error('Admin operation failed');
     } finally {
       setLoading(false);
     }
@@ -144,7 +144,7 @@ export default function GalleryManagement() {
       await fetchImages();
     } catch (err) {
       alert('Failed to delete image. Please try again.');
-      console.error(err);
+      console.error('Admin operation failed');
     }
   };
 
